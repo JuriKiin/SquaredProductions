@@ -1,1 +1,6 @@
 //Changelog.txt
+
+//James 2/24/2016 6:30pm
+	Added the initial code for the start menu. Player presses "P" to get the menu to appear. Need to figure out how to keep 
+the menu on the screen instead of toggling on and off with the key press. Also, the menu is moving up and to the left so you can
+see the whole thing until I resize it for the game.
