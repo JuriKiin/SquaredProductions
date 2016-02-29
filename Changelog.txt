@@ -4,3 +4,7 @@
 	Added the initial code for the start menu. Player presses "P" to get the menu to appear. Need to figure out how to keep 
 the menu on the screen instead of toggling on and off with the key press. Also, the menu is moving up and to the left so you can
 see the whole thing until I resize it for the game.
+
+//Juri Kiin 2/29/2016 10:07
+	- Added move method: makes character move around the screen without boarders at the edge of the window.
+	- Also added pause method. Press P to pause and will resume via button (Not implemented)

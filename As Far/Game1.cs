@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.IO;
 
 namespace As_Far
 {
@@ -14,15 +17,31 @@ namespace As_Far
         SpriteBatch spriteBatch;
 
         // additional attributes
-        private bool keypress = false;
+        private bool pause = false;
         Texture2D sm;
         Vector2 vec;
-        
+
+        //Attributes to resize window
+        int winX = 1000;
+        int winY = 1000;
+
+        //Player Attributes
+        Texture2D protag;
+        Vector2 playerPos;
+
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            //Resize Window to attributes.
+            graphics.PreferredBackBufferWidth = winX;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = winY;   // set this value to the desired height of your window
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -34,7 +53,9 @@ namespace As_Far
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            vec = new Vector2(0, 0);
+            vec = new Vector2(-500, -100);
+
+            //Load all of the protag images into an array
 
             base.Initialize();
         }
@@ -49,9 +70,14 @@ namespace As_Far
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
+
+
 
             // Loading in the start menu
-            sm = Content.Load<Texture2D>("StartMenu");
+            sm = Content.Load<Texture2D>("UI\\StartMenu.png");
+
+
         }
 
         /// <summary>
@@ -76,10 +102,13 @@ namespace As_Far
             // TODO: Add your update logic here
 
             // (*TEMPORARY*) Making the menu move so you can see the whole thing
-            vec = new Vector2(vec.X - 2, vec.Y - 1);
+
+            Pause();
+            Move();
 
             base.Update(gameTime);
         }
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -87,22 +116,51 @@ namespace As_Far
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Transparent);
+            GraphicsDevice.Clear(Color.Bisque);
 
             // TODO: Add your drawing code here
 
             // spawn in the menu
             spriteBatch.Begin();
 
-            // need to figure out how to keep the menu there
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P))
+            //Draw character
+            spriteBatch.Draw(protag, playerPos, Color.White);
+
+            //If the player pauses the game
+            if (pause)
             {
+                //Draw pause menu GUI
                 spriteBatch.Draw(sm, vec, Color.White);
+                //Show the cursor
+                this.IsMouseVisible = true;
             }
+
 
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        //Method to initialize the pause menu
+        public void Pause()
+        {
+            KeyboardState ks = Keyboard.GetState();
+            //If P is pressed
+            if (ks.IsKeyDown(Keys.P)) pause = true;
+            //Player will hit the resume button to continue playing.
+        }
+
+        public void Move()
+        {
+            KeyboardState ks = Keyboard.GetState();
+
+            //Make sprite move, and change sprite if the player looks differently
+            if (ks.IsKeyDown(Keys.A)) playerPos.X -= 3; //Move Left
+            if (ks.IsKeyDown(Keys.D)) playerPos.X += 3; //Move Right
+            if (ks.IsKeyDown(Keys.W)) playerPos.Y -= 3; //Move Up
+            if (ks.IsKeyDown(Keys.S)) playerPos.Y += 3; //Move Down
+
+        }
+
     }
 }
