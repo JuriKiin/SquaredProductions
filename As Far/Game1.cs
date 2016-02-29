@@ -116,7 +116,7 @@ namespace As_Far
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Bisque);
+            GraphicsDevice.Clear(Color.SeaGreen);
 
             // TODO: Add your drawing code here
 
@@ -140,7 +140,6 @@ namespace As_Far
 
             base.Draw(gameTime);
         }
-
         //Method to initialize the pause menu
         public void Pause()
         {
@@ -159,8 +158,9 @@ namespace As_Far
             if (ks.IsKeyDown(Keys.D)) playerPos.X += 3; //Move Right
             if (ks.IsKeyDown(Keys.W)) playerPos.Y -= 3; //Move Up
             if (ks.IsKeyDown(Keys.S)) playerPos.Y += 3; //Move Down
-
         }
+
+        //Combat System Below.
 
     }
 }
