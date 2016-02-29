@@ -8,3 +8,4 @@ see the whole thing until I resize it for the game.
 //Juri Kiin 2/29/2016 10:07
 	- Added move method: makes character move around the screen without boarders at the edge of the window.
 	- Also added pause method. Press P to pause and will resume via button (Not implemented)
+	- Added Enemy.cs -- Has paramaterized constructor for the enemy attributes.
