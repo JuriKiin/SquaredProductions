@@ -19,7 +19,14 @@ namespace As_Far
         // additional attributes
         private bool pause = false;
         Texture2D sm;
+        Texture2D statsMenu;
+        Texture2D itemsMenu;
         Vector2 vec;
+
+        //Buttons for start menu
+        Rectangle resume = new Rectangle(0, 0, 100, 65);
+        Rectangle stats = new Rectangle(200, 0, 100, 65);
+        Rectangle items = new Rectangle(400, 0, 100, 65); 
 
         //Attributes to resize window
         int winX = 1000;
@@ -29,7 +36,8 @@ namespace As_Far
         Texture2D protag;
         Vector2 playerPos;
 
-
+        //Cursor
+        MouseState m = Mouse.GetState();
 
         public Game1()
         {
@@ -55,6 +63,9 @@ namespace As_Far
             // TODO: Add your initialization logic here
             vec = new Vector2(-500, -100);
 
+            //Button assets for pause menu
+
+
             //Load all of the protag images into an array
 
             base.Initialize();
@@ -76,6 +87,13 @@ namespace As_Far
 
             // Loading in the start menu
             sm = Content.Load<Texture2D>("UI\\StartMenu.png");
+
+            // Loading in the stats menu
+            statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");
+
+            //Loading in the items menu
+            itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");
+
 
 
         }
@@ -100,6 +118,9 @@ namespace As_Far
                 Exit();
 
             // TODO: Add your update logic here
+
+            //Gets current state of mouse
+            MouseState m = Mouse.GetState();
 
             // (*TEMPORARY*) Making the menu move so you can see the whole thing
 
@@ -134,6 +155,22 @@ namespace As_Far
                 //Show the cursor
                 this.IsMouseVisible = true;
             }
+
+            //If the stats "button" is clicked
+            if(m.Position.X <= stats.X && m.Position.Y <= stats.Y)
+            {
+                if(m.LeftButton(IsActive) == true)
+                {
+
+                }
+            }
+
+            //If the items "button" is clicked
+            //if()
+            {
+
+            }
+            
 
 
             spriteBatch.End();

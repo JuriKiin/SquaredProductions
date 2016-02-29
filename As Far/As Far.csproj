@@ -56,9 +56,11 @@
     <Content Include="Content\Characters\Protag\Protag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\Items Menu.png" />
     <Content Include="Content\UI\StartMenu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\Stats Menu.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
