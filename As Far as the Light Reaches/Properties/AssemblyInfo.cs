@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("As Far")]
-[assembly: AssemblyProduct("As Far")]
+[assembly: AssemblyTitle("As Far as the Light Reaches")]
+[assembly: AssemblyProduct("As Far as the Light Reaches")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("948a5b8d-8301-41fb-873d-55fa2f687089")]
+[assembly: Guid("aa8f413c-f253-41ba-9ae4-6772695aa158")]
 
 // Version information for an assembly consists of the following four values:
 //

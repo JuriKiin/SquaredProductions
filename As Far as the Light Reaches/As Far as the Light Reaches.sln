@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "As Far", "As Far.csproj", "{2EB4C1A4-3923-4CCC-9033-22A3373BA866}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "As Far as the Light Reaches", "As Far as the Light Reaches.csproj", "{8433ADDA-2340-4C22-8E24-6A8635516EC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2EB4C1A4-3923-4CCC-9033-22A3373BA866}.Debug|x86.ActiveCfg = Debug|x86
-		{2EB4C1A4-3923-4CCC-9033-22A3373BA866}.Debug|x86.Build.0 = Debug|x86
-		{2EB4C1A4-3923-4CCC-9033-22A3373BA866}.Release|x86.ActiveCfg = Release|x86
-		{2EB4C1A4-3923-4CCC-9033-22A3373BA866}.Release|x86.Build.0 = Release|x86
+		{8433ADDA-2340-4C22-8E24-6A8635516EC8}.Debug|x86.ActiveCfg = Debug|x86
+		{8433ADDA-2340-4C22-8E24-6A8635516EC8}.Debug|x86.Build.0 = Debug|x86
+		{8433ADDA-2340-4C22-8E24-6A8635516EC8}.Release|x86.ActiveCfg = Release|x86
+		{8433ADDA-2340-4C22-8E24-6A8635516EC8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

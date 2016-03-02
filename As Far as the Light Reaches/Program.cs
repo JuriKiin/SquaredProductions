@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace As_Far
+namespace As_Far_as_the_Light_Reaches
 {
 #if WINDOWS || LINUX
     /// <summary>

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace As_Far
+namespace As_Far_as_the_Light_Reaches
 {
     public class Button 
     {

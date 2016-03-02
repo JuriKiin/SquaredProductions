@@ -11,7 +11,7 @@ using System.IO;
 //Juri Kiin
 //Enemy.cs
 //This will represent the enemies in the game. They will have their own health, and damage.
-namespace As_Far
+namespace As_Far_as_the_Light_Reaches
 {
     class Enemy
     {

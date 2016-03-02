@@ -1,18 +1,15 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using System.IO;
 
-namespace As_Far
+namespace As_Far_as_the_Light_Reaches
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
     public class Game1 : Game
     {
-        
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -26,7 +23,7 @@ namespace As_Far
         Texture2D statsButton;
         Texture2D itemsButton;
         Texture2D resumeButton;
-          
+
 
         //Attributes to resize window
         int winX = 1000;
@@ -65,7 +62,7 @@ namespace As_Far
             // TODO: Add your initialization logic here
             vec = new Vector2(-500, -100);
 
-            
+
             //Load all of the protag images into an array
 
             base.Initialize();
@@ -85,7 +82,7 @@ namespace As_Far
 
             // Loading in the protagonist sprite
             protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
-            
+
             // Loading in the start menu
             sm = Content.Load<Texture2D>("UI\\StartMenu.png");
 
@@ -166,7 +163,7 @@ namespace As_Far
 
             base.Draw(gameTime);
         }
-        
+
 
         //Method to initialize the pause menu
         public void Pause()
