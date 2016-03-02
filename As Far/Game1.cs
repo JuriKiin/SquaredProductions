@@ -16,10 +16,17 @@ namespace As_Far
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        // additional attributes
+        // Menu Attributes
         private bool pause = false;
         Texture2D sm;
+        Texture2D statsMenu;
+        Texture2D itemsMenu;
         Vector2 vec;
+
+        Texture2D statsButton;
+        Texture2D itemsButton;
+        Texture2D resumeButton;
+          
 
         //Attributes to resize window
         int winX = 1000;
@@ -29,6 +36,8 @@ namespace As_Far
         Texture2D protag;
         Vector2 playerPos;
 
+        //Mouse object
+        MouseState m = Mouse.GetState();
 
 
         public Game1()
@@ -44,6 +53,7 @@ namespace As_Far
 
         }
 
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -55,10 +65,12 @@ namespace As_Far
             // TODO: Add your initialization logic here
             vec = new Vector2(-500, -100);
 
+            
             //Load all of the protag images into an array
 
             base.Initialize();
         }
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -70,15 +82,24 @@ namespace As_Far
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            // Loading in the protagonist sprite
             protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
-
-
-
+            
             // Loading in the start menu
             sm = Content.Load<Texture2D>("UI\\StartMenu.png");
 
+            // Loading in the stats menu
+            statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");
+
+            // Loading in the items menu
+            itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");
+
+            //Loading in the Stats button from the pause menu
+            statsButton = Content.Load<Texture2D>("UI\\Stats Button.png");
 
         }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -88,6 +109,7 @@ namespace As_Far
         {
             // TODO: Unload any non ContentManager content here
         }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -101,7 +123,8 @@ namespace As_Far
 
             // TODO: Add your update logic here
 
-            // (*TEMPORARY*) Making the menu move so you can see the whole thing
+            //Gets current state of mouse
+            MouseState m = Mouse.GetState();
 
             Pause();
             Move();
@@ -131,15 +154,20 @@ namespace As_Far
             {
                 //Draw pause menu GUI
                 spriteBatch.Draw(sm, vec, Color.White);
+
+                //Draw menu buttons
+                Button stats = new Button("Stats", Color.Transparent, statsButton, -500, -500);
+                Button items = new Button("Items", Color.Transparent, itemsButton, -500, -700);
+                Button resume = new Button("Resume", Color.Transparent, resumeButton, -500, -900);
                 //Show the cursor
                 this.IsMouseVisible = true;
             }
-
-
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+        
+
         //Method to initialize the pause menu
         public void Pause()
         {
@@ -148,6 +176,7 @@ namespace As_Far
             if (ks.IsKeyDown(Keys.P)) pause = true;
             //Player will hit the resume button to continue playing.
         }
+
 
         public void Move()
         {
