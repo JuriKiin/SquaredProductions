@@ -9,3 +9,9 @@ see the whole thing until I resize it for the game.
 	- Added move method: makes character move around the screen without boarders at the edge of the window.
 	- Also added pause method. Press P to pause and will resume via button (Not implemented)
 	- Added Enemy.cs -- Has paramaterized constructor for the enemy attributes.
+
+//James Friedenberg 3/2/2016 2:26pm
+	-Created class for Buttons
+	-Attempted to implement buttons into the pause menu
+	-Loaded seperate Texture Files for the button assets so I could give the rectangles that represent the buttons 
+	their own coordinates
