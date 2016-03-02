@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 namespace As_Far
     //written by Dustin Knowlton
     // 2/29/2015
-    //class generally defines the matrix of transformation that will be applied to draw method
+    //class defines the matrix of transformation that will be applied to draw method
 {
     public class Camera
     {
