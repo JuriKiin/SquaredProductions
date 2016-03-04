@@ -15,3 +15,7 @@ see the whole thing until I resize it for the game.
 	-Attempted to implement buttons into the pause menu
 	-Loaded seperate Texture Files for the button assets so I could give the rectangles that represent the buttons 
 	their own coordinates
+
+//Dustin Knowlton 2/29/2016 11:30 
+	-Added Camera.cs
+	-Camera functions not yet implemented
