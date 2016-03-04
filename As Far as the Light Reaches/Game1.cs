@@ -15,16 +15,23 @@ namespace As_Far_as_the_Light_Reaches
 
         // Menu Attributes
         private bool pause = false;
-        Texture2D sm;
+        Texture2D startMenu;
         Texture2D statsMenu;
         Texture2D itemsMenu;
+
         Vector2 vec;
 
-        Texture2D statsButton;
-        Texture2D itemsButton;
-        Texture2D resumeButton;
+        //Clickable Rectangles for buttons
+        Rectangle itemsButton = new Rectangle(100, 500, 300, 150);
+        Rectangle statsButton = new Rectangle(100, 300, 300, 150);
+        Rectangle resumeButton = new Rectangle(100, 100, 300, 150);
 
-
+        //Textures to fill the button rectangles
+        Texture2D rb;
+        Texture2D sb;
+        Texture2D ib;
+        
+        
         //Attributes to resize window
         int winX = 1000;
         int winY = 1000;
@@ -84,7 +91,7 @@ namespace As_Far_as_the_Light_Reaches
             protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
 
             // Loading in the start menu
-            sm = Content.Load<Texture2D>("UI\\StartMenu.png");
+            startMenu = Content.Load<Texture2D>("UI\\StartMenu.png");
 
             // Loading in the stats menu
             statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");
@@ -92,9 +99,14 @@ namespace As_Far_as_the_Light_Reaches
             // Loading in the items menu
             itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");
 
-            //Loading in the Stats button from the pause menu
-            statsButton = Content.Load<Texture2D>("UI\\Stats Button.png");
+            // Loading in the resume button
+            rb = Content.Load<Texture2D>("UI\\Resume Button.png");
 
+            // Loading in the items button
+            ib = Content.Load<Texture2D>("UI\\Item Button.png");
+
+            // Loading in the stats button
+            sb = Content.Load<Texture2D>("UI\\Stats Button.png");
         }
 
 
@@ -146,18 +158,33 @@ namespace As_Far_as_the_Light_Reaches
             //Draw character
             spriteBatch.Draw(protag, playerPos, Color.White);
 
-            //If the player pauses the game
-            if (pause)
+            //If the player pauses the game1
+            if (pause == true)
             {
-                //Draw pause menu GUI
-                spriteBatch.Draw(sm, vec, Color.White);
-
-                //Draw menu buttons
-                Button stats = new Button("Stats", Color.Transparent, statsButton, -500, -500);
-                Button items = new Button("Items", Color.Transparent, itemsButton, -500, -700);
-                Button resume = new Button("Resume", Color.Transparent, resumeButton, -500, -900);
                 //Show the cursor
                 this.IsMouseVisible = true;
+
+                //Draw pause menu GUI
+                spriteBatch.Draw(startMenu, vec, Color.White);
+                spriteBatch.Draw(rb, resumeButton, Color.White);
+                spriteBatch.Draw(sb, statsButton, Color.White);
+                spriteBatch.Draw(ib, itemsButton, Color.White);
+
+                if(m.Position.X < resumeButton.Width && m.Position.X > resumeButton.X && m.Position.Y < resumeButton.Height && m.Position.Y > resumeButton.Y)
+                {
+                    spriteBatch.Draw(rb, resumeButton, Color.Red);
+                }
+
+                if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
+                {
+                    spriteBatch.Draw(ib, itemsButton, Color.Red);
+                }
+
+                if (m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
+                {
+                    spriteBatch.Draw(sb, statsButton, Color.Red);
+                }
+                
             }
             spriteBatch.End();
 

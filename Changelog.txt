@@ -1,9 +1,9 @@
 //Changelog.txt
 
 //James 2/24/2016 6:30pm
-	Added the initial code for the start menu. Player presses "P" to get the menu to appear. Need to figure out how to keep 
-the menu on the screen instead of toggling on and off with the key press. Also, the menu is moving up and to the left so you can
-see the whole thing until I resize it for the game.
+	-Added the initial code for the start menu. 
+	-Player presses "P" to get the menu to appear. Need to figure out how to keep the menu on the screen instead of toggling on and off with the key press. 
+	-Also, the menu is moving up and to the left so you can see the whole thing until I resize it for the game.
 
 //Juri Kiin 2/29/2016 10:07
 	- Added move method: makes character move around the screen without boarders at the edge of the window.
@@ -19,3 +19,8 @@ see the whole thing until I resize it for the game.
 //Dustin Knowlton 2/29/2016 11:30 
 	-Added Camera.cs
 	-Camera functions not yet implemented
+
+//James Friedenberg 3/4/2016 4:58pm
+	-Created rectangles to represent the buttons in the pause menu
+	-Loaded png content to give the button rectangles a texture representation
+	-Made if statements for the buttons changing appearance when mouse is over them
