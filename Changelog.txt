@@ -24,3 +24,7 @@
 	-Created rectangles to represent the buttons in the pause menu
 	-Loaded png content to give the button rectangles a texture representation
 	-Made if statements for the buttons changing appearance when mouse is over them
+
+//Dustin Knowlton 3/4/2016 5:10pm
+	-Started work on combat in enemy class with PlayerAttack function
+	-also added a few attributes to Enemy.cs
