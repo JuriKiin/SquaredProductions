@@ -20,6 +20,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D itemsMenu;
 
         Vector2 vec;
+        public Vector2 Barpos { get; set; }
 
         //Clickable Rectangles for buttons
         Rectangle itemsButton = new Rectangle(100, 500, 300, 150);
