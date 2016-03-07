@@ -89,7 +89,7 @@ namespace As_Far_as_the_Light_Reaches
             // TODO: use this.Content to load your game content here
 
             // Loading in the protagonist sprite
-            //protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
+            protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
 
             // Loading in the start menu
             startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");
@@ -158,7 +158,7 @@ namespace As_Far_as_the_Light_Reaches
             spriteBatch.Begin();
 
             //Draw character
-            //spriteBatch.Draw(protag, playerPos, Color.White);
+            spriteBatch.Draw(protag, playerPos, Color.White);
 
             //If the player pauses the game1
             if (pause == true)
