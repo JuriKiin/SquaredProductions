@@ -31,8 +31,11 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D rb;
         Texture2D sb;
         Texture2D ib;
-        
-        
+
+        //State machine
+        enum GameState { Menu, Walk, Combat, Over };
+        GameState curState;
+
         //Attributes to resize window
         int winX = 1000;
         int winY = 1000;
@@ -69,7 +72,7 @@ namespace As_Far_as_the_Light_Reaches
         {
             // TODO: Add your initialization logic here
             vec = new Vector2(-500, -100);
-
+            curState = GameState.Walk;
 
             //Load all of the protag images into an array
 
@@ -137,8 +140,29 @@ namespace As_Far_as_the_Light_Reaches
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
 
-            Pause();
-            Move();
+            //Switching between states
+            switch (curState)
+            {
+                case GameState.Menu:
+                    break;
+
+                case GameState.Walk:
+                    //Update the player movement, and if the player pauses the game.
+                    Pause();
+                    Move();
+
+                    break;
+
+                case GameState.Combat:
+                    break;
+
+                case GameState.Over:
+                    break;
+
+                default: break;
+
+            }
+
 
             base.Update(gameTime);
         }
@@ -157,37 +181,59 @@ namespace As_Far_as_the_Light_Reaches
             // spawn in the menu
             spriteBatch.Begin();
 
-            //Draw character
-            spriteBatch.Draw(protag, playerPos, Color.White);
-
-            //If the player pauses the game1
-            if (pause == true)
+            switch (curState)
             {
-                //Show the cursor
-                this.IsMouseVisible = true;
+                case GameState.Menu:
+                    break;
 
-                //Draw pause menu GUI
-                spriteBatch.Draw(startMenu, vec, Color.White);
-                spriteBatch.Draw(rb, resumeButton, Color.White);
-                spriteBatch.Draw(ib, itemsButton, Color.White);
-                spriteBatch.Draw(sb, statsButton, Color.White);
+                case GameState.Walk:
 
-                //Make rectangles change color
-                if(m.Position.X < resumeButton.Width && m.Position.X > resumeButton.X && m.Position.Y < resumeButton.Height && m.Position.Y > resumeButton.Y)
-                {
-                    spriteBatch.Draw(rb, resumeButton, Color.Red);
-                }
 
-                else if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
-                {
-                    spriteBatch.Draw(ib, itemsButton, Color.Red);
-                }
+                    //Draw character
+                    spriteBatch.Draw(protag, playerPos, Color.White);
 
-                else if(m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
-                {
-                    spriteBatch.Draw(sb, statsButton, Color.Red);
-                }
-                
+
+                    //If the player pauses the game1
+                    if (pause == true)
+                    {
+                        //Show the cursor
+                        this.IsMouseVisible = true;
+
+                        //Draw pause menu GUI
+                        spriteBatch.Draw(startMenu, vec, Color.White);
+                        spriteBatch.Draw(rb, resumeButton, Color.White);
+                        spriteBatch.Draw(ib, itemsButton, Color.White);
+                        spriteBatch.Draw(sb, statsButton, Color.White);
+
+                        //Make rectangles change color
+                        if (m.Position.X < resumeButton.Width && m.Position.X > resumeButton.X && m.Position.Y < resumeButton.Height && m.Position.Y > resumeButton.Y)
+                        {
+                            spriteBatch.Draw(rb, resumeButton, Color.Red);
+                        }
+
+                        else if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
+                        {
+                            spriteBatch.Draw(ib, itemsButton, Color.Red);
+                        }
+
+                        else if (m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
+                        {
+                            spriteBatch.Draw(sb, statsButton, Color.Red);
+                        }
+
+                    }
+
+
+                    break;
+
+                case GameState.Combat:
+                    break;
+
+                case GameState.Over:
+                    break;
+
+                default: break;
+
             }
             spriteBatch.End();
 
