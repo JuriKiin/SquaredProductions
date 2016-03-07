@@ -18,19 +18,10 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D startMenu;
         Texture2D statsMenu;
         Texture2D itemsMenu;
+        Texture2D title;
 
         Vector2 vec;
         public Vector2 Barpos { get; set; }
-
-        //Clickable Rectangles for buttons
-        Rectangle itemsButton = new Rectangle(-10, 60, 1000, 700);
-        Rectangle statsButton = new Rectangle(-10, 290, 1000, 700);
-        Rectangle resumeButton = new Rectangle(-10, -180, 1000, 700);
-
-        //Textures to fill the button rectangles
-        Texture2D rb;   //Resume Button
-        Texture2D sb;   //Stats Button
-        Texture2D ib;   //Items Button
 
         Texture2D protag;
 
@@ -112,15 +103,8 @@ namespace As_Far_as_the_Light_Reaches
             // Loading in the items menu
             itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");
 
-            // Loading in the resume button
-            rb = Content.Load<Texture2D>("UI\\Resume Button.png");
-
-            // Loading in the items button
-            ib = Content.Load<Texture2D>("UI\\Item Button.png");
-
-            // Loading in the stats button
-            sb = Content.Load<Texture2D>("UI\\Stats Button.png");
-
+            //Loading in title screen
+            title = Content.Load <Texture2D>("UI\\Title Screen.png");
         }
 
 
@@ -196,6 +180,9 @@ namespace As_Far_as_the_Light_Reaches
             switch (curState)
             {
                 case GameState.Menu:
+
+                    spriteBatch.Draw(title, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+
                     break;
 
                 case GameState.Walk:
@@ -220,26 +207,6 @@ namespace As_Far_as_the_Light_Reaches
 
                         //Draw pause menu GUI
                         spriteBatch.Draw(startMenu, vec, Color.White);
-                        spriteBatch.Draw(rb, resumeButton, Color.White);
-                        spriteBatch.Draw(ib, itemsButton, Color.White);
-                        spriteBatch.Draw(sb, statsButton, Color.White);
-
-                        //Make rectangles change color
-                        if (m.Position.X < resumeButton.Width && m.Position.X > resumeButton.X && m.Position.Y < resumeButton.Height && m.Position.Y > resumeButton.Y)
-                        {
-                            spriteBatch.Draw(rb, resumeButton, Color.Red);
-                        }
-
-                        else if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
-                        {
-                            spriteBatch.Draw(ib, itemsButton, Color.Red);
-                        }
-
-                        else if (m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
-                        {
-                            spriteBatch.Draw(sb, statsButton, Color.Red);
-                        }
-
                     }
 
 
