@@ -23,9 +23,9 @@ namespace As_Far_as_the_Light_Reaches
         public Vector2 Barpos { get; set; }
 
         //Clickable Rectangles for buttons
-        Rectangle itemsButton = new Rectangle(100, 500, 300, 150);
-        Rectangle statsButton = new Rectangle(100, 300, 300, 150);
-        Rectangle resumeButton = new Rectangle(100, 100, 300, 150);
+        Rectangle itemsButton = new Rectangle(-10, 60, 1000, 700);
+        Rectangle statsButton = new Rectangle(-10, 290, 1000, 700);
+        Rectangle resumeButton = new Rectangle(-10, -180, 1000, 700);
 
         //Textures to fill the button rectangles
         Texture2D rb;
@@ -89,10 +89,10 @@ namespace As_Far_as_the_Light_Reaches
             // TODO: use this.Content to load your game content here
 
             // Loading in the protagonist sprite
-            protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
+            //protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
 
             // Loading in the start menu
-            startMenu = Content.Load<Texture2D>("UI\\StartMenu.png");
+            startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");
 
             // Loading in the stats menu
             statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");
@@ -108,6 +108,7 @@ namespace As_Far_as_the_Light_Reaches
 
             // Loading in the stats button
             sb = Content.Load<Texture2D>("UI\\Stats Button.png");
+
         }
 
 
@@ -149,7 +150,7 @@ namespace As_Far_as_the_Light_Reaches
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.SeaGreen);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
@@ -157,7 +158,7 @@ namespace As_Far_as_the_Light_Reaches
             spriteBatch.Begin();
 
             //Draw character
-            spriteBatch.Draw(protag, playerPos, Color.White);
+            //spriteBatch.Draw(protag, playerPos, Color.White);
 
             //If the player pauses the game1
             if (pause == true)
@@ -168,20 +169,21 @@ namespace As_Far_as_the_Light_Reaches
                 //Draw pause menu GUI
                 spriteBatch.Draw(startMenu, vec, Color.White);
                 spriteBatch.Draw(rb, resumeButton, Color.White);
-                spriteBatch.Draw(sb, statsButton, Color.White);
                 spriteBatch.Draw(ib, itemsButton, Color.White);
+                spriteBatch.Draw(sb, statsButton, Color.White);
 
+                //Make rectangles change color
                 if(m.Position.X < resumeButton.Width && m.Position.X > resumeButton.X && m.Position.Y < resumeButton.Height && m.Position.Y > resumeButton.Y)
                 {
                     spriteBatch.Draw(rb, resumeButton, Color.Red);
                 }
 
-                if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
+                else if (m.Position.X < itemsButton.Width && m.Position.X > itemsButton.X && m.Position.Y < itemsButton.Height && m.Position.Y > itemsButton.Y)
                 {
                     spriteBatch.Draw(ib, itemsButton, Color.Red);
                 }
 
-                if (m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
+                else if(m.Position.X < statsButton.Width && m.Position.X > statsButton.X && m.Position.Y < statsButton.Height && m.Position.Y > statsButton.Y)
                 {
                     spriteBatch.Draw(sb, statsButton, Color.Red);
                 }

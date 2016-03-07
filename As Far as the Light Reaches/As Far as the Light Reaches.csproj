@@ -74,7 +74,9 @@
     <Content Include="Content\UI\Start Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\Stats Button.png" />
+    <Content Include="Content\UI\Stats Button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\Stats Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
