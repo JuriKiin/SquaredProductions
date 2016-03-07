@@ -28,3 +28,9 @@
 //Dustin Knowlton 3/4/2016 5:10pm
 	-Started work on combat in enemy class with PlayerAttack function
 	-also added a few attributes to Enemy.cs
+
+//Juri Kiin 3/7/16 10:40 am
+	- Added Finite state machine to game1.cs
+	- Added singlekeyPress method to use for toggling UI
+	- Made the player unable to move if the game is paused.
+	- Made player.cs which loads player position and texture and stats from outside the game1 class.

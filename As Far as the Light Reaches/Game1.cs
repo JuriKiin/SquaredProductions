@@ -28,24 +28,32 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle resumeButton = new Rectangle(-10, -180, 1000, 700);
 
         //Textures to fill the button rectangles
-        Texture2D rb;
-        Texture2D sb;
-        Texture2D ib;
+        Texture2D rb;   //Resume Button
+        Texture2D sb;   //Stats Button
+        Texture2D ib;   //Items Button
+
+        Texture2D protag;
 
         //State machine
         enum GameState { Menu, Walk, Combat, Over };
         GameState curState;
 
+        //Keyboard States
+        KeyboardState kbState;
+        KeyboardState prevState = Keyboard.GetState();
+
+        //Bool variables
+        bool canMove = true;
+
+
         //Attributes to resize window
         int winX = 1000;
         int winY = 1000;
 
-        //Player Attributes
-        Texture2D protag;
-        Vector2 playerPos;
-
-        //Mouse object
+        //OBJECTS
+            //Mouse object
         MouseState m = Mouse.GetState();
+        Player player = new Player(20,20,4,12);
 
 
         public Game1()
@@ -72,7 +80,8 @@ namespace As_Far_as_the_Light_Reaches
         {
             // TODO: Add your initialization logic here
             vec = new Vector2(-500, -100);
-            curState = GameState.Walk;
+            curState = GameState.Menu;
+
 
             //Load all of the protag images into an array
 
@@ -144,12 +153,15 @@ namespace As_Far_as_the_Light_Reaches
             switch (curState)
             {
                 case GameState.Menu:
+
+                    if (SingleKeyPress(Keys.Space)) curState = GameState.Walk;
+
                     break;
 
                 case GameState.Walk:
                     //Update the player movement, and if the player pauses the game.
+                    if (canMove) Move();
                     Pause();
-                    Move();
 
                     break;
 
@@ -188,16 +200,23 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
+                    //set player texture
+                    player.PlayerTexture = protag;
+                    //set player rec
+                    player.Width = 300;
+                    player.Height = 300;
 
                     //Draw character
-                    spriteBatch.Draw(protag, playerPos, Color.White);
+                    spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
 
 
                     //If the player pauses the game1
-                    if (pause == true)
+                    if (pause)
                     {
+                        canMove = false;    //Prevent the player from walking when the menu is up.
                         //Show the cursor
                         this.IsMouseVisible = true;
+
 
                         //Draw pause menu GUI
                         spriteBatch.Draw(startMenu, vec, Color.White);
@@ -235,6 +254,7 @@ namespace As_Far_as_the_Light_Reaches
                 default: break;
 
             }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -250,16 +270,24 @@ namespace As_Far_as_the_Light_Reaches
             //Player will hit the resume button to continue playing.
         }
 
+        public bool SingleKeyPress(Keys key)
+        {
+            kbState = Keyboard.GetState();
+            if (kbState.IsKeyDown(key) && prevState.IsKeyUp(key))
+            { prevState = kbState; return true; }
+            else { prevState = kbState; return false; }
+        }
+
 
         public void Move()
         {
             KeyboardState ks = Keyboard.GetState();
 
             //Make sprite move, and change sprite if the player looks differently
-            if (ks.IsKeyDown(Keys.A)) playerPos.X -= 3; //Move Left
-            if (ks.IsKeyDown(Keys.D)) playerPos.X += 3; //Move Right
-            if (ks.IsKeyDown(Keys.W)) playerPos.Y -= 3; //Move Up
-            if (ks.IsKeyDown(Keys.S)) playerPos.Y += 3; //Move Down
+            if (ks.IsKeyDown(Keys.A)) player.X -= 3; //Move Left
+            if (ks.IsKeyDown(Keys.D)) player.X += 3; //Move Right
+            if (ks.IsKeyDown(Keys.W)) player.Y -= 3; //Move Up
+            if (ks.IsKeyDown(Keys.S)) player.Y += 3; //Move Down
         }
 
         //Combat System Below.
