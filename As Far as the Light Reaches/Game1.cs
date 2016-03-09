@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Collections;
+using System;
 
 namespace As_Far_as_the_Light_Reaches
 {
@@ -13,17 +16,36 @@ namespace As_Far_as_the_Light_Reaches
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        ////TEXTURE VARIABLES
+
         // Menu Attributes
         private bool pause = false;
         Texture2D startMenu;
         Texture2D statsMenu;
         Texture2D itemsMenu;
         Texture2D title;
+        Texture2D battleUI;
 
-        Vector2 vec;
+        //Arrow Key Textures
+        Texture2D aR;   //Right arrow
+        Texture2D aL;   //Left arrow
+        Texture2D aU;   //Up arrow
+        Texture2D aD;   //Down arrow
+
+        Texture2D protag;   //Protag Texture
+        Texture2D antag;    //Antag texture
+
+        // Vector attributes
+        Vector2 pauseVec;
+        Vector2 spawnVec = new Vector2(1000,450);
+
         public Vector2 Barpos { get; set; }
 
-        Texture2D protag;
+        List<Enemy> enemies = new List<Enemy>();    //This list will be filled with all of the enemies in each level. Every time a level is loaded, the list will be emptied and loaded with new enemies.
+        List<Texture2D> arrows = new List<Texture2D>();
+        List<Texture2D> curArrows = new List<Texture2D>();
+
+        int level;  // this variable tells us which data to load. (Switch statement)
 
         //State machine
         enum GameState { Menu, Walk, Combat, Over };
@@ -44,7 +66,9 @@ namespace As_Far_as_the_Light_Reaches
         //OBJECTS
             //Mouse object
         MouseState m = Mouse.GetState();
-        Player player = new Player(20,20,4,12);
+        Player player = new Player(20, 20, 4, 12);
+        Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
+        Random rnd = new Random();
 
 
         public Game1()
@@ -70,11 +94,15 @@ namespace As_Far_as_the_Light_Reaches
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            vec = new Vector2(-500, -100);
+            pauseVec = new Vector2(-500, -100);
             curState = GameState.Menu;
 
 
-            //Load all of the protag images into an array
+            //Load the arrows into the list
+            arrows.Add(aR);
+            arrows.Add(aL);
+            arrows.Add(aU);
+            arrows.Add(aD);
 
             base.Initialize();
         }
@@ -88,23 +116,25 @@ namespace As_Far_as_the_Light_Reaches
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
 
             // Loading in the protagonist sprite
             protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
+            startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");  // Loading in the start menu
+            statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");  // Loading in the stats menu
+            itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");  // Loading in the items menu
+            title = Content.Load <Texture2D>("UI\\Title Screen.png");   // Loading in title screen
+            battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");   //Loading in the battle UI.
 
-            // Loading in the start menu
-            startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");
+            //Arrow keys
+            aR = Content.Load<Texture2D>("UI\\ArrowKey\\Right.png");
+            aL = Content.Load<Texture2D>("UI\\ArrowKey\\Left.png");
+            aU = Content.Load<Texture2D>("UI\\ArrowKey\\Up.png");
+            aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
 
-            // Loading in the stats menu
-            statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");
 
-            // Loading in the items menu
-            itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");
 
-            //Loading in title screen
-            title = Content.Load <Texture2D>("UI\\Title Screen.png");
+
         }
 
 
@@ -147,9 +177,34 @@ namespace As_Far_as_the_Light_Reaches
                     if (canMove) Move();
                     Pause();
 
+                    //Check to see if the player position intersects with any of the enemies.
+                    foreach (Enemy e in enemies)
+                    {
+                        if (player.PlayerRec.Intersects(e.Pos))
+                        {
+                            curEnemy = e;   //Sets the enemy 
+                            curState = GameState.Combat;    //Set the gamestate to combat
+                        }
+
+                    }
+
+                    //Check to make sure the battle UI loads properly
+                    if (SingleKeyPress(Keys.Space)) curState = GameState.Combat;
+
                     break;
 
+                //When we are in combat, we need to get the number of arrows to spawn.
                 case GameState.Combat:
+                    //Get the number of arrows
+                    int arr = SpawnArrow();
+
+                    //Reset the arrow list and then repopulate it with the right number of arrows.
+                    if (arrows != null) arrows.Clear(); //Resets the list
+                    for (int i = 0; i < arr; i++)
+                    {
+                        curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
+                    }
+
                     break;
 
                 case GameState.Over:
@@ -202,17 +257,24 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         canMove = false;    //Prevent the player from walking when the menu is up.
                         //Show the cursor
-                        this.IsMouseVisible = true;
-
-
+                        this.IsMouseVisible = true; //Make the mouse visable
                         //Draw pause menu GUI
-                        spriteBatch.Draw(startMenu, vec, Color.White);
+                        spriteBatch.Draw(startMenu, pauseVec, Color.White);
                     }
 
 
                     break;
 
+                //Draw the GUI in combat
                 case GameState.Combat:
+                    spriteBatch.Draw(battleUI,new Rectangle(0,0,winX,winY),Color.White);    //Draw the battle UI
+
+                    //Draw each Arrow
+                    foreach (Texture2D arrow in curArrows)
+                    {
+                        spriteBatch.Draw(arrow,spawnVec,Color.White);
+                    }
+
                     break;
 
                 case GameState.Over:
@@ -258,6 +320,16 @@ namespace As_Far_as_the_Light_Reaches
         }
 
         //Combat System Below.
+
+        //This method takes how many arrows we should spawn. It takes the number from the enemy object that we are getting.
+        public int SpawnArrow()
+        {
+            int numArrow;
+            numArrow = curEnemy.NumArrow;   //Sets the number of arrows to the value of numArrow that the given enemy has.
+            return numArrow;
+        }
+
+
 
     }
 }

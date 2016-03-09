@@ -34,7 +34,13 @@
 	- Added singlekeyPress method to use for toggling UI
 	- Made the player unable to move if the game is paused.
 	- Made player.cs which loads player position and texture and stats from outside the game1 class.
+
 //James Friedenberg 3/7/2016 10:56am
 	-Loaded title screen into game and got it hooked up to the menu game state
 	-Spacebar changes state from menu to walk
 	-Removed unneeded code and img files from the project
+
+//Juri Kiin 3/8/16 11:50 PM
+	- Added code to switch into combat mode to test (until enemies are in the level)
+	- Added major framework for blocking system.
+	- Loaded in arrow textures and added them to a list.

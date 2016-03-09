@@ -22,6 +22,7 @@ namespace As_Far_as_the_Light_Reaches
         private int damage;
         private int numArrow;
         private int boxwidth;
+        private Rectangle pos;
 
         Game1 game = new Game1();
 
@@ -33,6 +34,20 @@ namespace As_Far_as_the_Light_Reaches
             damage = d;
             numArrow = na;
         }
+
+        //Properties
+        public Rectangle Pos
+        {
+            get { return pos; }
+            set { pos = value; }
+        }
+
+        public int NumArrow
+        {
+            get { return numArrow; }
+        }
+
+
 
         public void PlayerAttack (int dmg) //pass in player's damage, enemy defense if needed. This will be run when the bar is stopped with spacebar.
         {
