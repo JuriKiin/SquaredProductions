@@ -17,7 +17,7 @@ namespace As_Far_as_the_Light_Reaches
     {
         //Attributes
         private string name;
-        private int currhealth;
+        private int currHealth;
         private int health;
         private int damage;
         private int numArrow;
@@ -29,7 +29,7 @@ namespace As_Far_as_the_Light_Reaches
         public Enemy(int h, int d, int na, string nm)
         {
             name = nm;
-            currhealth = h;
+            currHealth = h;
             health = h;
             damage = d;
             numArrow = na;
@@ -47,30 +47,34 @@ namespace As_Far_as_the_Light_Reaches
             get { return numArrow; }
         }
 
-
-
-        public void PlayerAttack (int dmg) //pass in player's damage, enemy defense if needed. This will be run when the bar is stopped with spacebar.
+        public int CurrHealth
         {
-            Vector2 bar = game.Barpos;
+            get { return currHealth; }
+            set { currHealth = value; }
+        }
+
+
+        public void PlayerAttack(int dmg, int rec) //pass in player's damage. It will also pass in the x value that the meterobj was stopped at.
+        {
             int mult = 0;
-            if (bar.X > 180 || bar.X < 120) //sample values assume the bar is 100 units to the right and 100 units long, and that the window is 300 units long. Obviously all wrong, but this is just example stuff right now.
+            if (pos.X <= rec) //sample values assume the bar is 100 units to the right and 100 units long, and that the window is 300 units long. Obviously all wrong, but this is just example stuff right now.
             {
                 mult = 0;
             }
-            else if (bar.X > 165 || bar.X < 135)
+            else if (pos.X <= rec)
             {
                 mult = 1;
             }
-            else if (bar.X > 155||bar.X <125)
+            else if (pos.X <= rec)
             {
                 mult = 2;
             }
-            else if (bar.X > 125||bar.X<115)
+            else if (pos.X <= rec)
             {
                 mult = 3;
             }
             int hit = dmg * mult;
-            currhealth -= hit;
+            currHealth -= hit;
         }
 
         public void PlayerDefend(int dmg)
