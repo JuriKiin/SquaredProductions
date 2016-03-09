@@ -34,20 +34,28 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D aU;   //Up arrow
         Texture2D aD;   //Down arrow
 
+        Texture2D meter;    //This is the meter that te player will use to attack
+        Rectangle meterRec; //This is the rectangle that will keep track of the meter's position.
+        Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
+        Rectangle meterObjRec;  //This is the rectangle that will keep track of the position of the meter obj;
+
+
         Texture2D protag;   //Protag Texture
         Texture2D antag;    //Antag texture
 
         // Vector attributes
         Vector2 pauseVec;
-        Vector2 spawnVec = new Vector2(1000,450);
+        Vector2 spawnVec = new Vector2(1000, 450);
 
         public Vector2 Barpos { get; set; }
 
+        //Collection variables
         List<Enemy> enemies = new List<Enemy>();    //This list will be filled with all of the enemies in each level. Every time a level is loaded, the list will be emptied and loaded with new enemies.
-        List<Texture2D> arrows = new List<Texture2D>();
-        List<Texture2D> curArrows = new List<Texture2D>();
+        List<Texture2D> arrows = new List<Texture2D>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
+        List<Texture2D> curArrows = new List<Texture2D>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
 
-        int level;  // this variable tells us which data to load. (Switch statement)
+        Dictionary<int, Texture2D[]> levelManager = new Dictionary<int, Texture2D[]>();
+
 
         //State machine
         enum GameState { Menu, Walk, Combat, Over };
@@ -58,19 +66,23 @@ namespace As_Far_as_the_Light_Reaches
         KeyboardState prevState = Keyboard.GetState();
 
         //Bool variables
-        bool canMove = true;
+        bool canMove = true;    //Make the player not move if the game is paused.
+        bool attackState;       // True = attacking. False = blocking.
 
-
+        //INT VARIABLES
         //Attributes to resize window
         int winX = 1000;
         int winY = 1000;
 
+        int level;  // this variable tells us which data to load. (Switch statement)
+
         //OBJECTS
-            //Mouse object
+        //Mouse object
         MouseState m = Mouse.GetState();
         Player player = new Player(20, 20, 4, 12);
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
+
 
 
         public Game1()
@@ -138,6 +150,8 @@ namespace As_Far_as_the_Light_Reaches
             aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
 
 
+            meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
+            meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
 
         }
@@ -173,17 +187,20 @@ namespace As_Far_as_the_Light_Reaches
             {
                 case GameState.Menu:
 
-                    if (SingleKeyPress(Keys.Space)) curState = GameState.Walk;
+                    if (SingleKeyPress(Keys.Space))
+                    {
+                        curState = GameState.Walk;      //Change the gamestate to walk (normal gameplay)
+                        level = 0;
+                    }
 
                     break;
 
                 case GameState.Walk:
                     //Update the player movement, and if the player pauses the game.
-                    if (canMove) Move();
-                    Pause();
+                    if (canMove) Move();    //Move the player around if the game isn't paused.
+                    Pause();    //Update the game to check if the player pauses the game.
 
-                    //Check to see if the player position intersects with any of the enemies.
-                    foreach (Enemy e in enemies)
+                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
                         if (player.PlayerRec.Intersects(e.Pos))
                         {
@@ -193,21 +210,43 @@ namespace As_Far_as_the_Light_Reaches
 
                     }
 
-                    //Check to make sure the battle UI loads properly
-                    if (SingleKeyPress(Keys.Space)) curState = GameState.Combat;
-
                     break;
 
                 //When we are in combat, we need to get the number of arrows to spawn.
                 case GameState.Combat:
-                    //Get the number of arrows
-                    int arr = SpawnArrow();
 
-                    //Reset the arrow list and then repopulate it with the right number of arrows.
-                    if (arrows != null) arrows.Clear(); //Resets the list
-                    for (int i = 0; i < arr; i++)
+                    int arr = SpawnArrow(); //Get the number of arrows
+
+                    attackState = true; //Set the attack state to attacking.
+
+                    //Player attack
+                    if (attackState)
                     {
-                        curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
+                        //Check for the position of the meter object to that of the meter, and call the damage method with that int.
+                        meterObjRec.X -= 3;     //Move the arrows across the screen.
+
+
+                        if (SingleKeyPress(Keys.Enter))
+                        {
+                            meterObjRec.X = +0;    //Stop the position of the meter object
+                            curEnemy.PlayerAttack(player.Damage, meterObjRec.X);
+
+
+                        }
+
+                        attackState = false;    ///lastly set the attack phase to blocking.
+                    }
+
+                    if (!attackState)
+                    {
+                        //Reset the arrow list and then repopulate it with the right number of arrows.
+                        if (arrows != null) arrows.Clear(); //Resets the list
+                        for (int i = 0; i < arr; i++)
+                        {
+                            curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
+                        }
+
+                        attackState = true;     //Lastly set the attack phase to attacking.
                     }
 
                     break;

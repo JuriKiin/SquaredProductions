@@ -48,3 +48,13 @@
 //Dustin Knowlton 3/9/16 4:20 PM
 	- Blaze it
 	- Camera fully added, except for actual map draw statement (in but not correct, commented out)
+
+
+//Juri Kiin  3/9/16 4:51 PM
+	- Worked on the attack combat.
+	- Added a dictionary for future level management.
+
+
+
+
+
