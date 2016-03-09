@@ -15,6 +15,8 @@ namespace As_Far_as_the_Light_Reaches
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteBatch mapBatch;
+        Camera cam;
 
         ////TEXTURE VARIABLES
 
@@ -97,6 +99,8 @@ namespace As_Far_as_the_Light_Reaches
             pauseVec = new Vector2(-500, -100);
             curState = GameState.Menu;
 
+            //camera object
+            cam = new Camera(GraphicsDevice.Viewport);
 
             //Load the arrows into the list
             arrows.Add(aR);
@@ -116,6 +120,7 @@ namespace As_Far_as_the_Light_Reaches
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            mapBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
 
             // Loading in the protagonist sprite
@@ -251,6 +256,12 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw character
                     spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
 
+                    //draw map
+                    var viewMatrix = cam.GrabMatrix();
+                    mapBatch.Begin(transformMatrix: viewMatrix);
+                    //mapBatch.Draw(map, new Rectangle(0, 0, w, h)Color.White);
+                    mapBatch.End();
+
 
                     //If the player pauses the game1
                     if (pause)
@@ -313,10 +324,10 @@ namespace As_Far_as_the_Light_Reaches
             KeyboardState ks = Keyboard.GetState();
 
             //Make sprite move, and change sprite if the player looks differently
-            if (ks.IsKeyDown(Keys.A)) player.X -= 3; //Move Left
-            if (ks.IsKeyDown(Keys.D)) player.X += 3; //Move Right
-            if (ks.IsKeyDown(Keys.W)) player.Y -= 3; //Move Up
-            if (ks.IsKeyDown(Keys.S)) player.Y += 3; //Move Down
+            if (ks.IsKeyDown(Keys.A)) cam.Position -= new Vector2(-3,0); //Move Left
+            if (ks.IsKeyDown(Keys.D)) cam.Position -= new Vector2(3,0); //Move Right
+            if (ks.IsKeyDown(Keys.W)) cam.Position -= new Vector2(0,3); //Move Up
+            if (ks.IsKeyDown(Keys.S)) cam.Position -= new Vector2(0,-3); //Move Down
         }
 
         //Combat System Below.
