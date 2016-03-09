@@ -26,6 +26,37 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D title;
         Texture2D battleUI;
 
+        // Protag Textures 
+        Texture2D protagDownStill;
+        Texture2D protagDownWalk1;
+        Texture2D protagDownWalk2;
+
+        Texture2D protagLeftWalk;
+        Texture2D protagLeftStill;
+
+        Texture2D protagRightWalk;
+        Texture2D protagRightStill;
+
+        Texture2D protagUpStill;
+        Texture2D protagUpWalk1;
+        Texture2D protagUpWalk2;
+
+
+        // Antag Textures 
+        Texture2D antagDownStill;
+        Texture2D antagDownWalk1;
+        Texture2D antagDownWalk2;
+
+        Texture2D antagLeftWalk;
+        Texture2D antagLeftStill;
+
+        Texture2D antagRightWalk;
+        Texture2D antagRightStill;
+
+        Texture2D antagUpStill;
+        Texture2D antagUpWalk1;
+        Texture2D antagUpWalk2;
+
         //Arrow Key Textures
         Texture2D aR;   //Right arrow
         Texture2D aL;   //Left arrow
@@ -131,6 +162,40 @@ namespace As_Far_as_the_Light_Reaches
             aL = Content.Load<Texture2D>("UI\\ArrowKey\\Left.png");
             aU = Content.Load<Texture2D>("UI\\ArrowKey\\Up.png");
             aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
+
+            // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
+
+            // Protag Textures 
+            protagDownStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownStill.png");
+            protagDownWalk1 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk1.png");
+            protagDownWalk2 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk2.png");
+
+            protagLeftWalk = Content.Load<Texture2D>("Characters\\Protag\\ProtagLeftWalk.png");
+            protagLeftStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagLeftStill.png");
+
+            protagRightWalk = Content.Load<Texture2D>("Characters\\Protag\\ProtagRightWalk.png");
+            protagRightStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagRightStill.png");
+
+            protagUpStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagUpStill.png");
+            protagUpWalk1 = Content.Load<Texture2D>("Characters\\Protag\\ProtagUpWalk1.png");
+            protagUpWalk2 = Content.Load<Texture2D>("Characters\\Protag\\ProtagUpWalk2.png");
+
+            // Antag Textures 
+            antagDownStill = Content.Load<Texture2D>("Characters\\Antag\\AntagDownStill.png");
+            antagDownWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagDownWalk1.png");
+            antagDownWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagDownWalk2.png");
+
+            antagLeftWalk = Content.Load<Texture2D>("Characters\\Antag\\AntagLeftWalk.png");
+            antagLeftStill = Content.Load<Texture2D>("Characters\\Antag\\AntagLeftStill.png");
+
+            antagRightWalk = Content.Load<Texture2D>("Characters\\Antag\\AntagRightWalk.png");
+            antagRightStill = Content.Load<Texture2D>("Characters\\Antag\\AntagRightStill.png");
+
+            antagUpStill = Content.Load<Texture2D>("Characters\\Antag\\AntagUpStill.png");
+            antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
+            antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
+
+
 
 
 
