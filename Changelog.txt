@@ -54,7 +54,10 @@
 	- Worked on the attack combat.
 	- Added a dictionary for future level management.
 
-
+//James Friedenberg 3/9/2016 5:46pm
+	-kek
+	-Added edited version of the item, battle, and basic UIs
+	-Added broken if statements to allow the user to switch between menus while paused
 
 
 

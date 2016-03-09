@@ -26,6 +26,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D statsMenu;
         Texture2D itemsMenu;
         Texture2D title;
+        Texture2D basicUI;
         Texture2D battleUI;
 
         // Protag Textures 
@@ -168,11 +169,13 @@ namespace As_Far_as_the_Light_Reaches
 
             // Loading in the protagonist sprite
             protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
+
             startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");  // Loading in the start menu
             statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");  // Loading in the stats menu
             itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");  // Loading in the items menu
             title = Content.Load <Texture2D>("UI\\Title Screen.png");   // Loading in title screen
-            battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");   //Loading in the battle UI.
+            basicUI = Content.Load<Texture2D>("UI\\Basic UI.png");      // Loading in basic UI
+            battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    //Loading in the battle UI.
 
             //Arrow keys
             aR = Content.Load<Texture2D>("UI\\ArrowKey\\Right.png");
@@ -215,8 +218,8 @@ namespace As_Far_as_the_Light_Reaches
 
 
 
-            meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
-            meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
+            //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
+            //meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
 
         }
@@ -295,8 +298,6 @@ namespace As_Far_as_the_Light_Reaches
                         {
                             meterObjRec.X = +0;    //Stop the position of the meter object
                             curEnemy.PlayerAttack(player.Damage, meterObjRec.X);
-
-
                         }
 
                         attackState = false;    ///lastly set the attack phase to blocking.
@@ -360,6 +361,9 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw character
                     spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
 
+                    //Draw basic UI
+                    spriteBatch.Draw(basicUI, pauseVec, Color.White);
+
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
@@ -375,6 +379,17 @@ namespace As_Far_as_the_Light_Reaches
                         this.IsMouseVisible = true; //Make the mouse visable
                         //Draw pause menu GUI
                         spriteBatch.Draw(startMenu, pauseVec, Color.White);
+
+                        //Checking for player input and changing menu accordingly
+                        if(SingleKeyPress(Keys.I))
+                        {
+                            spriteBatch.Draw(itemsMenu, pauseVec, Color.White);
+                        }
+
+                        if(SingleKeyPress(Keys.S))
+                        {
+                            spriteBatch.Draw(statsMenu, pauseVec, Color.White);
+                        }
                     }
 
 
