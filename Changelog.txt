@@ -59,5 +59,7 @@
 	-Added edited version of the item, battle, and basic UIs
 	-Added broken if statements to allow the user to switch between menus while paused
 
-
+//Juri Kiin 3/14/16 10:43 AM
+	- Changed the gamestates to add for the UI menu's
+	- Fixed the UI so it all works nice (Button non functioning.)
 

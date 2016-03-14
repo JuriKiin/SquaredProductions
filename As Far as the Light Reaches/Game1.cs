@@ -71,6 +71,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
         Rectangle meterObjRec;  //This is the rectangle that will keep track of the position of the meter obj;
 
+        Texture2D overScreen;   //Game over Screen. (Class, our names. etc.)
 
         Texture2D protag;   //Protag Texture
         Texture2D antag;    //Antag texture
@@ -90,7 +91,7 @@ namespace As_Far_as_the_Light_Reaches
 
 
         //State machine
-        enum GameState { Menu, Walk, Combat, Over };
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
         GameState curState;
 
         //Keyboard States
@@ -98,7 +99,6 @@ namespace As_Far_as_the_Light_Reaches
         KeyboardState prevState = Keyboard.GetState();
 
         //Bool variables
-        bool canMove = true;    //Make the player not move if the game is paused.
         bool attackState;       // True = attacking. False = blocking.
 
         //INT VARIABLES
@@ -217,7 +217,7 @@ namespace As_Far_as_the_Light_Reaches
 
 
 
-
+            //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
             //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
             //meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
@@ -249,6 +249,8 @@ namespace As_Far_as_the_Light_Reaches
 
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
+            prevState = kbState;
+            kbState = Keyboard.GetState();
 
             //Switching between states
             switch (curState)
@@ -265,8 +267,9 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
                     //Update the player movement, and if the player pauses the game.
-                    if (canMove) Move();    //Move the player around if the game isn't paused.
-                    Pause();    //Update the game to check if the player pauses the game.
+                    //                  if (canMove) Move();    //Move the player around if the game isn't paused.
+                    if (SingleKeyPress(Keys.P)) curState = GameState.Pause;
+  //                  Pause();    //Update the game to check if the player pauses the game.
 
                     foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
@@ -317,13 +320,59 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
+                case GameState.Pause:
+                    this.IsMouseVisible = true; //Make the mouse visable
+
+                    if (SingleKeyPress(Keys.I))     //If 'i' is pressed, switch the gamestate to Items
+                    {
+                        curState = GameState.Item;
+                    }
+                    else if (SingleKeyPress(Keys.U))    //If 'u' is pressed, switch the gamState to Stats
+                    {
+                        curState = GameState.Stats;
+                    }
+                    else if (SingleKeyPress(Keys.Enter))     //Return to normal gameplay.
+                    {
+                        curState = GameState.Walk;
+                    }
+                    break;
+
+                case GameState.Stats:
+                    if (SingleKeyPress(Keys.I)) //Switch to item menu
+                    {
+                        curState = GameState.Item;
+                    }
+                    else if (SingleKeyPress(Keys.P))       //Switch to normal pause method.
+                    {
+                        curState = GameState.Pause;
+                    }
+                    else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
+                    {
+                        curState = GameState.Walk;
+                    }
+                    break;
+
+                case GameState.Item:
+                    if (SingleKeyPress(Keys.U))     //Go to Stats menu
+                    {
+                        curState = GameState.Stats;
+                    }
+                    else if (SingleKeyPress(Keys.P))    //To go normal pause screen.
+                    {
+                        curState = GameState.Pause;
+                    }
+                    else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
+                    {
+                        curState = GameState.Walk;
+                    }
+                    break;
+
                 case GameState.Over:
                     break;
 
                 default: break;
 
             }
-
 
             base.Update(gameTime);
         }
@@ -358,40 +407,20 @@ namespace As_Far_as_the_Light_Reaches
                     player.Width = 300;
                     player.Height = 300;
 
-                    //Draw character
-                    spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, pauseVec, Color.White);
 
+                    //Draw character
+                    spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
+
+
+
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-                    //mapBatch.Draw(map, new Rectangle(0, 0, w, h)Color.White);
+                   // mapBatch.Draw(map, new Rectangle(0, 0, w, h)Color.White);
                     mapBatch.End();
-
-
-                    //If the player pauses the game1
-                    if (pause)
-                    {
-                        canMove = false;    //Prevent the player from walking when the menu is up.
-                        //Show the cursor
-                        this.IsMouseVisible = true; //Make the mouse visable
-                        //Draw pause menu GUI
-                        spriteBatch.Draw(startMenu, pauseVec, Color.White);
-
-                        //Checking for player input and changing menu accordingly
-                        if(SingleKeyPress(Keys.I))
-                        {
-                            spriteBatch.Draw(itemsMenu, pauseVec, Color.White);
-                        }
-
-                        if(SingleKeyPress(Keys.S))
-                        {
-                            spriteBatch.Draw(statsMenu, pauseVec, Color.White);
-                        }
-                    }
-
 
                     break;
 
@@ -408,6 +437,20 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Over:
+ //                   spriteBatch.Draw(overScreen,new Rectangle(0,0,winX,winY),Color.White);    //Draw the game over screen.
+                    break;
+
+                case GameState.Pause:
+                    //Draw pause menu GUI
+                    spriteBatch.Draw(startMenu, pauseVec, Color.White); //Draw pause menu
+                    break;
+
+                case GameState.Item:
+                    spriteBatch.Draw(itemsMenu, pauseVec, Color.White); //Draw items menu   
+                    break;
+
+                case GameState.Stats:
+                    spriteBatch.Draw(statsMenu, pauseVec, Color.White); //Draw the stats menu.
                     break;
 
                 default: break;
@@ -431,10 +474,10 @@ namespace As_Far_as_the_Light_Reaches
 
         public bool SingleKeyPress(Keys key)
         {
-            kbState = Keyboard.GetState();
+            //kbState = Keyboard.GetState();
             if (kbState.IsKeyDown(key) && prevState.IsKeyUp(key))
-            { prevState = kbState; return true; }
-            else { prevState = kbState; return false; }
+            { return true; }
+            else { return false; }
         }
 
 
