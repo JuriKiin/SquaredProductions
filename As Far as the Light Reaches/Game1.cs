@@ -519,9 +519,9 @@ namespace As_Far_as_the_Light_Reaches
                     switch (Moving)
                     {
                         case Motion.StandDown: spriteBatch.Draw(protagDownStill, center, Color.White); break;
-                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, center, Color.White);  break;
-                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, center, Color.White);  break;
-                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, center, Color.White);  break;
+                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, center, Color.White); break;
+                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, center, Color.White); break;
+                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, center, Color.White); break;
 
                         case Motion.WalkDown:
                             if (frame1 == 1)
@@ -565,7 +565,6 @@ namespace As_Far_as_the_Light_Reaches
                                 spriteBatch.Draw(protagRightStill, center, Color.White);
                             }
                             break;
-
                     }
 
                     break;
@@ -647,24 +646,24 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A))
             {
-                center = new Rectangle(center.X -= 3, center.Y,center.Width,center.Height);
+                center = new Rectangle(center.X += 3, center.Y,center.Width,center.Height);
                 cam.Position -= new Vector2(3, 0);
 
             }//Move Left
             if (ks.IsKeyDown(Keys.D))
             {
-                center = new Rectangle(center.X += 3, center.Y, center.Width, center.Height);
+                center = new Rectangle(center.X -= 3, center.Y, center.Width, center.Height);
                 cam.Position -= new Vector2(-3, 0);
             } //Move Right
             if (ks.IsKeyDown(Keys.W))
             {
-                center = new Rectangle(center.X, center.Y-=3, center.Width, center.Height);
+                center = new Rectangle(center.X, center.Y+=3, center.Width, center.Height);
                 cam.Position -= new Vector2(0, 3);
             }
             //Move Up
             if (ks.IsKeyDown(Keys.S))
             {
-                center = new Rectangle(center.X, center.Y+=3, center.Width, center.Height);
+                center = new Rectangle(center.X, center.Y-=3, center.Width, center.Height);
                 cam.Position -= new Vector2(0, -3);
             } //Move Down
         }
