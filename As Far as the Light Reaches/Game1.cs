@@ -44,8 +44,25 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D protagUpWalk1;
         Texture2D protagUpWalk2;
 
+        //protag movng enum 
+        enum Facing {Right, Left, Up, Down };
+        enum Motion {StandRight, StandLeft, StandUp, StandDown, WalkRight, WalkLeft, WalkUp, WalkDown };
+
+        Facing Direction;
+        Motion Moving;
+
+        int frame;
+        double timePerFrame = 200;
+        double timePerFrame1 = 300;
+        int frame1;
+        int numFrames = 2;
+        int framesElapsed;
+
 
         // Antag Textures 
+
+        Texture2D curTex;
+
         Texture2D antagDownStill;
         Texture2D antagDownWalk1;
         Texture2D antagDownWalk2;
@@ -76,9 +93,14 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D protag;   //Protag Texture
         Texture2D antag;    //Antag texture
 
+        // Maps 
+        Texture2D Quarter;
+
         // Vector attributes
         Vector2 pauseVec;
         Vector2 spawnVec = new Vector2(1000, 450);
+
+        Rectangle center;
 
         public Vector2 Barpos { get; set; }
 
@@ -115,6 +137,8 @@ namespace As_Far_as_the_Light_Reaches
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
 
+        //test enemy
+        Enemy Testgoon;
 
 
         public Game1()
@@ -142,6 +166,8 @@ namespace As_Far_as_the_Light_Reaches
             // TODO: Add your initialization logic here
             pauseVec = new Vector2(-500, -100);
             curState = GameState.Menu;
+            Direction = Facing.Down;
+            Moving = Motion.StandDown;
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
@@ -151,6 +177,10 @@ namespace As_Far_as_the_Light_Reaches
             arrows.Add(aL);
             arrows.Add(aU);
             arrows.Add(aD);
+
+            Testgoon = new Enemy(10, 1, 2, "Big Goon");
+            Testgoon.Pos = new Rectangle(0, 0, 200, 200);
+            enemies.Add(Testgoon);
 
             base.Initialize();
         }
@@ -182,6 +212,9 @@ namespace As_Far_as_the_Light_Reaches
             aL = Content.Load<Texture2D>("UI\\ArrowKey\\Left.png");
             aU = Content.Load<Texture2D>("UI\\ArrowKey\\Up.png");
             aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
+
+            //Maps 
+            Quarter = Content.Load<Texture2D>("Maps\\Quarter Mile.png");
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -245,12 +278,21 @@ namespace As_Far_as_the_Light_Reaches
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // TODO: Add your update logic here]
+
+            // keybaard state for player movement 
+            KeyboardState protag = Keyboard.GetState();
 
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
             prevState = kbState;
             kbState = Keyboard.GetState();
+
+            framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
+            frame = framesElapsed % numFrames;
+
+            framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame1);
+            frame1 = framesElapsed % numFrames;
 
             //Switching between states
             switch (curState)
@@ -273,13 +315,58 @@ namespace As_Far_as_the_Light_Reaches
 
                     foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
-                        if (player.PlayerRec.Intersects(e.Pos))
+                        if (center.Intersects(e.Pos))
                         {
                             curEnemy = e;   //Sets the enemy 
                             curState = GameState.Combat;    //Set the gamestate to combat
                         }
 
                     }
+
+                    //moves the camera, therefore the map and map elements.
+                    Move();
+
+                    if(!protag.IsKeyDown(Keys.W) && !protag.IsKeyDown(Keys.S) && !protag.IsKeyDown(Keys.A) && !protag.IsKeyDown(Keys.D))
+                    {
+                        if(Direction == Facing.Right)
+                        {
+                            Moving = Motion.StandRight;
+                        }
+                        if (Direction == Facing.Left)
+                        {
+                            Moving = Motion.StandLeft;
+                        }
+                        if (Direction == Facing.Up)
+                        {
+                            Moving = Motion.StandUp;
+                        }
+                        if (Direction == Facing.Down)
+                        {
+                            Moving = Motion.StandDown;
+                        }
+                    }
+                    else if (protag.IsKeyDown(Keys.W))
+                    {
+                        Direction = Facing.Up;
+                        Moving = Motion.WalkUp;
+                    }
+                    else if (protag.IsKeyDown(Keys.S))
+                    {
+                        Direction = Facing.Down;
+                        Moving = Motion.WalkDown;
+                    }
+                    else if (protag.IsKeyDown(Keys.A))
+                    {
+                        Direction = Facing.Left;
+                        Moving = Motion.WalkLeft;
+                    }
+                    else if (protag.IsKeyDown(Keys.D))
+                    {
+                        Direction = Facing.Right;
+                        Moving = Motion.WalkRight;
+                    }
+
+
 
                     break;
 
@@ -401,26 +488,69 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-                    //set player texture
-                    player.PlayerTexture = protag;
-                    //set player rec
-                    player.Width = 300;
-                    player.Height = 300;
-
+                    center = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
 
                     //Draw basic UI
-                    spriteBatch.Draw(basicUI, pauseVec, Color.White);
-
-                    //Draw character
-                    spriteBatch.Draw(player.PlayerTexture, player.PlayerRec, Color.White);
-
-
+                   // spriteBatch.Draw(basicUI, pauseVec, Color.White);
 
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-                   // mapBatch.Draw(map, new Rectangle(0, 0, w, h)Color.White);
+                    mapBatch.Draw(Quarter, new Rectangle(0, 0, 1000, 1800), Color.White);
+                    mapBatch.Draw(protag, Testgoon.Pos, Color.White);
                     mapBatch.End();
+
+                    switch (Moving)
+                    {
+                        case Motion.StandDown: spriteBatch.Draw(protagDownStill, center, Color.White); break;
+                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, center, Color.White);  break;
+                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, center, Color.White);  break;
+                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, center, Color.White);  break;
+
+                        case Motion.WalkDown:
+                            if (frame1 == 1)
+                            {
+                                spriteBatch.Draw(protagDownWalk1, center, Color.White);
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(protagDownWalk2, center, Color.White);
+                            }
+                            break;
+                        case Motion.WalkUp:
+                            if (frame1 == 1)
+                            {
+                                spriteBatch.Draw(protagUpWalk2, center, Color.White);
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(protagUpWalk1, center, Color.White);
+                            }
+                            break;
+                        case Motion.WalkLeft:
+                            if (frame == 1)
+                            {
+                                // public void Draw(Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth);
+                                spriteBatch.Draw(protagRightWalk, new Rectangle(center.X, center.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(protagRightStill, new Rectangle(center.X, center.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                            }
+
+                            break;
+                        case Motion.WalkRight:
+                            if (frame == 1)
+                            {
+                                spriteBatch.Draw(protagRightWalk, center, Color.White);
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(protagRightStill, center, Color.White);
+                            }
+                            break;
+
+                    }
 
                     break;
 
@@ -486,10 +616,28 @@ namespace As_Far_as_the_Light_Reaches
             KeyboardState ks = Keyboard.GetState();
 
             //Make sprite move, and change sprite if the player looks differently
-            if (ks.IsKeyDown(Keys.A)) cam.Position -= new Vector2(-3,0); //Move Left
-            if (ks.IsKeyDown(Keys.D)) cam.Position -= new Vector2(3,0); //Move Right
-            if (ks.IsKeyDown(Keys.W)) cam.Position -= new Vector2(0,3); //Move Up
-            if (ks.IsKeyDown(Keys.S)) cam.Position -= new Vector2(0,-3); //Move Down
+            if (ks.IsKeyDown(Keys.A))
+            {
+                center = new Rectangle(center.X -= 3, center.Y,center.Width,center.Height);
+                cam.Position -= new Vector2(3, 0);
+
+            }//Move Left
+            if (ks.IsKeyDown(Keys.D))
+            {
+                center = new Rectangle(center.X += 3, center.Y, center.Width, center.Height);
+                cam.Position -= new Vector2(-3, 0);
+            } //Move Right
+            if (ks.IsKeyDown(Keys.W))
+            {
+                center = new Rectangle(center.X, center.Y-=3, center.Width, center.Height);
+                cam.Position -= new Vector2(0, 3);
+            }
+            //Move Up
+            if (ks.IsKeyDown(Keys.S))
+            {
+                center = new Rectangle(center.X, center.Y+=3, center.Width, center.Height);
+                cam.Position -= new Vector2(0, -3);
+            } //Move Down
         }
 
         //Combat System Below.

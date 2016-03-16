@@ -63,3 +63,8 @@
 	- Changed the gamestates to add for the UI menu's
 	- Fixed the UI so it all works nice (Button non functioning.)
 
+// Andrew and Dustin 6:09 PM 
+	- Player now animates and moves! 
+	- Test map and enemy added, they work. No collision with enemy yet. 
+	- UI draw moved, however commented out the draw for the in game UI because you cant see map with it present.
+

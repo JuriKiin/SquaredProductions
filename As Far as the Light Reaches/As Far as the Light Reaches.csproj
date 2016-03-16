@@ -120,6 +120,9 @@
     <Content Include="Content\Characters\Protag\ProtagUpWalk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Maps\Quarter Mile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\ArrowKey\Down.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
