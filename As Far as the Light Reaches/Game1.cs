@@ -28,6 +28,9 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D title;
         Texture2D basicUI;
         Texture2D battleUI;
+        SpriteFont font;
+        int potsAmount = 10;
+
 
         // Protag Textures 
         Texture2D protagDownStill;
@@ -116,12 +119,15 @@ namespace As_Far_as_the_Light_Reaches
         enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
         GameState curState;
 
+
         //Keyboard States
         KeyboardState kbState;
         KeyboardState prevState = Keyboard.GetState();
 
+
         //Bool variables
         bool attackState;       // True = attacking. False = blocking.
+
 
         //INT VARIABLES
         //Attributes to resize window
@@ -130,16 +136,15 @@ namespace As_Far_as_the_Light_Reaches
 
         int level;  // this variable tells us which data to load. (Switch statement)
 
+
         //OBJECTS
-        //Mouse object
         MouseState m = Mouse.GetState();
-        Player player = new Player(20, 20, 4, 12);
+        Player player = new Player(20, 20, 4, 12, 0);
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
 
         //test enemy
         Enemy Testgoon;
-
 
         public Game1()
         {
@@ -205,7 +210,9 @@ namespace As_Far_as_the_Light_Reaches
             itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");  // Loading in the items menu
             title = Content.Load <Texture2D>("UI\\Title Screen.png");   // Loading in title screen
             basicUI = Content.Load<Texture2D>("UI\\Basic UI.png");      // Loading in basic UI
-            battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    //Loading in the battle UI.
+            battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    // Loading in the battle UI
+            font = Content.Load<SpriteFont>("UI\\Font1");           // Loading in font for stats
+
 
             //Arrow keys
             aR = Content.Load<Texture2D>("UI\\ArrowKey\\Right.png");
@@ -285,6 +292,8 @@ namespace As_Far_as_the_Light_Reaches
 
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
+
+            //Keyboard states
             prevState = kbState;
             kbState = Keyboard.GetState();
 
@@ -365,9 +374,7 @@ namespace As_Far_as_the_Light_Reaches
                         Direction = Facing.Right;
                         Moving = Motion.WalkRight;
                     }
-
-
-
+                    
                     break;
 
                 //When we are in combat, we need to get the number of arrows to spawn.
@@ -413,6 +420,11 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.I))     //If 'i' is pressed, switch the gamestate to Items
                     {
                         curState = GameState.Item;
+
+                        if (SingleKeyPress(Keys.H))
+                        {
+                            player.CurHealth += 10;
+                        }
                     }
                     else if (SingleKeyPress(Keys.U))    //If 'u' is pressed, switch the gamState to Stats
                     {
@@ -489,9 +501,13 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Walk:
 
                     center = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
-
+                    
                     //Draw basic UI
-                   // spriteBatch.Draw(basicUI, pauseVec, Color.White);
+                    spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
+
+                    //Draw player hp
+                    spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
+
 
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
@@ -556,7 +572,7 @@ namespace As_Far_as_the_Light_Reaches
 
                 //Draw the GUI in combat
                 case GameState.Combat:
-                    spriteBatch.Draw(battleUI,new Rectangle(0,0,winX,winY),Color.White);    //Draw the battle UI
+                    spriteBatch.Draw(battleUI, new Rectangle(0,0,winX,winY), Color.White);    //Draw the battle UI
 
                     //Draw each Arrow
                     foreach (Texture2D arrow in curArrows)
@@ -576,11 +592,24 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Item:
-                    spriteBatch.Draw(itemsMenu, pauseVec, Color.White); //Draw items menu   
+                    spriteBatch.Draw(itemsMenu, pauseVec, Color.White); //Draw items menu
+                    if (SingleKeyPress(Keys.H))
+                    {
+                        potsAmount--;
+                        if (potsAmount <= 0)
+                        {
+                            potsAmount = 0;
+                        }
+                    }
+                    spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(800, 300), Color.White);
                     break;
 
                 case GameState.Stats:
                     spriteBatch.Draw(statsMenu, pauseVec, Color.White); //Draw the stats menu.
+                    spriteBatch.DrawString(font, "" + player.Armor, new Vector2(580, 165), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Damage, new Vector2(580, 400), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Boost, new Vector2(580, 635), Color.White);
+                    spriteBatch.DrawString(font, "", new Vector2(580, 235), Color.White);
                     break;
 
                 default: break;

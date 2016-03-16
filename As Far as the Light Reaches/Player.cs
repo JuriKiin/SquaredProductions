@@ -23,6 +23,7 @@ namespace As_Far_as_the_Light_Reaches
         private int curHealth;
         private int damage;
         private int armor;
+        private int boost;
 
         //Properties
         public int X
@@ -61,6 +62,11 @@ namespace As_Far_as_the_Light_Reaches
 
         }
 
+        public int Boost
+        {
+            get { return boost; }
+            set { boost = value; }
+        }
         public Rectangle PlayerRec
         {
             get { return playerRec; }
@@ -88,14 +94,14 @@ namespace As_Far_as_the_Light_Reaches
 
 
         //Constructor
-        public Player(int h, int mh, int d, int a)
+        public Player(int h, int mh, int d, int a, int b)
         {
             //set default stats
             curHealth = h;
             maxHealth = mh;
             damage = d;
             armor = a;
-
+            boost = b;
         }
 
 

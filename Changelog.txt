@@ -67,4 +67,8 @@
 	- Player now animates and moves! 
 	- Test map and enemy added, they work. No collision with enemy yet. 
 	- UI draw moved, however commented out the draw for the in game UI because you cant see map with it present.
-
+//James Friedenberg 6:40pm
+	- Edited basic UI to be transparent and display player hp
+	- Added consumable potion code
+	- Added stat numbers to the stats menu
+	- Added a boost variable to the player class
