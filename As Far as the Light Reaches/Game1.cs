@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.IO;
 
 namespace As_Far_as_the_Light_Reaches
 {
@@ -176,6 +177,7 @@ namespace As_Far_as_the_Light_Reaches
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
+            center = player.PlayerRec;
 
             //Load the arrows into the list
             arrows.Add(aR);
@@ -183,9 +185,17 @@ namespace As_Far_as_the_Light_Reaches
             arrows.Add(aU);
             arrows.Add(aD);
 
-            Testgoon = new Enemy(10, 1, 2, "Big Goon");
+            Testgoon = new Enemy(10, 1, 2, "Big Goon",5,false);
             Testgoon.Pos = new Rectangle(0, 0, 200, 200);
             enemies.Add(Testgoon);
+  //          ReadFiles();
+
+            foreach (Enemy e in enemies)
+            {
+                e.Pos = new Rectangle(rnd.Next(0, 500), rnd.Next(0, 590), 200, 200);
+            }
+
+
 
             base.Initialize();
         }
@@ -317,20 +327,15 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Walk:
+
+
+
                     //Update the player movement, and if the player pauses the game.
                     //                  if (canMove) Move();    //Move the player around if the game isn't paused.
                     if (SingleKeyPress(Keys.P)) curState = GameState.Pause;
   //                  Pause();    //Update the game to check if the player pauses the game.
 
-                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
-                    {
-                        if (center.Intersects(e.Pos))
-                        {
-                            curEnemy = e;   //Sets the enemy 
-                            curState = GameState.Combat;    //Set the gamestate to combat
-                        }
 
-                    }
 
                     //moves the camera, therefore the map and map elements.
                     Move();
@@ -374,7 +379,17 @@ namespace As_Far_as_the_Light_Reaches
                         Direction = Facing.Right;
                         Moving = Motion.WalkRight;
                     }
-                    
+
+
+ //                   foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
+ //                   {
+  //                      if (e.Pos.Intersects(center))
+   //                     {
+    //                        curEnemy = e;   //Sets the enemy 
+  //                          curState = GameState.Combat;    //Set the gamestate to combat
+ //                       }
+
+ //                   }
                     break;
 
                 //When we are in combat, we need to get the number of arrows to spawn.
@@ -406,7 +421,7 @@ namespace As_Far_as_the_Light_Reaches
                         if (arrows != null) arrows.Clear(); //Resets the list
                         for (int i = 0; i < arr; i++)
                         {
-                            curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
+                          //  curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
                         }
 
                         attackState = true;     //Lastly set the attack phase to attacking.
@@ -500,8 +515,9 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-                    center = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
                     
+
+                    center = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
 
@@ -512,8 +528,15 @@ namespace As_Far_as_the_Light_Reaches
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
+
+                    //Draw each enemy
+   //                 foreach (Enemy e in enemies)
+    //                {
+   //                     mapBatch.Draw(protag, e.Pos, Color.White);
+   //                 }
+
                     mapBatch.Draw(Quarter, new Rectangle(0, 0, 1000, 1800), Color.White);
-                    mapBatch.Draw(protag, Testgoon.Pos, Color.White);
+                   // mapBatch.Draw(protag, Testgoon.Pos, Color.White);
                     mapBatch.End();
 
                     switch (Moving)
@@ -679,6 +702,37 @@ namespace As_Far_as_the_Light_Reaches
         }
 
 
+        //THIS METHOD LOADS ENEMIES IN FROM THE ENEMY FILES
+        public void ReadFiles()
+        {
+            string[] files = Directory.GetFiles(".");
+
+            for(int i=0;i<files.Length-1;i++)
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(files[i]));
+
+                bool directional = false;
+
+                // need to follow the file format to get the data
+                int health = br.ReadInt32();
+                int damage = br.ReadInt32();
+                int armor = br.ReadInt32();
+                int dir = br.ReadInt32();
+                int numArrow = br.ReadInt32();
+
+                if (dir == 0) directional = true;
+                if (dir == 1) directional = false;
+                //Create the enemy and add it to the enemies list in game1
+                Enemy e = new Enemy(health,damage,numArrow,"Enemy",armor,directional);
+                enemies.Add(e);
+                // close when we are done
+                br.Close();
+            }
+
+
+
+
+        }
 
     }
 }

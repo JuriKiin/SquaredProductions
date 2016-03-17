@@ -22,17 +22,21 @@ namespace As_Far_as_the_Light_Reaches
         private int damage;
         private int numArrow;
         private int boxwidth;
+        private int armor;
+        private bool directional;
         private Rectangle pos;
 
         Game1 game = new Game1();
 
-        public Enemy(int h, int d, int na, string nm)
+        public Enemy(int h, int d, int na, string nm,int a,bool dir)
         {
             name = nm;
             currHealth = h;
             health = h;
             damage = d;
             numArrow = na;
+            armor = a;
+            directional = dir;
         }
 
         //Properties
@@ -45,6 +49,16 @@ namespace As_Far_as_the_Light_Reaches
         public int NumArrow
         {
             get { return numArrow; }
+        }
+
+        public int Armor
+        {
+            get { return armor; }
+        }
+
+        public bool Directional
+        {
+            get { return directional; }
         }
 
         public int CurrHealth

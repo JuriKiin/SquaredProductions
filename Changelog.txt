@@ -76,3 +76,8 @@
 
 //Dustin Knowlton 7:17pm
 	-few small adjustments to the move class, failed to fix enemy collision.
+
+
+//Juri Kiin 3:07 PM
+	- Created the Enemy Creation tool that allows the user to input stats for the enemy, and it creates a binary file with those stats stored.
+	- Added a ReadFiles() method that loads in the data from the binary files, and created an enemy object with that data.
