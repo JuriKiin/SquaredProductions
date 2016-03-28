@@ -190,7 +190,7 @@ namespace As_Far_as_the_Light_Reaches
             Testgoon = new Enemy(10, 1, 2, "Big Goon",5,false);
             Testgoon.Pos = new Rectangle(0, 0, 200, 200);
             enemies.Add(Testgoon);
-  //          ReadFiles();
+            ReadFiles();
 
             foreach (Enemy e in enemies)
             {
@@ -707,26 +707,31 @@ namespace As_Far_as_the_Light_Reaches
         {
             string[] files = Directory.GetFiles(".");
 
-            for(int i=0;i<files.Length-1;i++)
+//            for(int i=0;i<files.Length-1;i++)
+            foreach(string file in files)
             {
-                BinaryReader br = new BinaryReader(File.OpenRead(files[i]));
+                if (file.Contains("$_$"))
+                {
+                    BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-                bool directional = false;
+                    bool directional = true;
 
-                // need to follow the file format to get the data
-                int health = br.ReadInt32();
-                int damage = br.ReadInt32();
-                int armor = br.ReadInt32();
-                int dir = br.ReadInt32();
-                int numArrow = br.ReadInt32();
+                    // need to follow the file format to get the data
+                    int numArrow = br.ReadInt32();
+                    int health = br.ReadInt32();
+                    int damage = br.ReadInt32();
+                    int armor = br.ReadInt32();
+                    int dir = br.ReadInt32();
 
-                if (dir == 0) directional = true;
-                if (dir == 1) directional = false;
-                //Create the enemy and add it to the enemies list in game1
-                Enemy e = new Enemy(health,damage,numArrow,"Enemy",armor,directional);
-                enemies.Add(e);
-                // close when we are done
-                br.Close();
+
+                    if (dir == 0) directional = true;
+                    if (dir == 1) directional = false;
+                    //Create the enemy and add it to the enemies list in game1
+                    Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional);
+                    enemies.Add(e);
+                    // close when we are done
+                    br.Close();
+                }
             }
 
 

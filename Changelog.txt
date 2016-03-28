@@ -81,3 +81,6 @@
 //Juri Kiin 3:07 PM
 	- Created the Enemy Creation tool that allows the user to input stats for the enemy, and it creates a binary file with those stats stored.
 	- Added a ReadFiles() method that loads in the data from the binary files, and created an enemy object with that data.
+
+//Juri Kiin 10:42 AM
+	- Fixed the external tool so it works properly
