@@ -32,6 +32,8 @@ namespace As_Far_as_the_Light_Reaches
         SpriteFont font;
         int potsAmount = 10;
 
+        //Player Rectangle
+        Rectangle playerRec;
 
         // Protag Textures 
         Texture2D protagDownStill;
@@ -295,13 +297,16 @@ namespace As_Far_as_the_Light_Reaches
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here]
+            // TODO: Add your update logic here
 
             // keybaard state for player movement 
             KeyboardState protag = Keyboard.GetState();
 
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
+            
+            //Player's Rectangle
+            player.PlayerRec = playerRec;
 
             //Keyboard states
             prevState = kbState;
@@ -327,8 +332,6 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Walk:
-
-
 
                     //Update the player movement, and if the player pauses the game.
                     //                  if (canMove) Move();    //Move the player around if the game isn't paused.
@@ -381,15 +384,14 @@ namespace As_Far_as_the_Light_Reaches
                     }
 
 
- //                   foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
- //                   {
-  //                      if (e.Pos.Intersects(center))
-   //                     {
-    //                        curEnemy = e;   //Sets the enemy 
-  //                          curState = GameState.Combat;    //Set the gamestate to combat
- //                       }
-
- //                   }
+                   foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
+                    {
+                       if (e.Pos.Intersects(player.PlayerRec))
+                       {
+                            curEnemy = e;   //Sets the enemy 
+                            curState = GameState.Combat;    //Set the gamestate to combat
+                       }
+                    }
                     break;
 
                 //When we are in combat, we need to get the number of arrows to spawn.
@@ -515,16 +517,14 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-                    
+                    playerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
 
-                    center = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
 
                     //Draw player hp
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
-
-
+                    
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
@@ -536,56 +536,56 @@ namespace As_Far_as_the_Light_Reaches
    //                 }
 
                     mapBatch.Draw(Quarter, new Rectangle(0, 0, 1000, 1800), Color.White);
-                   // mapBatch.Draw(protag, Testgoon.Pos, Color.White);
+                   mapBatch.Draw(protag, Testgoon.Pos, Color.White);
                     mapBatch.End();
 
                     switch (Moving)
                     {
-                        case Motion.StandDown: spriteBatch.Draw(protagDownStill, center, Color.White); break;
-                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, center, Color.White); break;
-                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, center, Color.White); break;
-                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, center, Color.White); break;
+                        case Motion.StandDown: spriteBatch.Draw(protagDownStill, player.PlayerRec, Color.White); break;
+                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, player.PlayerRec, Color.White); break;
+                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, player.PlayerRec, Color.White); break;
+                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, player.PlayerRec, Color.White); break;
 
                         case Motion.WalkDown:
                             if (frame1 == 1)
                             {
-                                spriteBatch.Draw(protagDownWalk1, center, Color.White);
+                                spriteBatch.Draw(protagDownWalk1, player.PlayerRec, Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagDownWalk2, center, Color.White);
+                                spriteBatch.Draw(protagDownWalk2, player.PlayerRec, Color.White);
                             }
                             break;
                         case Motion.WalkUp:
                             if (frame1 == 1)
                             {
-                                spriteBatch.Draw(protagUpWalk2, center, Color.White);
+                                spriteBatch.Draw(protagUpWalk2, player.PlayerRec, Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagUpWalk1, center, Color.White);
+                                spriteBatch.Draw(protagUpWalk1, player.PlayerRec, Color.White);
                             }
                             break;
                         case Motion.WalkLeft:
                             if (frame == 1)
                             {
                                 // public void Draw(Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth);
-                                spriteBatch.Draw(protagRightWalk, new Rectangle(center.X, center.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                                spriteBatch.Draw(protagRightWalk, player.PlayerRec, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagRightStill, new Rectangle(center.X, center.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                             }
 
                             break;
                         case Motion.WalkRight:
                             if (frame == 1)
                             {
-                                spriteBatch.Draw(protagRightWalk, center, Color.White);
+                                spriteBatch.Draw(protagRightWalk, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagRightStill, center, Color.White);
+                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), Color.White);
                             }
                             break;
                     }
