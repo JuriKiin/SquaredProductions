@@ -25,6 +25,7 @@ namespace As_Far_as_the_Light_Reaches
         private int armor;
         private bool directional;
         private Rectangle pos;
+        private Texture2D enemyTex;
 
         Game1 game = new Game1();
 
@@ -54,6 +55,12 @@ namespace As_Far_as_the_Light_Reaches
         public int Armor
         {
             get { return armor; }
+        }
+
+        public Texture2D EnemyTexture
+        {
+            get { return enemyTex; }
+            set { enemyTex = value; }
         }
 
         public bool Directional

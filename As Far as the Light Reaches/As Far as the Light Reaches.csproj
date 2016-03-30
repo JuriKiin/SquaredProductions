@@ -42,6 +42,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="LevelManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -120,7 +121,7 @@
     <Content Include="Content\Characters\Protag\ProtagUpWalk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Maps\Quarter Mile.png">
+    <Content Include="Content\Maps\1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\ArrowKey\Down.png">

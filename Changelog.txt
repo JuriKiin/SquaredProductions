@@ -84,3 +84,9 @@
 
 //Juri Kiin 10:42 AM
 	- Fixed the external tool so it works properly
+
+
+//Juri Kiin 4:58 PM
+	- Fixed so the players created with the tool are made and drawn to the screen.
+	- Collisions still not working correctly
+	- Added code to load the correct background based on what level the player is in.

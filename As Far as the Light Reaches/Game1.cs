@@ -106,7 +106,6 @@ namespace As_Far_as_the_Light_Reaches
         Vector2 pauseVec;
         Vector2 spawnVec = new Vector2(1000, 450);
 
-        Rectangle center;
 
         public Vector2 Barpos { get; set; }
 
@@ -115,7 +114,9 @@ namespace As_Far_as_the_Light_Reaches
         List<Texture2D> arrows = new List<Texture2D>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
         List<Texture2D> curArrows = new List<Texture2D>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
 
-        Dictionary<int, Texture2D[]> levelManager = new Dictionary<int, Texture2D[]>();
+        Rectangle endPoint;
+
+        Dictionary<int, Rectangle> endPoints = new Dictionary<int, Rectangle>();    //This determines the end point for each level.
 
 
         //State machine
@@ -145,9 +146,7 @@ namespace As_Far_as_the_Light_Reaches
         Player player = new Player(20, 20, 4, 12, 0);
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
-
-        //test enemy
-        Enemy Testgoon;
+        LevelManager manager;
 
         public Game1()
         {
@@ -179,7 +178,6 @@ namespace As_Far_as_the_Light_Reaches
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
-            center = player.PlayerRec;
 
             //Load the arrows into the list
             arrows.Add(aR);
@@ -187,15 +185,9 @@ namespace As_Far_as_the_Light_Reaches
             arrows.Add(aU);
             arrows.Add(aD);
 
-            Testgoon = new Enemy(10, 1, 2, "Big Goon",5,false);
-            Testgoon.Pos = new Rectangle(0, 0, 200, 200);
-            enemies.Add(Testgoon);
+           
             ReadFiles();
 
-            foreach (Enemy e in enemies)
-            {
-                e.Pos = new Rectangle(rnd.Next(0, 500), rnd.Next(0, 590), 200, 200);
-            }
 
 
 
@@ -223,7 +215,7 @@ namespace As_Far_as_the_Light_Reaches
             title = Content.Load <Texture2D>("UI\\Title Screen.png");   // Loading in title screen
             basicUI = Content.Load<Texture2D>("UI\\Basic UI.png");      // Loading in basic UI
             battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    // Loading in the battle UI
-            font = Content.Load<SpriteFont>("UI\\Font1");           // Loading in font for stats
+            font = Content.Load<SpriteFont>("UI\\Font1");               // Loading in font for stats
 
 
             //Arrow keys
@@ -233,7 +225,7 @@ namespace As_Far_as_the_Light_Reaches
             aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
 
             //Maps 
-            Quarter = Content.Load<Texture2D>("Maps\\Quarter Mile.png");
+//            Quarter = Content.Load<Texture2D>("Maps\\Quarter Mile.png");
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -267,7 +259,8 @@ namespace As_Far_as_the_Light_Reaches
             antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
 
-
+            manager = new LevelManager(Content);
+            manager.LoadNextLevel();
 
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
             //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
@@ -306,7 +299,7 @@ namespace As_Far_as_the_Light_Reaches
             MouseState m = Mouse.GetState();
             
             //Player's Rectangle
-            player.PlayerRec = playerRec;
+            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300); ;
 
             //Keyboard states
             prevState = kbState;
@@ -332,6 +325,7 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Walk:
+
 
                     //Update the player movement, and if the player pauses the game.
                     //                  if (canMove) Move();    //Move the player around if the game isn't paused.
@@ -522,21 +516,23 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
 
-                    //Draw player hp
+                    //Draw player
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
 
-                    //Draw each enemy
-   //                 foreach (Enemy e in enemies)
-    //                {
-   //                     mapBatch.Draw(protag, e.Pos, Color.White);
-   //                 }
 
-                    mapBatch.Draw(Quarter, new Rectangle(0, 0, 1000, 1800), Color.White);
-                   mapBatch.Draw(protag, Testgoon.Pos, Color.White);
+
+                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(0, 0, 1000, 1800), Color.White);   //Draws the level background
+
+                    //Draw each enemy
+                    foreach (Enemy e in enemies)
+                    {
+                        mapBatch.Draw(protag, e.Pos, Color.White);
+                    }
+
                     mapBatch.End();
 
                     switch (Moving)
@@ -569,7 +565,7 @@ namespace As_Far_as_the_Light_Reaches
                         case Motion.WalkLeft:
                             if (frame == 1)
                             {
-                                // public void Draw(Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth);
+                               
                                 spriteBatch.Draw(protagRightWalk, player.PlayerRec, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                             }
                             else
@@ -669,24 +665,24 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A))
             {
-                center = new Rectangle(center.X += 3, center.Y,center.Width,center.Height);
+                player.PlayerRec = new Rectangle(player.X += 3, player.Y,player.Width,player.Height);
                 cam.Position -= new Vector2(3, 0);
 
             }//Move Left
             if (ks.IsKeyDown(Keys.D))
             {
-                center = new Rectangle(center.X -= 3, center.Y, center.Width, center.Height);
+                player.PlayerRec = new Rectangle(player.X -= 3, player.Y, player.Width, player.Height);
                 cam.Position -= new Vector2(-3, 0);
             } //Move Right
             if (ks.IsKeyDown(Keys.W))
             {
-                center = new Rectangle(center.X, center.Y+=3, center.Width, center.Height);
+                player.PlayerRec = new Rectangle(player.X, player.Y+=3, player.Width, player.Height);
                 cam.Position -= new Vector2(0, 3);
             }
             //Move Up
             if (ks.IsKeyDown(Keys.S))
             {
-                center = new Rectangle(center.X, center.Y-=3, center.Width, center.Height);
+                player.PlayerRec = new Rectangle(player.X, player.Y-=3, player.Width, player.Height);
                 cam.Position -= new Vector2(0, -3);
             } //Move Down
         }
@@ -728,16 +724,15 @@ namespace As_Far_as_the_Light_Reaches
                     if (dir == 1) directional = false;
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional);
+                    e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 200, 200);
+                    e.EnemyTexture = protag;
                     enemies.Add(e);
                     // close when we are done
                     br.Close();
                 }
             }
-
-
-
-
         }
+
 
     }
 }
