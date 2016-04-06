@@ -111,6 +111,7 @@ namespace As_Far_as_the_Light_Reaches
 
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
+        Rectangle hitBox = new Rectangle(100,500,256,256);
 
 
         //Game State machine
@@ -192,9 +193,6 @@ namespace As_Far_as_the_Light_Reaches
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
-
-            // Loading in the protagonist sprite
-            protag = Content.Load<Texture2D>("Characters\\Protag\\Protag.png");
 
             startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");  // Loading in the start menu
             statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");  // Loading in the stats menu
@@ -358,20 +356,20 @@ namespace As_Far_as_the_Light_Reaches
                         Moving = Motion.WalkRight;
                     }
 
+                    /*
                     if (SingleKeyPress(Keys.Space))
                     {
                         curState = GameState.Combat;
-                        curArrows = arrowSpawner.GenerateArrows(10, true);
+                        curArrows = arrowSpawner.GenerateArrows(9, true);
                     }
-
+                    */
 
                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
                        if (e.Pos.Intersects(player.PlayerRec))
                        {
                             curEnemy = e;   //Sets the enemy
-             //               curArrows = arrowSpawner.GenerateArrows(e.numArrow, curEnemy.Directional);
-                            curArrows = arrowSpawner.GenerateArrows(10, true);
+                            curArrows = arrowSpawner.GenerateArrows(curEnemy.NumArrow, curEnemy.Directional);
                             curState = GameState.Combat;    //Set the gamestate to combat
                        }
                     }
@@ -394,43 +392,38 @@ namespace As_Far_as_the_Light_Reaches
 
                         case CombatState.Block:
 
+                            curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Populate the list of current arrows the player needs to hit.
+
+                            int totalHits = 0;
+
                             for(int i = 0;i<= curArrows.Count-1;i++)      //Move the arrows across the screen.
                             {
-                                curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 3, curArrows[i].Rec.Y, 512, 512);
+                                curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 7, curArrows[i].Rec.Y, 512, 512);
                             }
 
-                            //Check to see if the player presses the correct key.
-                            if (SingleKeyPress(Keys.Space))
+
+                            foreach (Arrow a in curArrows)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
                             {
-                                hits++;
+                                if (hitBox.Intersects(a.Rec))   //Checks for collision
+                                {
+                                    if (SingleKeyPress(a.KeyValue)) totalHits++;
+                                }
                             }
-
 
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
-                            if (hits >= curArrows.Count)
-                            {
-                                curArrows.Clear();  //Clears the list
-                                curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Repopulates the list.
 
-                                System.Threading.Thread.Sleep(50);
-                                cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
-                            }
+                            player.CurHealth -= (curArrows.Count - totalHits);  //Subtract the health 
 
+                            curArrows.Clear();  //Clears the list
 
+                            System.Threading.Thread.Sleep(50);
+                            cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
 
                             break;
 
-
-
                         default: break;
 
-
-
                     }
-
-
-
-
                     break;
 
                 case GameState.Pause:
@@ -519,7 +512,7 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-                    playerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
+                    playerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 75, 85);
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
@@ -545,51 +538,51 @@ namespace As_Far_as_the_Light_Reaches
 
                     switch (Moving)
                     {
-                        case Motion.StandDown: spriteBatch.Draw(protagDownStill, player.PlayerRec, Color.White); break;
-                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, player.PlayerRec, Color.White); break;
-                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, player.PlayerRec, Color.White); break;
-                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, player.PlayerRec, Color.White); break;
+                        case Motion.StandDown: spriteBatch.Draw(protagDownStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+                        case Motion.StandUp: spriteBatch.Draw(protagUpStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+                        case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+                        case Motion.StandRight: spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
 
                         case Motion.WalkDown:
                             if (frame1 == 1)
                             {
-                                spriteBatch.Draw(protagDownWalk1, player.PlayerRec, Color.White);
+                                spriteBatch.Draw(protagDownWalk1, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagDownWalk2, player.PlayerRec, Color.White);
+                                spriteBatch.Draw(protagDownWalk2, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             break;
                         case Motion.WalkUp:
                             if (frame1 == 1)
                             {
-                                spriteBatch.Draw(protagUpWalk2, player.PlayerRec, Color.White);
+                                spriteBatch.Draw(protagUpWalk2, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagUpWalk1, player.PlayerRec, Color.White);
+                                spriteBatch.Draw(protagUpWalk1, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             break;
                         case Motion.WalkLeft:
                             if (frame == 1)
                             {
                                
-                                spriteBatch.Draw(protagRightWalk, player.PlayerRec, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                                spriteBatch.Draw(protagRightWalk, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
                             }
 
                             break;
                         case Motion.WalkRight:
                             if (frame == 1)
                             {
-                                spriteBatch.Draw(protagRightWalk, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), Color.White);
+                                spriteBatch.Draw(protagRightWalk, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             else
                             {
-                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 300, 300), Color.White);
+                                spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             break;
                     }
@@ -598,7 +591,6 @@ namespace As_Far_as_the_Light_Reaches
 
                 //Draw the GUI in combat
                 case GameState.Combat:
-                     spriteBatch.Draw(battleUI, new Rectangle(0,0,winX,winY), Color.White);    //Draw the battle UI
 
                     switch (cmbState)
                     {
@@ -609,21 +601,21 @@ namespace As_Far_as_the_Light_Reaches
                             break;
 
                         case CombatState.Block:
-
+                            int iteration = 0;
                             foreach(Arrow a in curArrows)        //Draw each Arrow
                             {
-                                spriteBatch.Draw(a.CurTexture,a.Rec,Color.White);
-                                
+                                iteration++;
+
+                                spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
+                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, winX, winY), Color.White);    //Draw the battle UI
 
                             break;
 
 
 
                         default: break;
-
-
-
+                            
                     }
 
 

@@ -97,6 +97,7 @@
 	-Added another gamestate that controls the combat phases, and does the respective job
 	-Cleaned up unused variables
 	
-	
-
+//James Friedenberg + Juri Kiin 4:50 PM 4/6/16
+	-Fixed blocking mechanic so random arrows spawn and move across the screen during combat
+	-Loaded in new protag/antag sprites
 
