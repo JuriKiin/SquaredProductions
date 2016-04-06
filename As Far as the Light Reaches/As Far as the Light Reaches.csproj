@@ -38,6 +38,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Arrow.cs" />
+    <Compile Include="ArrowSpawn.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Enemy.cs" />
@@ -124,16 +126,16 @@
     <Content Include="Content\Maps\1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\ArrowKey\Down.png">
+    <Content Include="Content\UI\ArrowKey\1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\ArrowKey\Left.png">
+    <Content Include="Content\UI\ArrowKey\2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\ArrowKey\Right.png">
+    <Content Include="Content\UI\ArrowKey\3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\ArrowKey\Up.png">
+    <Content Include="Content\UI\ArrowKey\4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\Basic UI.png">

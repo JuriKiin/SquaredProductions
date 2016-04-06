@@ -20,7 +20,7 @@ namespace As_Far_as_the_Light_Reaches
         private int currHealth;
         private int health;
         private int damage;
-        private int numArrow;
+        public int numArrow;
         private int boxwidth;
         private int armor;
         private bool directional;

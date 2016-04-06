@@ -78,15 +78,25 @@
 	-few small adjustments to the move class, failed to fix enemy collision.
 
 
-//Juri Kiin 3:07 PM
+//Juri Kiin 3:07 PM	3/23/16
 	- Created the Enemy Creation tool that allows the user to input stats for the enemy, and it creates a binary file with those stats stored.
 	- Added a ReadFiles() method that loads in the data from the binary files, and created an enemy object with that data.
 
-//Juri Kiin 10:42 AM
+//Juri Kiin 10:42 AM	3/28/16
 	- Fixed the external tool so it works properly
 
 
-//Juri Kiin 4:58 PM
+//Juri Kiin 4:58 PM	3/30/16
 	- Fixed so the players created with the tool are made and drawn to the screen.
 	- Collisions still not working correctly
 	- Added code to load the correct background based on what level the player is in.
+
+//Juri Kiin 11:44 PM 	4/5/16
+	-Added ArrowSpawner.cs: creates arrow objects that are used for the blocking mechanic
+	-Added Arrow.cs: Creates an object to hold the arrow texture and the rectangle.
+	-Added another gamestate that controls the combat phases, and does the respective job
+	-Cleaned up unused variables
+	
+	
+
+

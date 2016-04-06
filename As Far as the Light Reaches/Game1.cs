@@ -54,6 +54,7 @@ namespace As_Far_as_the_Light_Reaches
         enum Facing {Right, Left, Up, Down };
         enum Motion {StandRight, StandLeft, StandUp, StandDown, WalkRight, WalkLeft, WalkUp, WalkDown };
 
+
         Facing Direction;
         Motion Moving;
 
@@ -83,12 +84,6 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D antagUpWalk1;
         Texture2D antagUpWalk2;
 
-        //Arrow Key Textures
-        Texture2D aR;   //Right arrow
-        Texture2D aL;   //Left arrow
-        Texture2D aU;   //Up arrow
-        Texture2D aD;   //Down arrow
-
         Texture2D meter;    //This is the meter that te player will use to attack
         Rectangle meterRec; //This is the rectangle that will keep track of the meter's position.
         Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
@@ -104,33 +99,31 @@ namespace As_Far_as_the_Light_Reaches
 
         // Vector attributes
         Vector2 pauseVec;
-        Vector2 spawnVec = new Vector2(1000, 450);
+        Vector2 spawnVec = new Vector2(500, 450);
 
 
         public Vector2 Barpos { get; set; }
 
         //Collection variables
         List<Enemy> enemies = new List<Enemy>();    //This list will be filled with all of the enemies in each level. Every time a level is loaded, the list will be emptied and loaded with new enemies.
-        List<Texture2D> arrows = new List<Texture2D>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
-        List<Texture2D> curArrows = new List<Texture2D>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
+        List<Arrow> arrows = new List<Arrow>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
+        List<Arrow> curArrows = new List<Arrow>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
 
-        Rectangle endPoint;
-
-        Dictionary<int, Rectangle> endPoints = new Dictionary<int, Rectangle>();    //This determines the end point for each level.
+        Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
 
-        //State machine
+
+        //Game State machine
         enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
         GameState curState;
 
+        enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
+        CombatState cmbState;
 
         //Keyboard States
         KeyboardState kbState;
         KeyboardState prevState = Keyboard.GetState();
 
-
-        //Bool variables
-        bool attackState;       // True = attacking. False = blocking.
 
 
         //INT VARIABLES
@@ -147,6 +140,7 @@ namespace As_Far_as_the_Light_Reaches
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
         LevelManager manager;
+        ArrowSpawn arrowSpawner = new ArrowSpawn();
 
         public Game1()
         {
@@ -178,16 +172,9 @@ namespace As_Far_as_the_Light_Reaches
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
-
-            //Load the arrows into the list
-            arrows.Add(aR);
-            arrows.Add(aL);
-            arrows.Add(aU);
-            arrows.Add(aD);
-
            
-            ReadFiles();
-
+            ReadFiles();    //Creates each enemy
+            arrowSpawner.LoadArrow(Content);   //This should load all of the arrow keys into arrows.
 
 
 
@@ -218,14 +205,6 @@ namespace As_Far_as_the_Light_Reaches
             font = Content.Load<SpriteFont>("UI\\Font1");               // Loading in font for stats
 
 
-            //Arrow keys
-            aR = Content.Load<Texture2D>("UI\\ArrowKey\\Right.png");
-            aL = Content.Load<Texture2D>("UI\\ArrowKey\\Left.png");
-            aU = Content.Load<Texture2D>("UI\\ArrowKey\\Up.png");
-            aD = Content.Load<Texture2D>("UI\\ArrowKey\\Down.png");
-
-            //Maps 
-//            Quarter = Content.Load<Texture2D>("Maps\\Quarter Mile.png");
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -261,6 +240,8 @@ namespace As_Far_as_the_Light_Reaches
 
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
+
+            
 
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
             //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
@@ -377,51 +358,78 @@ namespace As_Far_as_the_Light_Reaches
                         Moving = Motion.WalkRight;
                     }
 
+                    if (SingleKeyPress(Keys.Space))
+                    {
+                        curState = GameState.Combat;
+                        curArrows = arrowSpawner.GenerateArrows(10, true);
+                    }
+
 
                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
                        if (e.Pos.Intersects(player.PlayerRec))
                        {
-                            curEnemy = e;   //Sets the enemy 
+                            curEnemy = e;   //Sets the enemy
+             //               curArrows = arrowSpawner.GenerateArrows(e.numArrow, curEnemy.Directional);
+                            curArrows = arrowSpawner.GenerateArrows(10, true);
                             curState = GameState.Combat;    //Set the gamestate to combat
                        }
                     }
                     break;
 
-                //When we are in combat, we need to get the number of arrows to spawn.
-                case GameState.Combat:
+                case GameState.Combat:  //Begin combat
 
-                    int arr = SpawnArrow(); //Get the number of arrows
+                    int hits = 0;   //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
 
-                    attackState = true; //Set the attack state to attacking.
-
-                    //Player attack
-                    if (attackState)
+                    switch (cmbState)
                     {
-                        //Check for the position of the meter object to that of the meter, and call the damage method with that int.
-                        meterObjRec.X -= 3;     //Move the arrows across the screen.
+                        case CombatState.Attack:
 
 
-                        if (SingleKeyPress(Keys.Enter))
-                        {
-                            meterObjRec.X = +0;    //Stop the position of the meter object
-                            curEnemy.PlayerAttack(player.Damage, meterObjRec.X);
-                        }
 
-                        attackState = false;    ///lastly set the attack phase to blocking.
+
+                            cmbState = CombatState.Block;     //Set the attack phase to blocking.
+
+                            break;
+
+                        case CombatState.Block:
+
+                            for(int i = 0;i<= curArrows.Count-1;i++)      //Move the arrows across the screen.
+                            {
+                                curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 3, curArrows[i].Rec.Y, 512, 512);
+                            }
+
+                            //Check to see if the player presses the correct key.
+                            if (SingleKeyPress(Keys.Space))
+                            {
+                                hits++;
+                            }
+
+
+                            //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
+                            if (hits >= curArrows.Count)
+                            {
+                                curArrows.Clear();  //Clears the list
+                                curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Repopulates the list.
+
+                                System.Threading.Thread.Sleep(50);
+                                cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
+                            }
+
+
+
+                            break;
+
+
+
+                        default: break;
+
+
+
                     }
 
-                    if (!attackState)
-                    {
-                        //Reset the arrow list and then repopulate it with the right number of arrows.
-                        if (arrows != null) arrows.Clear(); //Resets the list
-                        for (int i = 0; i < arr; i++)
-                        {
-                          //  curArrows.Add(arrows[rnd.Next(0, arrows.Count - 1)]);   //Populate the current arrows with random arrows from the list.
-                        }
 
-                        attackState = true;     //Lastly set the attack phase to attacking.
-                    }
+
 
                     break;
 
@@ -590,13 +598,35 @@ namespace As_Far_as_the_Light_Reaches
 
                 //Draw the GUI in combat
                 case GameState.Combat:
-                    spriteBatch.Draw(battleUI, new Rectangle(0,0,winX,winY), Color.White);    //Draw the battle UI
+                     spriteBatch.Draw(battleUI, new Rectangle(0,0,winX,winY), Color.White);    //Draw the battle UI
 
-                    //Draw each Arrow
-                    foreach (Texture2D arrow in curArrows)
+                    switch (cmbState)
                     {
-                        spriteBatch.Draw(arrow,spawnVec,Color.White);
+                        case CombatState.Attack:
+
+
+
+                            break;
+
+                        case CombatState.Block:
+
+                            foreach(Arrow a in curArrows)        //Draw each Arrow
+                            {
+                                spriteBatch.Draw(a.CurTexture,a.Rec,Color.White);
+                                
+                            }
+
+                            break;
+
+
+
+                        default: break;
+
+
+
                     }
+
+
 
                     break;
 
@@ -688,15 +718,6 @@ namespace As_Far_as_the_Light_Reaches
         }
 
         //Combat System Below.
-
-        //This method takes how many arrows we should spawn. It takes the number from the enemy object that we are getting.
-        public int SpawnArrow()
-        {
-            int numArrow;
-            numArrow = curEnemy.NumArrow;   //Sets the number of arrows to the value of numArrow that the given enemy has.
-            return numArrow;
-        }
-
 
         //THIS METHOD LOADS ENEMIES IN FROM THE ENEMY FILES
         public void ReadFiles()
