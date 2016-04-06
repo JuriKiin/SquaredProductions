@@ -54,7 +54,6 @@ namespace As_Far_as_the_Light_Reaches
         enum Facing {Right, Left, Up, Down };
         enum Motion {StandRight, StandLeft, StandUp, StandDown, WalkRight, WalkLeft, WalkUp, WalkDown };
 
-
         Facing Direction;
         Motion Moving;
 
@@ -64,7 +63,6 @@ namespace As_Far_as_the_Light_Reaches
         int frame1;
         int numFrames = 2;
         int framesElapsed;
-
 
         // Antag Textures 
 
@@ -101,7 +99,6 @@ namespace As_Far_as_the_Light_Reaches
         Vector2 pauseVec;
         Vector2 spawnVec = new Vector2(500, 450);
 
-
         public Vector2 Barpos { get; set; }
 
         //Collection variables
@@ -112,7 +109,6 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         Rectangle hitBox = new Rectangle(100,500,256,256);
-
 
         //Game State machine
         enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
@@ -125,8 +121,6 @@ namespace As_Far_as_the_Light_Reaches
         KeyboardState kbState;
         KeyboardState prevState = Keyboard.GetState();
 
-
-
         //INT VARIABLES
         //Attributes to resize window
         int winX = 1000;
@@ -134,14 +128,14 @@ namespace As_Far_as_the_Light_Reaches
 
         int level;  // this variable tells us which data to load. (Switch statement)
 
-
         //OBJECTS
         MouseState m = Mouse.GetState();
-        Player player = new Player(20, 20, 4, 12, 0);
+        Player player;
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
         LevelManager manager;
         ArrowSpawn arrowSpawner = new ArrowSpawn();
+        Enemy TestGoon;
 
         public Game1()
         {
@@ -170,14 +164,21 @@ namespace As_Far_as_the_Light_Reaches
             curState = GameState.Menu;
             Direction = Facing.Down;
             Moving = Motion.StandDown;
+            
+            //define player object and position
+            player = new Player(20, 20, 4, 12, 0);
+            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
+
+            //define test goon
+            TestGoon = new Enemy(200, 200, 3, "Dumb Goon", 1, true);
+            TestGoon.Pos = new Rectangle(0, 0, 200, 200);
+            enemies.Add(TestGoon);            
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
            
             ReadFiles();    //Creates each enemy
             arrowSpawner.LoadArrow(Content);   //This should load all of the arrow keys into arrows.
-
-
 
             base.Initialize();
         }
@@ -239,7 +240,6 @@ namespace As_Far_as_the_Light_Reaches
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
 
-            
 
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
             //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
@@ -276,9 +276,6 @@ namespace As_Far_as_the_Light_Reaches
 
             //Gets current state of mouse
             MouseState m = Mouse.GetState();
-            
-            //Player's Rectangle
-            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300); ;
 
             //Keyboard states
             prevState = kbState;
@@ -290,6 +287,9 @@ namespace As_Far_as_the_Light_Reaches
             framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame1);
             frame1 = framesElapsed % numFrames;
 
+            player.X = player.PlayerRec.X;
+            player.Y = player.PlayerRec.Y;
+
             //Switching between states
             switch (curState)
             {
@@ -300,18 +300,12 @@ namespace As_Far_as_the_Light_Reaches
                         curState = GameState.Walk;      //Change the gamestate to walk (normal gameplay)
                         level = 0;
                     }
-
                     break;
 
                 case GameState.Walk:
 
-
-                    //Update the player movement, and if the player pauses the game.
-                    //                  if (canMove) Move();    //Move the player around if the game isn't paused.
+                    //If P is hit, pause the game.
                     if (SingleKeyPress(Keys.P)) curState = GameState.Pause;
-  //                  Pause();    //Update the game to check if the player pauses the game.
-
-
 
                     //moves the camera, therefore the map and map elements.
                     Move();
@@ -383,9 +377,6 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         case CombatState.Attack:
 
-
-
-
                             cmbState = CombatState.Block;     //Set the attack phase to blocking.
 
                             break;
@@ -409,20 +400,16 @@ namespace As_Far_as_the_Light_Reaches
                                     if (SingleKeyPress(a.KeyValue)) totalHits++;
                                 }
                             }
-
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
 
                             player.CurHealth -= (curArrows.Count - totalHits);  //Subtract the health 
-
                             curArrows.Clear();  //Clears the list
 
                             System.Threading.Thread.Sleep(50);
                             cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
-
                             break;
 
                         default: break;
-
                     }
                     break;
 
@@ -507,12 +494,9 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Menu:
 
                     spriteBatch.Draw(title, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-
                     break;
 
                 case GameState.Walk:
-
-                    playerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 75, 85);
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
@@ -523,18 +507,13 @@ namespace As_Far_as_the_Light_Reaches
                     //draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-
-
-
                     mapBatch.Draw(manager.CurLevelTexture, new Rectangle(0, 0, 1000, 1800), Color.White);   //Draws the level background
-
+                    mapBatch.End();
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        mapBatch.Draw(protag, e.Pos, Color.White);
+                        spriteBatch.Draw(protagDownStill, e.Pos, Color.White);
                     }
-
-                    mapBatch.End();
 
                     switch (Moving)
                     {
@@ -586,7 +565,6 @@ namespace As_Far_as_the_Light_Reaches
                             }
                             break;
                     }
-
                     break;
 
                 //Draw the GUI in combat
@@ -595,8 +573,6 @@ namespace As_Far_as_the_Light_Reaches
                     switch (cmbState)
                     {
                         case CombatState.Attack:
-
-
 
                             break;
 
@@ -608,17 +584,14 @@ namespace As_Far_as_the_Light_Reaches
 
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
+
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, winX, winY), Color.White);    //Draw the battle UI
 
+
                             break;
-
-
-
                         default: break;
-                            
+
                     }
-
-
 
                     break;
 
@@ -687,25 +660,38 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A))
             {
-                player.PlayerRec = new Rectangle(player.X += 3, player.Y,player.Width,player.Height);
                 cam.Position -= new Vector2(3, 0);
+                foreach(Enemy e in enemies)
+                {
+                    e.Pos = new Rectangle(e.Pos.X + 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                }
 
             }//Move Left
             if (ks.IsKeyDown(Keys.D))
             {
-                player.PlayerRec = new Rectangle(player.X -= 3, player.Y, player.Width, player.Height);
                 cam.Position -= new Vector2(-3, 0);
+                foreach (Enemy e in enemies)
+                {
+                    e.Pos = new Rectangle(e.Pos.X - 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                }
+
             } //Move Right
             if (ks.IsKeyDown(Keys.W))
             {
-                player.PlayerRec = new Rectangle(player.X, player.Y+=3, player.Width, player.Height);
                 cam.Position -= new Vector2(0, 3);
+                foreach (Enemy e in enemies)
+                {
+                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y + 3, e.Pos.Width, e.Pos.Height);
+                }
             }
             //Move Up
             if (ks.IsKeyDown(Keys.S))
             {
-                player.PlayerRec = new Rectangle(player.X, player.Y-=3, player.Width, player.Height);
                 cam.Position -= new Vector2(0, -3);
+                foreach (Enemy e in enemies)
+                {
+                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y - 3, e.Pos.Width, e.Pos.Height);
+                }
             } //Move Down
         }
 
@@ -731,7 +717,6 @@ namespace As_Far_as_the_Light_Reaches
                     int damage = br.ReadInt32();
                     int armor = br.ReadInt32();
                     int dir = br.ReadInt32();
-
 
                     if (dir == 0) directional = true;
                     if (dir == 1) directional = false;

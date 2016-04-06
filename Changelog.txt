@@ -101,3 +101,8 @@
 	-Fixed blocking mechanic so random arrows spawn and move across the screen during combat
 	-Loaded in new protag/antag sprites
 
+//Dustin Knowlton 5:05PM 4/6/16
+	-Collision functions properly!
+	-Enemy is too large
+	-Combat cycling atk->def
+
