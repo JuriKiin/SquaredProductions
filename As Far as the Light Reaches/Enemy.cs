@@ -29,14 +29,14 @@ namespace As_Far_as_the_Light_Reaches
 
         Game1 game = new Game1();
 
-        public Enemy(int h, int d, int na, string nm,int a,bool dir)
+        public Enemy(int hp, int dam, int numArr, string nm,int arm,bool dir)
         {
             name = nm;
-            currHealth = h;
-            health = h;
-            damage = d;
-            numArrow = na;
-            armor = a;
+            currHealth = hp;
+            health = hp;
+            damage = dam;
+            numArrow = numArr;
+            armor = arm;
             directional = dir;
         }
 
@@ -72,6 +72,11 @@ namespace As_Far_as_the_Light_Reaches
         {
             get { return currHealth; }
             set { currHealth = value; }
+        }
+        public int Damage
+        {
+            get { return damage; }
+            set { damage = value; }
         }
 
 

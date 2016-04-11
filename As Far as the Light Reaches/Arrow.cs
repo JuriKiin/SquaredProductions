@@ -14,7 +14,7 @@ namespace As_Far_as_the_Light_Reaches
     class Arrow
     {
         private Texture2D curTexture;
-        private Rectangle rec = new Rectangle(750, 225, 512, 512);
+        private Rectangle rec = new Rectangle(750, 450, 200, 200);
         private Keys keyValue;
 
         public Keys KeyValue

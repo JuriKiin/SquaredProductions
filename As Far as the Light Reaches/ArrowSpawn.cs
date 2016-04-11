@@ -68,7 +68,7 @@ namespace As_Far_as_the_Light_Reaches
             {
                 if (dir == true)
                 {
-                    int h = rnd.Next(0,3);
+                    int h = rnd.Next(0,4);
                     Arrow ar = new Arrow(loadArrows[h], dict[h]);
                     cArrow.Add(ar);
                 }

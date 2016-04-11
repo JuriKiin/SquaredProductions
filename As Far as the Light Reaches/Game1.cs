@@ -108,8 +108,7 @@ namespace As_Far_as_the_Light_Reaches
 
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
-        Rectangle hitBox = new Rectangle(100,500,256,256);
-
+        bool hits = false;
         //Game State machine
         enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
         GameState curState;
@@ -131,6 +130,7 @@ namespace As_Far_as_the_Light_Reaches
         //OBJECTS
         MouseState m = Mouse.GetState();
         Player player;
+        int arrCount = 0;
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
         LevelManager manager;
@@ -169,9 +169,10 @@ namespace As_Far_as_the_Light_Reaches
             player = new Player(20, 20, 4, 12, 0);
             player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
 
+
             //define test goon
-            TestGoon = new Enemy(200, 200, 3, "Dumb Goon", 1, true);
-            TestGoon.Pos = new Rectangle(0, 0, 200, 200);
+            TestGoon = new Enemy(10, 2, 5, "Dumb Goon", 1, true);
+            TestGoon.Pos = new Rectangle(0, 0, 75, 85);
             enemies.Add(TestGoon);            
 
             //camera object
@@ -207,11 +208,12 @@ namespace As_Far_as_the_Light_Reaches
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
+            //
+
             // Protag Textures 
             protagDownStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownStill.png");
             protagDownWalk1 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk1.png");
             protagDownWalk2 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk2.png");
-
             protagLeftWalk = Content.Load<Texture2D>("Characters\\Protag\\ProtagLeftWalk.png");
             protagLeftStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagLeftStill.png");
 
@@ -270,6 +272,8 @@ namespace As_Far_as_the_Light_Reaches
                 Exit();
 
             // TODO: Add your update logic here
+
+            
 
             // keybaard state for player movement 
             KeyboardState protag = Keyboard.GetState();
@@ -350,20 +354,11 @@ namespace As_Far_as_the_Light_Reaches
                         Moving = Motion.WalkRight;
                     }
 
-                    /*
-                    if (SingleKeyPress(Keys.Space))
-                    {
-                        curState = GameState.Combat;
-                        curArrows = arrowSpawner.GenerateArrows(9, true);
-                    }
-                    */
-
                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
                        if (e.Pos.Intersects(player.PlayerRec))
                        {
                             curEnemy = e;   //Sets the enemy
-                            curArrows = arrowSpawner.GenerateArrows(curEnemy.NumArrow, curEnemy.Directional);
                             curState = GameState.Combat;    //Set the gamestate to combat
                        }
                     }
@@ -371,42 +366,78 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Combat:  //Begin combat
 
-                    int hits = 0;   //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
-
+                    int totalHits = 0;   //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
+                    
                     switch (cmbState)
                     {
                         case CombatState.Attack:
 
-                            cmbState = CombatState.Block;     //Set the attack phase to blocking.
+                            //Put meter-based code here for correct timing and damage
 
+                            if (curEnemy.CurrHealth > 0)
+                            {
+                                cmbState = CombatState.Block;     //Set the attack phase to blocking.
+                            }
+                            else
+                            {
+                                curState = GameState.Walk;        //Says the battle is over
+                            }
+                            
                             break;
 
                         case CombatState.Block:
-
-                            curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Populate the list of current arrows the player needs to hit.
-
-                            int totalHits = 0;
-
-                            for(int i = 0;i<= curArrows.Count-1;i++)      //Move the arrows across the screen.
+                            if (arrCount == 0)
                             {
-                                curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 7, curArrows[i].Rec.Y, 512, 512);
+                                curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Populate the list of current arrows the player needs to hit.
+                                arrCount = curArrows.Count;
+                                //for(int i = 0; i<= curArrows.Count - 1; i++)      //Move the arrows across the screen.
+                                //{
+                                //   curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - i  * 50, curArrows[i].Rec.Y, 512, 512);
+                                //}
                             }
+                            //for(int i = 0; i<= curArrows.Count - 1; i++)      //Move the arrows across the screen.
+                            //{
+                            //   curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 7, curArrows[i].Rec.Y, 512, 512);
+                            //}
 
-
-                            foreach (Arrow a in curArrows)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
-                            {
-                                if (hitBox.Intersects(a.Rec))   //Checks for collision
+                            curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150);
+                            for (int a = 0; a < curArrows.Count; a++)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
                                 {
-                                    if (SingleKeyPress(a.KeyValue)) totalHits++;
+                                    if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
+                                        {
+                                            hits = true;
+                                            if (SingleKeyPress(curArrows[a].KeyValue))
+                                            {
+                                                totalHits++;
+                                                
+                                                curArrows.RemoveAt(a);
+                                                a--;
+                                            }
+                                        }
+                                    else if (curArrows[a].Rec.X < 0 - 200 - curArrows[a].Rec.Width)
+                                        {
+                                             
+                                             curArrows.RemoveAt(a);
+                                    hits = false;
+                                             a--;
+                                        } 
                                 }
-                            }
+                                
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
 
-                            player.CurHealth -= (curArrows.Count - totalHits);  //Subtract the health 
-                            curArrows.Clear();  //Clears the list
+                            if (curArrows.Count <= 0)
+                            {
+                                player.CurHealth -= (arrCount - totalHits) * curEnemy.Damage;  //Subtract the health 
+                                arrCount = 0;
+                                
+                                cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
+                            }
+                            else
+                            {
 
-                            System.Threading.Thread.Sleep(50);
-                            cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
+                            }
+
+                            
                             break;
 
                         default: break;
@@ -498,10 +529,7 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-                    //Draw basic UI
-                    spriteBatch.Draw(basicUI, new Rectangle(0,0,GraphicsDevice.Viewport.Width,GraphicsDevice.Viewport.Height), Color.White);
-
-                    //Draw player
+                    //Draw HP in Walking UI
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
                     //draw map
@@ -509,11 +537,15 @@ namespace As_Far_as_the_Light_Reaches
                     mapBatch.Begin(transformMatrix: viewMatrix);
                     mapBatch.Draw(manager.CurLevelTexture, new Rectangle(0, 0, 1000, 1800), Color.White);   //Draws the level background
                     mapBatch.End();
+
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        spriteBatch.Draw(protagDownStill, e.Pos, Color.White);
+                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
                     }
+
+                    //Draw basic UI
+                    spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
                     switch (Moving)
                     {
@@ -573,10 +605,11 @@ namespace As_Far_as_the_Light_Reaches
                     switch (cmbState)
                     {
                         case CombatState.Attack:
-
+                            
                             break;
 
                         case CombatState.Block:
+                            spriteBatch.DrawString(font, ":" + hits, new Vector2(0, 0), Color.White);
                             int iteration = 0;
                             foreach(Arrow a in curArrows)        //Draw each Arrow
                             {
@@ -584,19 +617,18 @@ namespace As_Far_as_the_Light_Reaches
 
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
-
-                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, winX, winY), Color.White);    //Draw the battle UI
-
-
+                            
                             break;
                         default: break;
 
                     }
-
+                    spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     break;
 
                 case GameState.Over:
+
  //                   spriteBatch.Draw(overScreen,new Rectangle(0,0,winX,winY),Color.White);    //Draw the game over screen.
+
                     break;
 
                 case GameState.Pause:

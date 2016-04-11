@@ -101,6 +101,10 @@
 	-Fixed blocking mechanic so random arrows spawn and move across the screen during combat
 	-Loaded in new protag/antag sprites
 
+//James Friedenberg + Juri Kiin + Austin Ford 11:57 AM 4/11/2016
+	-Fixed blocking hitbox 
+	-Fixed states and health reduction so blocking mechanic is functional
+	
 //Dustin Knowlton 5:05PM 4/6/16
 	-Collision functions properly!
 	-Enemy is too large
