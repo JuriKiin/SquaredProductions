@@ -136,6 +136,10 @@ namespace As_Far_as_the_Light_Reaches
         LevelManager manager;
         ArrowSpawn arrowSpawner = new ArrowSpawn();
         Enemy TestGoon;
+        Rectangle tunnel;
+
+        //does the level need to be genned?
+        bool levelgenreq;
 
         public Game1()
         {
@@ -173,7 +177,14 @@ namespace As_Far_as_the_Light_Reaches
             //define test goon
             TestGoon = new Enemy(10, 2, 5, "Dumb Goon", 1, true);
             TestGoon.Pos = new Rectangle(0, 0, 75, 85);
-            enemies.Add(TestGoon);            
+            enemies.Add(TestGoon);
+
+            //define manager
+            manager = new LevelManager(Content);
+            manager.LoadNextLevel();
+
+            //Run Levelgen for level 1
+            LevelGen();
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
@@ -204,11 +215,7 @@ namespace As_Far_as_the_Light_Reaches
             battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    // Loading in the battle UI
             font = Content.Load<SpriteFont>("UI\\Font1");               // Loading in font for stats
 
-
-
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
-
-            //
 
             // Protag Textures 
             protagDownStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownStill.png");
@@ -238,15 +245,10 @@ namespace As_Far_as_the_Light_Reaches
             antagUpStill = Content.Load<Texture2D>("Characters\\Antag\\AntagUpStill.png");
             antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
-
-            manager = new LevelManager(Content);
-            manager.LoadNextLevel();
-
-
+                       
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
             //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
             //meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
-
 
         }
 
@@ -308,6 +310,9 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
+                    //if level needs to be generated, run LevelGen
+                    if (levelgenreq == true) LevelGen();
+
                     //If P is hit, pause the game.
                     if (SingleKeyPress(Keys.P)) curState = GameState.Pause;
 
@@ -354,14 +359,21 @@ namespace As_Far_as_the_Light_Reaches
                         Moving = Motion.WalkRight;
                     }
 
-                   foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
+                    foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
-                       if (e.Pos.Intersects(player.PlayerRec))
-                       {
+                        if (e.Pos.Intersects(player.PlayerRec))
+                        {
                             curEnemy = e;   //Sets the enemy
                             curState = GameState.Combat;    //Set the gamestate to combat
-                       }
+                        }
                     }
+
+                    if (tunnel.Intersects(player.PlayerRec))
+                    {
+                        manager.LoadNextLevel();
+                        levelgenreq = true; //if levelgenreq is true, the next update will run the levelgen. 
+                    }
+
                     break;
 
                 case GameState.Combat:  //Begin combat
@@ -666,7 +678,6 @@ namespace As_Far_as_the_Light_Reaches
             base.Draw(gameTime);
         }
 
-
         //Method to initialize the pause menu
         public void Pause()
         {
@@ -683,7 +694,6 @@ namespace As_Far_as_the_Light_Reaches
             { return true; }
             else { return false; }
         }
-
 
         public void Move()
         {
@@ -727,14 +737,11 @@ namespace As_Far_as_the_Light_Reaches
             } //Move Down
         }
 
-        //Combat System Below.
-
         //THIS METHOD LOADS ENEMIES IN FROM THE ENEMY FILES
         public void ReadFiles()
         {
             string[] files = Directory.GetFiles(".");
 
-//            for(int i=0;i<files.Length-1;i++)
             foreach(string file in files)
             {
                 if (file.Contains("$_$"))
@@ -763,6 +770,60 @@ namespace As_Far_as_the_Light_Reaches
             }
         }
 
+        public void LevelGen()
+        {
+            switch (manager.CurLevel)
+            {
+                case 0:
+                    //set player location and cam if possible
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    TestGoon = new Enemy(200, 200, 3, "Dumb Goon", 1, true);
+                    TestGoon.Pos = new Rectangle(0, 0, 200, 200);
+                    enemies.Add(TestGoon);
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+                case 1:
+                    //set player location and camera position
+                    //curleveltexture set LoadNextLevel
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set box that will take the player to the next level
 
-    }
+                    break;
+                case 2:
+                    //set player location
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+                case 3:
+                    //set player location
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+                case 4:
+                    //set player location
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+                case 5:
+                    //set player location
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+                case 6:
+                    //set player location
+                    //set bounding box for level (?)
+                    //set enemies, will eventually use file reading
+                    //set tunnel, rectangle to transfer level on collide.
+                    break;
+            }
+            levelgenreq = false;
+        }
+
+}
 }
