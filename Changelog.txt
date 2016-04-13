@@ -118,3 +118,6 @@
 //James Friedenberg 5:46PM 4/13/2016
 	-Added Loading screen and Game Over screen and took out some debugging code
 
+//Dustin Knowlton 6:01PM 4/13/16
+	-Dialogue method added, very unfinished.
+

@@ -173,12 +173,6 @@ namespace As_Far_as_the_Light_Reaches
             player = new Player(20, 20, 4, 12, 0);
             player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
 
-
-            //define test goon
-            TestGoon = new Enemy(10, 2, 5, "Dumb Goon", 1, true);
-            TestGoon.Pos = new Rectangle(1000, 1000, 75, 85);
-            enemies.Add(TestGoon);
-
             //define manager
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
@@ -759,7 +753,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (dir == 1) directional = false;
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional);
-                    e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 200, 200);
+                    e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
                     e.EnemyTexture = protag;
                     enemies.Add(e);
                     // close when we are done
@@ -777,7 +771,7 @@ namespace As_Far_as_the_Light_Reaches
                     //set bounding box for level (?)
                     //set enemies, will eventually use file reading
                     TestGoon = new Enemy(200, 200, 3, "Dumb Goon", 1, true);
-                    TestGoon.Pos = new Rectangle(0, 0, 200, 200);
+                    TestGoon.Pos = new Rectangle(0, 0, 75, 85);
                     enemies.Add(TestGoon);
                     //set tunnel, rectangle to transfer level on collide.
                     break;
@@ -823,5 +817,31 @@ namespace As_Far_as_the_Light_Reaches
             levelgenreq = false;
         }
 
-}
+        //dialogue takes an actor and a line number and writes it out in the dialogue box.
+        public void Dialogue(string actor, int linum, bool combat)
+        {
+            StreamReader Read = new StreamReader(File.OpenRead("Dialogue\\" + actor + ".txt")); //pull up text file based on inserted actor.
+            //fills an array with needed lines.
+            string got;
+            int i = 0;
+            string[] lines = new string[20];
+            while ((got = Read.ReadLine()) != null)
+            {
+                lines[i] = got;
+                i++;
+            }
+
+            Vector2 lineplace;
+            if (combat == true)
+            {
+                //lineplace = wherever it needs to be.
+            }
+            else
+            {
+                //lineplace = wherever it needs to be
+            }
+            //whence we have a spritefont ready
+            //spriteBatch.DrawString(SpriteFont, lines[linum], position, Color.White); 
+        }
+    }
 }
