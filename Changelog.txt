@@ -110,9 +110,11 @@
 	-Fixed blocking hitbox 
 	-Fixed states and health reduction so blocking mechanic is functional
 	
-
 //Dustin Knowlton 4:45PM 4/13/16
 	-added Levelgen method
 	-level switching should work properly
 	-simply set tunnel (rectangle object) to wherever the player should go to head to the next level, intersection will gen the next.
+
+//James Friedenberg 5:46PM 4/13/2016
+	-Added Loading screen and Game Over screen and took out some debugging code
 

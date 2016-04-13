@@ -82,12 +82,13 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D antagUpWalk1;
         Texture2D antagUpWalk2;
 
-        Texture2D meter;    //This is the meter that te player will use to attack
+        Texture2D meter;    //This is the meter that the player will use to attack
         Rectangle meterRec; //This is the rectangle that will keep track of the meter's position.
         Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
         Rectangle meterObjRec;  //This is the rectangle that will keep track of the position of the meter obj;
 
         Texture2D overScreen;   //Game over Screen. (Class, our names. etc.)
+        Texture2D loadScreen;   //Loading screen between levels
 
         Texture2D protag;   //Protag Texture
         Texture2D antag;    //Antag texture
@@ -108,7 +109,6 @@ namespace As_Far_as_the_Light_Reaches
 
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
-        bool hits = false;
         //Game State machine
         enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
         GameState curState;
@@ -122,8 +122,8 @@ namespace As_Far_as_the_Light_Reaches
 
         //INT VARIABLES
         //Attributes to resize window
-        int winX = 1000;
-        int winY = 1000;
+        int winX = 1024;
+        int winY = 768;
 
         int level;  // this variable tells us which data to load. (Switch statement)
 
@@ -176,7 +176,7 @@ namespace As_Far_as_the_Light_Reaches
 
             //define test goon
             TestGoon = new Enemy(10, 2, 5, "Dumb Goon", 1, true);
-            TestGoon.Pos = new Rectangle(0, 0, 75, 85);
+            TestGoon.Pos = new Rectangle(1000, 1000, 75, 85);
             enemies.Add(TestGoon);
 
             //define manager
@@ -214,6 +214,8 @@ namespace As_Far_as_the_Light_Reaches
             basicUI = Content.Load<Texture2D>("UI\\Basic UI.png");      // Loading in basic UI
             battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    // Loading in the battle UI
             font = Content.Load<SpriteFont>("UI\\Font1");               // Loading in font for stats
+            loadScreen = Content.Load<Texture2D>("UI\\LoadingScreen.png"); // Loading in load screen between levels
+            overScreen = Content.Load<Texture2D>("UI\\GameOverScreen.png"); // Loading in Game Over screen
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -417,7 +419,6 @@ namespace As_Far_as_the_Light_Reaches
                                 {
                                     if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
                                         {
-                                            hits = true;
                                             if (SingleKeyPress(curArrows[a].KeyValue))
                                             {
                                                 totalHits++;
@@ -428,9 +429,7 @@ namespace As_Far_as_the_Light_Reaches
                                         }
                                     else if (curArrows[a].Rec.X < 0 - 200 - curArrows[a].Rec.Width)
                                         {
-                                             
                                              curArrows.RemoveAt(a);
-                                    hits = false;
                                              a--;
                                         } 
                                 }
@@ -621,7 +620,6 @@ namespace As_Far_as_the_Light_Reaches
                             break;
 
                         case CombatState.Block:
-                            spriteBatch.DrawString(font, ":" + hits, new Vector2(0, 0), Color.White);
                             int iteration = 0;
                             foreach(Arrow a in curArrows)        //Draw each Arrow
                             {
