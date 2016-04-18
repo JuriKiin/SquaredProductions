@@ -19,8 +19,6 @@ namespace As_Far_as_the_Light_Reaches
         SpriteBatch mapBatch;
         Camera cam;
 
-        ////TEXTURE VARIABLES
-
         // Menu Attributes
         private bool pause = false;
         Texture2D startMenu;
@@ -29,6 +27,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D title;
         Texture2D basicUI;
         Texture2D battleUI;
+        Texture2D hitbox;
         SpriteFont font;
         int potsAmount = 10;
 
@@ -49,14 +48,14 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D protagUpStill;
         Texture2D protagUpWalk1;
         Texture2D protagUpWalk2;
-
-        //protag movng enum 
+        
+        //Enums for general character motion 
         enum Facing {Right, Left, Up, Down };
         enum Motion {StandRight, StandLeft, StandUp, StandDown, WalkRight, WalkLeft, WalkUp, WalkDown };
-
         enum MoveState { Left, Right, Still};
-        MoveState mState;
 
+        //Variables for movement state machines
+        MoveState mState;
         Facing Direction;
         Motion Moving;
 
@@ -101,7 +100,6 @@ namespace As_Far_as_the_Light_Reaches
         // Vector attributes
         Vector2 pauseVec;
         Vector2 spawnVec = new Vector2(500, 450);
-
         public Vector2 Barpos { get; set; }
 
         //Collection variables
@@ -109,6 +107,7 @@ namespace As_Far_as_the_Light_Reaches
         List<Arrow> arrows = new List<Arrow>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
         List<Arrow> curArrows = new List<Arrow>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
 
+        //Rectangle for the arrows spawning in the block state
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
@@ -122,7 +121,7 @@ namespace As_Far_as_the_Light_Reaches
         KeyboardState kbState;
         KeyboardState prevState = Keyboard.GetState();
 
-        //INT VARIABLES
+
         //Attributes to resize window
         int winX = 1024;
         int winY = 768;
@@ -139,7 +138,7 @@ namespace As_Far_as_the_Light_Reaches
         ArrowSpawn arrowSpawner = new ArrowSpawn();
         Enemy TestGoon;
         Rectangle tunnel;
-
+        int totalHits = 0;
         //does the level need to be genned?
         bool levelgenreq;
 
@@ -212,6 +211,7 @@ namespace As_Far_as_the_Light_Reaches
             font = Content.Load<SpriteFont>("UI\\Font1");               // Loading in font for stats
             loadScreen = Content.Load<Texture2D>("UI\\LoadingScreen.png"); // Loading in load screen between levels
             overScreen = Content.Load<Texture2D>("UI\\GameOverScreen.png"); // Loading in Game Over screen
+            hitbox = Content.Load<Texture2D>("UI\\ArrowHitbox.png"); // Loading in hitbox texture for block phase
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -378,7 +378,7 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Combat:  //Begin combat
 
-                    int totalHits = 0;   //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
+                       //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
                     double attackPercentage = 0;    //This will be the modifier of damage we do to the enemy.
                     double meterLocation = 0;  //This will set the X value of the meterobj rectangle.
 
@@ -447,33 +447,62 @@ namespace As_Far_as_the_Light_Reaches
 
                             curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150); //Move the arrows across the screen.
                             for (int a = 0; a < curArrows.Count; a++)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
+                            {
+                                if (SingleKeyPress(curArrows[a].KeyValue) && (125 < curArrows[a].Rec.X && 425 > curArrows[a].Rec.X))
                                 {
-                                    if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
-                                        {
-                                            if (SingleKeyPress(curArrows[a].KeyValue))
-                                            {
-                                                totalHits++;    //Increment the number of hits                                               
-                                                curArrows.RemoveAt(a);  //remove the pressed arrow
-                                                a--;    //get rid of the arrow count
-                                            }
-                                            else if(SingleKeyPress(curArrows[a].KeyValue) && curArrows[a].Rec.X < 75 && curArrows[a].Rec.X > 350)   //If we are pressing the button out of bounds
-                                            {
-                                                curArrows.RemoveAt(a);  //Remove the arrow from the list
-                                                a--;    //Get rid of that arrow but don't add a hit to the list.
-                                            }
-                                        }
-                                    else if (curArrows[a].Rec.X < -200 - curArrows[a].Rec.Width)
-                                        {
-                                             curArrows.RemoveAt(a);
-                                             a--;
-                                        } 
+                                    curArrows.RemoveAt(a);
+                                    a--;
                                 }
-                                
+
+                                else if ((SingleKeyPress(Keys.Up) || SingleKeyPress(Keys.Down) || SingleKeyPress(Keys.Left) || SingleKeyPress(Keys.Right)) && (125 > curArrows[a].Rec.X && 425 < curArrows[a].Rec.X))
+                                {
+                                    curArrows.RemoveAt(a);
+                                    a--;
+                                    totalHits++;
+                                }
+
+                                else if (SingleKeyPress(curArrows[a].KeyValue) == false && (125 < curArrows[a].Rec.X && 425 > curArrows[a].Rec.X))
+                                {
+                                    curArrows.RemoveAt(a);
+                                    a--;
+                                    totalHits++;
+                                }
+
+                                else if (curArrows[a].Rec.X < 0 - curArrows[a].Rec.Width)
+                                {
+                                    curArrows.RemoveAt(a);
+                                    a--;
+                                    totalHits++;
+                                }
+
+                                /*
+                                if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
+                                    {
+                                        if (SingleKeyPress(curArrows[a].KeyValue))
+                                        {
+                                            totalHits++;    //Increment the number of hits                                               
+                                            curArrows.RemoveAt(a);  //remove the pressed arrow
+                                            a--;    //get rid of the arrow count
+                                        }
+                                        else if(SingleKeyPress(curArrows[a].KeyValue) && 100 < curArrows[a].Rec.X && 300 > curArrows[a].Rec.X)   //If we are pressing the button out of bounds
+                                        {
+                                            curArrows.RemoveAt(a);  //Remove the arrow from the list
+                                            a--;    //Get rid of that arrow but don't add a hit to the list.
+                                        }
+                                    }
+                                else if (curArrows[a].Rec.X < -200 - curArrows[a].Rec.Width)
+                                    {
+                                         curArrows.RemoveAt(a);
+                                         a--;
+                                    } 
+                                */
+                            }
+
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
 
                             if (curArrows.Count <= 0)
                             {
-                                player.CurHealth -= (arrCount - totalHits) * curEnemy.Damage;  //Subtract the health 
+                                player.CurHealth -= totalHits * curEnemy.Damage;  //Subtract the health 
                                 arrCount = 0;
                                 
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
@@ -481,6 +510,7 @@ namespace As_Far_as_the_Light_Reaches
                                 mState = MoveState.Left;    //Reset the meter rectangle location and set its moving state.
                                 attackPercentage = 0;
                                 meterLocation = 0;
+                                totalHits = 0;
                             }
                             
                             break;
@@ -665,6 +695,7 @@ namespace As_Far_as_the_Light_Reaches
 
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
+                            spriteBatch.Draw(hitbox, new Rectangle(275, 300, 150, 150), Color.White);
                             spriteBatch.DrawString(font, "Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                             spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
@@ -796,11 +827,13 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (dir == 0) directional = true;
                     if (dir == 1) directional = false;
+
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional);
                     e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
                     e.EnemyTexture = protag;
                     enemies.Add(e);
+
                     // close when we are done
                     br.Close();
                 }

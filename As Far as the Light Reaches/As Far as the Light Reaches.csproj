@@ -123,6 +123,9 @@
     <Content Include="Content\Maps\1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\ArrowHitbox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\ArrowKey\0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
