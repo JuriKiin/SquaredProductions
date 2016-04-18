@@ -526,9 +526,16 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         curState = GameState.Item;
 
-                        if (SingleKeyPress(Keys.H))
+                        //Checks if health potion is used 
+                        if (SingleKeyPress(Keys.H) && potsAmount > 0)
                         {
                             player.CurHealth += 10;
+
+                            potsAmount--;
+                            if (potsAmount <= 0)
+                            {
+                                potsAmount = 0;
+                            }
                         }
                     }
                     else if (SingleKeyPress(Keys.U))    //If 'u' is pressed, switch the gamState to Stats
@@ -607,7 +614,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw HP in Walking UI
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
-                    //draw map
+                    //Draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
                     mapBatch.Draw(manager.CurLevelTexture, new Rectangle(0, 0, 1000, 1800), Color.White);   //Draws the level background
@@ -616,18 +623,22 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
+                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 90), Color.White);
                     }
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-
+                    
                     switch (Moving)
                     {
                         case Motion.StandDown: spriteBatch.Draw(protagDownStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+
                         case Motion.StandUp: spriteBatch.Draw(protagUpStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+
                         case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+
                         case Motion.StandRight: spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
+
 
                         case Motion.WalkDown:
                             if (frame1 == 1)
@@ -639,6 +650,7 @@ namespace As_Far_as_the_Light_Reaches
                                 spriteBatch.Draw(protagDownWalk2, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             break;
+
                         case Motion.WalkUp:
                             if (frame1 == 1)
                             {
@@ -649,6 +661,7 @@ namespace As_Far_as_the_Light_Reaches
                                 spriteBatch.Draw(protagUpWalk1, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White);
                             }
                             break;
+
                         case Motion.WalkLeft:
                             if (frame == 1)
                             {
@@ -661,6 +674,7 @@ namespace As_Far_as_the_Light_Reaches
                             }
 
                             break;
+
                         case Motion.WalkRight:
                             if (frame == 1)
                             {
@@ -674,51 +688,67 @@ namespace As_Far_as_the_Light_Reaches
                     }
                     break;
 
-                //Draw the GUI in combat
                 case GameState.Combat:
 
                     switch (cmbState)
                     {
                         case CombatState.Attack:
-                            spriteBatch.DrawString(font, "Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
+                            //Draw the UI for combat
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                            spriteBatch.Draw(meterObj, meterObjRec, Color.White);   //Draw the meter going back and forth on the screen.
+
+                            //Draw the meter going back and forth on the screen.
+                            spriteBatch.Draw(meterObj, meterObjRec, Color.White);   
+
+                            //Draw the hp values of each fighter
+                            spriteBatch.DrawString(font, "Enemy's Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
                             spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
 
                             break;
 
                         case CombatState.Block:
                             int iteration = 0;
-                            foreach(Arrow a in curArrows)        //Draw each Arrow
+
+                            //Draw each arrow
+                            foreach(Arrow a in curArrows)        
                             {
                                 iteration++;
 
+                                //Draw each arrow to the screen
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
-                            spriteBatch.Draw(hitbox, new Rectangle(275, 300, 150, 150), Color.White);
-                            spriteBatch.DrawString(font, "Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
-                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                            spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
-                            break;
-                        default: break;
 
+                            //Draws the hitbox for the arrows
+                            spriteBatch.Draw(hitbox, new Rectangle(275, 300, 150, 150), Color.White);
+
+                            //Draw the UI for combat
+                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+
+                            //Draw the hp values of each fighter
+                            spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
+                            spriteBatch.DrawString(font, "Enemy's Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
+                                                        
+                            break;
+
+                        default:
+                            break;
                     }
                     break;
 
                 case GameState.Over:
 
- //                   spriteBatch.Draw(overScreen,new Rectangle(0,0,winX,winY),Color.White);    //Draw the game over screen.
+                    spriteBatch.Draw(overScreen,new Rectangle(0,0,winX,winY),Color.White);    //Draw the game over screen.
 
                     break;
 
                 case GameState.Pause:
-                    //Draw pause menu GUI
-                    spriteBatch.Draw(startMenu, pauseVec, Color.White); //Draw pause menu
+
+                    //Draw pause menu
+                    spriteBatch.Draw(startMenu, new Vector2(-188,0), Color.White);
                     break;
 
                 case GameState.Item:
-                    spriteBatch.Draw(itemsMenu, pauseVec, Color.White); //Draw items menu
-                    if (SingleKeyPress(Keys.H))
+
+                    if (SingleKeyPress(Keys.H) && potsAmount > 0)
                     {
                         potsAmount--;
                         if (potsAmount <= 0)
@@ -726,15 +756,22 @@ namespace As_Far_as_the_Light_Reaches
                             potsAmount = 0;
                         }
                     }
-                    spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(800, 300), Color.White);
+
+                    //Draw items menu
+                    spriteBatch.Draw(itemsMenu, new Vector2(0, 0), Color.White); 
+
+                    spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(670, 275), Color.White);
                     break;
 
                 case GameState.Stats:
-                    spriteBatch.Draw(statsMenu, pauseVec, Color.White); //Draw the stats menu.
-                    spriteBatch.DrawString(font, "" + player.Armor, new Vector2(580, 165), Color.White);
-                    spriteBatch.DrawString(font, "" + player.Damage, new Vector2(580, 400), Color.White);
-                    spriteBatch.DrawString(font, "" + player.Boost, new Vector2(580, 635), Color.White);
-                    spriteBatch.DrawString(font, "", new Vector2(580, 235), Color.White);
+
+                    //Draw the stats menu.
+                    spriteBatch.Draw(statsMenu, new Vector2(-188,0), Color.White);
+
+                    //Prints out player stats in their own respective sections in the menu
+                    spriteBatch.DrawString(font, "" + player.Armor, new Vector2(580, 195), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Damage, new Vector2(580, 375), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Boost, new Vector2(580, 550), Color.White);
                     break;
 
                 default: break;
