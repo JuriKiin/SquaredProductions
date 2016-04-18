@@ -54,6 +54,9 @@ namespace As_Far_as_the_Light_Reaches
         enum Facing {Right, Left, Up, Down };
         enum Motion {StandRight, StandLeft, StandUp, StandDown, WalkRight, WalkLeft, WalkUp, WalkDown };
 
+        enum MoveState { Left, Right, Still};
+        MoveState mState;
+
         Facing Direction;
         Motion Moving;
 
@@ -82,10 +85,9 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D antagUpWalk1;
         Texture2D antagUpWalk2;
 
-        Texture2D meter;    //This is the meter that the player will use to attack
         Rectangle meterRec; //This is the rectangle that will keep track of the meter's position.
         Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
-        Rectangle meterObjRec;  //This is the rectangle that will keep track of the position of the meter obj;
+        Rectangle meterObjRec = new Rectangle(100,425,25,100);  //This is the rectangle that will keep track of the position of the meter obj;
 
         Texture2D overScreen;   //Game over Screen. (Class, our names. etc.)
         Texture2D loadScreen;   //Loading screen between levels
@@ -241,10 +243,10 @@ namespace As_Far_as_the_Light_Reaches
             antagUpStill = Content.Load<Texture2D>("Characters\\Antag\\AntagUpStill.png");
             antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
+
                        
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
-            //meter = Content.Load<Texture2D>("UI\\combatMeter.png");  //Loading in the combat meter
-            //meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
+            meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
         }
 
@@ -361,6 +363,8 @@ namespace As_Far_as_the_Light_Reaches
                         {
                             curEnemy = e;   //Sets the enemy
                             curState = GameState.Combat;    //Set the gamestate to combat
+                            cmbState = CombatState.Attack;
+                            mState = MoveState.Left;
                         }
                     }
 
@@ -375,53 +379,90 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Combat:  //Begin combat
 
                     int totalHits = 0;   //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
-                    
+                    double attackPercentage = 0;    //This will be the modifier of damage we do to the enemy.
+                    double meterLocation = 0;  //This will set the X value of the meterobj rectangle.
+
                     switch (cmbState)
                     {
                         case CombatState.Attack:
 
-                            //Put meter-based code here for correct timing and damage
+                            switch(mState)
+                            {
+                                case MoveState.Left: meterObjRec = new Rectangle(meterObjRec.X + 15, meterObjRec.Y, 25, 150);
+                                    if (meterObjRec.X >= 950) mState = MoveState.Right;
+                                    break;
+                                case MoveState.Right: meterObjRec = new Rectangle(meterObjRec.X - 15, meterObjRec.Y, 25, 150);
+                                    if (meterObjRec.X <= 25) mState = MoveState.Left;
+                                    break;
+                                case MoveState.Still: meterObjRec = new Rectangle(meterObjRec.X,meterObjRec.Y,25,150);
+                                    break;
+                                default: mState = MoveState.Left;
+                                    break;
+                            }
 
-                            if (curEnemy.CurrHealth > 0)
+                            if (SingleKeyPress(Keys.Space))
                             {
-                                cmbState = CombatState.Block;     //Set the attack phase to blocking.
+                                mState = MoveState.Still;   //Stop the meter    
+                                meterLocation = meterObjRec.X;  //Store its location
+                                attackPercentage = 100 * (meterLocation / 925);     //Set the attack percentage based on where it is on the meter.
+
+                                if (attackPercentage <= 0 && attackPercentage >= 15 || attackPercentage >= 85 && attackPercentage <= 100)   //Set the attack modifier.
+                                {
+                                    curEnemy.CurrHealth -= (int)(player.Damage * 0.5);  //Poor hit.
+                                }
+                                else if (attackPercentage <= 16 && attackPercentage >= 33 || attackPercentage >= 67 && attackPercentage <= 84)
+                                {
+                                    curEnemy.CurrHealth -= (int)(player.Damage * 0.75); //Weak hit
+                                }
+                                else if (attackPercentage <= 34 && attackPercentage >= 45 || attackPercentage >= 55 && attackPercentage <= 66)
+                                {
+                                    curEnemy.CurrHealth -= player.Damage;   //Normal hit.
+                                }
+                                else if (attackPercentage >= 46 && attackPercentage <= 54)
+                                {
+                                    curEnemy.CurrHealth -= (int)(player.Damage * 1.5);   //Critical hit.
+                                }
+                                else { curEnemy.CurrHealth -= 0; }
+
+                                System.Threading.Thread.Sleep(500);
+
+                                if (curEnemy.CurrHealth <= 0)
+                                {
+                                    curState = GameState.Walk;
+                                    enemies.Remove(curEnemy);   //Get rid of the enemy in the list of them.
+                                }
+                                else { cmbState = CombatState.Block; }
+
                             }
-                            else
-                            {
-                                curState = GameState.Walk;        //Says the battle is over
-                            }
-                            
+
                             break;
 
                         case CombatState.Block:
-                            if (arrCount == 0)
+
+                            if (arrCount == 0)  //If the arrow list is empty, fill it.
                             {
                                 curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Populate the list of current arrows the player needs to hit.
                                 arrCount = curArrows.Count;
-                                //for(int i = 0; i<= curArrows.Count - 1; i++)      //Move the arrows across the screen.
-                                //{
-                                //   curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - i  * 50, curArrows[i].Rec.Y, 512, 512);
-                                //}
                             }
-                            //for(int i = 0; i<= curArrows.Count - 1; i++)      //Move the arrows across the screen.
-                            //{
-                            //   curArrows[i].Rec = new Rectangle(curArrows[i].Rec.X - 7, curArrows[i].Rec.Y, 512, 512);
-                            //}
 
-                            curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150);
+                            curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150); //Move the arrows across the screen.
                             for (int a = 0; a < curArrows.Count; a++)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
                                 {
                                     if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
                                         {
                                             if (SingleKeyPress(curArrows[a].KeyValue))
                                             {
-                                                totalHits++;
-                                                
-                                                curArrows.RemoveAt(a);
-                                                a--;
+                                                totalHits++;    //Increment the number of hits                                               
+                                                curArrows.RemoveAt(a);  //remove the pressed arrow
+                                                a--;    //get rid of the arrow count
+                                            }
+                                            else if(SingleKeyPress(curArrows[a].KeyValue) && curArrows[a].Rec.X < 75 && curArrows[a].Rec.X > 350)   //If we are pressing the button out of bounds
+                                            {
+                                                curArrows.RemoveAt(a);  //Remove the arrow from the list
+                                                a--;    //Get rid of that arrow but don't add a hit to the list.
                                             }
                                         }
-                                    else if (curArrows[a].Rec.X < 0 - 200 - curArrows[a].Rec.Width)
+                                    else if (curArrows[a].Rec.X < -200 - curArrows[a].Rec.Width)
                                         {
                                              curArrows.RemoveAt(a);
                                              a--;
@@ -436,12 +477,11 @@ namespace As_Far_as_the_Light_Reaches
                                 arrCount = 0;
                                 
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
+                                meterObjRec.X = 25;
+                                mState = MoveState.Left;    //Reset the meter rectangle location and set its moving state.
+                                attackPercentage = 0;
+                                meterLocation = 0;
                             }
-                            else
-                            {
-
-                            }
-
                             
                             break;
 
@@ -610,7 +650,11 @@ namespace As_Far_as_the_Light_Reaches
                     switch (cmbState)
                     {
                         case CombatState.Attack:
-                            
+                            spriteBatch.DrawString(font, "Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
+                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            spriteBatch.Draw(meterObj, meterObjRec, Color.White);   //Draw the meter going back and forth on the screen.
+                            spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
+
                             break;
 
                         case CombatState.Block:
@@ -621,12 +665,13 @@ namespace As_Far_as_the_Light_Reaches
 
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
-                            
+                            spriteBatch.DrawString(font, "Health: " + curEnemy.CurrHealth, new Vector2(10, 10), Color.White);
+                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
                             break;
                         default: break;
 
                     }
-                    spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     break;
 
                 case GameState.Over:
@@ -764,15 +809,22 @@ namespace As_Far_as_the_Light_Reaches
 
         public void LevelGen()
         {
+
+            //Let's think about maybe putting random enemies in from the list with a random object.
+
             switch (manager.CurLevel)
             {
                 case 0:
                     //set player location and cam if possible
                     //set bounding box for level (?)
                     //set enemies, will eventually use file reading
-                    TestGoon = new Enemy(200, 200, 3, "Dumb Goon", 1, true);
+                    TestGoon = new Enemy(15, 1, 3, "Enemy", 1, true);
                     TestGoon.Pos = new Rectangle(0, 0, 75, 85);
                     enemies.Add(TestGoon);
+
+                    Enemy E = new Enemy(15, 1, 3, "Enemy2", 1, true);
+                    E.Pos = new Rectangle(200, 400, 75, 85);
+                    enemies.Add(E);
                     //set tunnel, rectangle to transfer level on collide.
                     break;
                 case 1:

@@ -121,3 +121,10 @@
 //Dustin Knowlton 6:01PM 4/13/16
 	-Dialogue method added, very unfinished.
 
+//Juri Kiin 10:52 AM 4/18/16
+	- Added the combat code for attacking.
+	- Subtracts the enemies health, and displays both the enemy and player health.
+
+
+
+
