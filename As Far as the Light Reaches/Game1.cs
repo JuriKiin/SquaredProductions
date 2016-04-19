@@ -446,56 +446,33 @@ namespace As_Far_as_the_Light_Reaches
                             }
 
                             curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150); //Move the arrows across the screen.
-                            for (int a = 0; a < curArrows.Count; a++)  //Check if the player presses the correct key when the key sprite gets to the hitbox.
+                            if(curArrows.Count!=0)  //As long is there is still an arrow to go across the screen, check for input.
                             {
-                                if (SingleKeyPress(curArrows[a].KeyValue) && (125 < curArrows[a].Rec.X && 425 > curArrows[a].Rec.X))
+                                if(SingleKeyPress(Keys.Up) || SingleKeyPress(Keys.Down) || SingleKeyPress(Keys.Left) || SingleKeyPress(Keys.Right))//If you hit a button...
                                 {
-                                    curArrows.RemoveAt(a);
-                                    a--;
-                                }
-
-                                else if ((SingleKeyPress(Keys.Up) || SingleKeyPress(Keys.Down) || SingleKeyPress(Keys.Left) || SingleKeyPress(Keys.Right)) && (125 > curArrows[a].Rec.X && 425 < curArrows[a].Rec.X))
-                                {
-                                    curArrows.RemoveAt(a);
-                                    a--;
-                                    totalHits++;
-                                }
-
-                                else if (SingleKeyPress(curArrows[a].KeyValue) == false && (125 < curArrows[a].Rec.X && 425 > curArrows[a].Rec.X))
-                                {
-                                    curArrows.RemoveAt(a);
-                                    a--;
-                                    totalHits++;
-                                }
-
-                                else if (curArrows[a].Rec.X < 0 - curArrows[a].Rec.Width)
-                                {
-                                    curArrows.RemoveAt(a);
-                                    a--;
-                                    totalHits++;
-                                }
-
-                                /*
-                                if (75 < (curArrows[a].Rec.X) && 350 > (curArrows[a].Rec.X) )   //Checks for collision
+                                    if(SingleKeyPress(curArrows[0].KeyValue)) //... is it the right one...?
                                     {
-                                        if (SingleKeyPress(curArrows[a].KeyValue))
+                                        if(curArrows[0].Rec.X>125 && curArrows[0].Rec.X<425) //...and is it in the hit box?
                                         {
-                                            totalHits++;    //Increment the number of hits                                               
-                                            curArrows.RemoveAt(a);  //remove the pressed arrow
-                                            a--;    //get rid of the arrow count
+                                            //no hit taken!
                                         }
-                                        else if(SingleKeyPress(curArrows[a].KeyValue) && 100 < curArrows[a].Rec.X && 300 > curArrows[a].Rec.X)   //If we are pressing the button out of bounds
+                                        else //...if it's not in the box...
                                         {
-                                            curArrows.RemoveAt(a);  //Remove the arrow from the list
-                                            a--;    //Get rid of that arrow but don't add a hit to the list.
+                                            totalHits++;//take a hit.
                                         }
                                     }
-                                else if (curArrows[a].Rec.X < -200 - curArrows[a].Rec.Width)
+                                    else //...if it's not the right one...
                                     {
-                                         curArrows.RemoveAt(a);
-                                         a--;
-                                    } 
-                                */
+                                        totalHits++;//take a hit.
+                                    }
+                                    curArrows.RemoveAt(0); //arrow will always be removed if you hit a button. Whether you get hit or not.
+                                }
+
+                                else if(curArrows[0].Rec.X < (0 - curArrows[0].Rec.Width)) //if you never hit a button and just let it pass...
+                                {
+                                    totalHits++;//take a hit. 
+                                    curArrows.RemoveAt(0); //but of course the arrow is still removed.
+                                }                               
                             }
 
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//

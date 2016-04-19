@@ -127,6 +127,10 @@
 //James Friedenberg 6:15pm 4/18/2016
 	-cleaned up the UI and have the health potions properly decrementing. Need to figure out how to make them properly restore player HP
 
+//Dustin Knowlton 7:52 PM 4/8/16
+	-Blocking sequence functions as intended, except for "hitbox" issues.
+	-X coordinates set as limits for hitbox seem to somehow disagree with what is displayed, including the hitbox graphic. 
+
 
 
 
