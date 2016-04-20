@@ -96,6 +96,7 @@ namespace As_Far_as_the_Light_Reaches
 
         // Maps 
         Texture2D Quarter;
+        Texture2D underground;
 
         // Vector attributes
         Vector2 pauseVec;
@@ -106,6 +107,7 @@ namespace As_Far_as_the_Light_Reaches
         List<Enemy> enemies = new List<Enemy>();    //This list will be filled with all of the enemies in each level. Every time a level is loaded, the list will be emptied and loaded with new enemies.
         List<Arrow> arrows = new List<Arrow>(); //A list of all of the keys the user has to press (arrow keys and letter keys)
         List<Arrow> curArrows = new List<Arrow>();  //A list of the keys the player has to hit every time he faces an enemy. (Reset with every battle)
+        List<Wall> walls = new List<Wall>();
 
         //Rectangle for the arrows spawning in the block state
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
@@ -139,8 +141,15 @@ namespace As_Far_as_the_Light_Reaches
         Enemy TestGoon;
         Rectangle tunnel;
         int totalHits = 0;
+
         //does the level need to be genned?
         bool levelgenreq;
+
+        //movement abilities
+        bool canUp = true;
+        bool canDown = true;
+        bool canLeft = true;
+        bool canRight = true;
 
         public Game1()
         {
@@ -243,9 +252,8 @@ namespace As_Far_as_the_Light_Reaches
             antagUpStill = Content.Load<Texture2D>("Characters\\Antag\\AntagUpStill.png");
             antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
-
                        
-            //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game voer screen.
+            //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game over screen.
             meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
         }
@@ -272,8 +280,6 @@ namespace As_Far_as_the_Light_Reaches
                 Exit();
 
             // TODO: Add your update logic here
-
-            
 
             // keybaard state for player movement 
             KeyboardState protag = Keyboard.GetState();
@@ -365,6 +371,35 @@ namespace As_Far_as_the_Light_Reaches
                             curState = GameState.Combat;    //Set the gamestate to combat
                             cmbState = CombatState.Attack;
                             mState = MoveState.Left;
+                        }
+                    }
+
+                    foreach (Wall w in walls)
+                    {
+                        if (w.Pos.Intersects(player.PlayerRec))
+                        {
+                            switch (w.Blocks)
+                            {
+                                case Wall.direction.up:
+                                    canUp = false;
+                                    break;
+                                case Wall.direction.down:
+                                    canDown = false;
+                                    break;
+                                case Wall.direction.left:
+                                    canLeft = false;
+                                    break;
+                                case Wall.direction.right:
+                                    canRight = false;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            canUp = true;
+                            canDown = true;
+                            canLeft = true;
+                            canRight = true;
                         }
                     }
 
@@ -782,39 +817,55 @@ namespace As_Far_as_the_Light_Reaches
             KeyboardState ks = Keyboard.GetState();
 
             //Make sprite move, and change sprite if the player looks differently
-            if (ks.IsKeyDown(Keys.A))
+            if (ks.IsKeyDown(Keys.A) && canLeft)
             {
                 cam.Position -= new Vector2(3, 0);
                 foreach(Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X + 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
                 }
+                foreach (Wall w in walls)
+                {
+                    w.Pos = new Rectangle(w.Pos.X + 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
+                }
 
             }//Move Left
-            if (ks.IsKeyDown(Keys.D))
+            if (ks.IsKeyDown(Keys.D) && canRight)
             {
                 cam.Position -= new Vector2(-3, 0);
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X - 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
                 }
+                foreach (Wall w in walls)
+                {
+                    w.Pos = new Rectangle(w.Pos.X - 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
+                }
 
             } //Move Right
-            if (ks.IsKeyDown(Keys.W))
+            if (ks.IsKeyDown(Keys.W) && canUp)
             {
                 cam.Position -= new Vector2(0, 3);
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X, e.Pos.Y + 3, e.Pos.Width, e.Pos.Height);
                 }
+                foreach (Wall w in walls)
+                {
+                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + 3, w.Pos.Width, w.Pos.Height);
+                }
             }
             //Move Up
-            if (ks.IsKeyDown(Keys.S))
+            if (ks.IsKeyDown(Keys.S) && canDown)
             {
                 cam.Position -= new Vector2(0, -3);
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X, e.Pos.Y - 3, e.Pos.Width, e.Pos.Height);
+                }
+                foreach (Wall w in walls)
+                {
+                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
             } //Move Down
         }
@@ -858,21 +909,26 @@ namespace As_Far_as_the_Light_Reaches
         {
 
             //Let's think about maybe putting random enemies in from the list with a random object.
-
+            //clear list of walls
+            walls.Clear();
             switch (manager.CurLevel)
             {
                 case 0:
                     //set player location and cam if possible
                     //set bounding box for level (?)
+                    walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
+                    walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
+                    walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
+                    walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
                     //set enemies, will eventually use file reading
                     TestGoon = new Enemy(15, 1, 3, "Enemy", 1, true);
                     TestGoon.Pos = new Rectangle(0, 0, 75, 85);
                     enemies.Add(TestGoon);
-
                     Enemy E = new Enemy(15, 1, 3, "Enemy2", 1, true);
                     E.Pos = new Rectangle(200, 400, 75, 85);
                     enemies.Add(E);
                     //set tunnel, rectangle to transfer level on collide.
+                    tunnel = new Rectangle(350, 1000, 300, 300);
                     break;
                 case 1:
                     //set player location and camera position
