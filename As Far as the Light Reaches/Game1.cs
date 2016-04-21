@@ -133,7 +133,6 @@ namespace As_Far_as_the_Light_Reaches
         //OBJECTS
         MouseState m = Mouse.GetState();
         Player player;
-        int arrCount = 0;
         Enemy curEnemy; //This object will be the enemy object that we fill with whatever enemy the player intersects with.
         Random rnd = new Random();
         LevelManager manager;
@@ -181,7 +180,7 @@ namespace As_Far_as_the_Light_Reaches
             
             //define player object and position
             player = new Player(20, 20, 4, 12, 0);
-            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - 150, GraphicsDevice.Viewport.Height / 2 - 300, 300, 300);
+            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - (int)37.5, GraphicsDevice.Viewport.Height / 2 - 143, 75, 85);
 
             //define manager
             manager = new LevelManager(Content);
@@ -474,49 +473,45 @@ namespace As_Far_as_the_Light_Reaches
 
                         case CombatState.Block:
 
-                            if (arrCount == 0)  //If the arrow list is empty, fill it.
+                            if (curArrows.Count == 0)  //If the arrow list is empty, fill it.
                             {
                                 curArrows = arrowSpawner.GenerateArrows(curEnemy.numArrow, curEnemy.Directional);   //Populate the list of current arrows the player needs to hit.
-                                arrCount = curArrows.Count;
                             }
 
-                            curArrows[0].Rec = new Rectangle(curArrows[0].Rec.X - 7, curArrows[0].Rec.Y, 150, 150); //Move the arrows across the screen.
-                            if(curArrows.Count!=0)  //As long is there is still an arrow to go across the screen, check for input.
+                            foreach (Arrow a in curArrows)
                             {
-                                if(SingleKeyPress(Keys.Up) || SingleKeyPress(Keys.Down) || SingleKeyPress(Keys.Left) || SingleKeyPress(Keys.Right))//If you hit a button...
-                                {
-                                    if(SingleKeyPress(curArrows[0].KeyValue)) //... is it the right one...?
-                                    {
-                                        if(curArrows[0].Rec.X>125 && curArrows[0].Rec.X<425) //...and is it in the hit box?
-                                        {
-                                            //no hit taken!
-                                        }
-                                        else //...if it's not in the box...
-                                        {
-                                            totalHits++;//take a hit.
-                                        }
-                                    }
-                                    else //...if it's not the right one...
-                                    {
-                                        totalHits++;//take a hit.
-                                    }
-                                    curArrows.RemoveAt(0); //arrow will always be removed if you hit a button. Whether you get hit or not.
-                                }
-
-                                else if(curArrows[0].Rec.X < (0 - curArrows[0].Rec.Width)) //if you never hit a button and just let it pass...
-                                {
-                                    totalHits++;//take a hit. 
-                                    curArrows.RemoveAt(0); //but of course the arrow is still removed.
-                                }                               
+                                a.Rec = new Rectangle(a.Rec.X - curEnemy.Speed, a.Rec.Y, 150, 150);  //Moves each one.
                             }
+
+                            if (SingleKeyPress(curArrows[0].KeyValue))  //If we press the right key
+                            {
+                                if (curArrows[0].Rec.X >= 250 && curArrows[0].Rec.X <= 300)
+                                {
+                                    curArrows.RemoveAt(0);
+                                }
+                                else
+                                {
+                                    totalHits++;
+                                    curArrows.RemoveAt(0);
+                                }
+                            }
+
+                            if (curArrows.Count != 0)
+                            {
+                                if (curArrows[0].Rec.X < 120)
+                                {
+                                    totalHits++;
+                                    curArrows.RemoveAt(0);
+                                }
+                            }
+
 
                             //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
 
                             if (curArrows.Count <= 0)
                             {
                                 player.CurHealth -= totalHits * curEnemy.Damage;  //Subtract the health 
-                                arrCount = 0;
-                                
+
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
                                 meterObjRec.X = 25;
                                 mState = MoveState.Left;    //Reset the meter rectangle location and set its moving state.
@@ -524,7 +519,8 @@ namespace As_Far_as_the_Light_Reaches
                                 meterLocation = 0;
                                 totalHits = 0;
                             }
-                            
+
+
                             break;
 
                         default: break;
@@ -635,7 +631,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 90), Color.White);
+                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
                     }
 
                     //Draw basic UI
@@ -718,19 +714,17 @@ namespace As_Far_as_the_Light_Reaches
                             break;
 
                         case CombatState.Block:
-                            int iteration = 0;
 
                             //Draw each arrow
                             foreach(Arrow a in curArrows)        
                             {
-                                iteration++;
 
                                 //Draw each arrow to the screen
-                                spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X + (iteration * a.Rec.Width + 50), a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
+                                spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X, a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
 
                             //Draws the hitbox for the arrows
-                            spriteBatch.Draw(hitbox, new Rectangle(275, 300, 150, 150), Color.White);
+                            spriteBatch.Draw(hitbox, new Rectangle(250, 300, 200, 150), Color.White);
 
                             //Draw the UI for combat
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
@@ -875,7 +869,7 @@ namespace As_Far_as_the_Light_Reaches
         {
             string[] files = Directory.GetFiles(".");
 
-            foreach(string file in files)
+            foreach (string file in files)
             {
                 if (file.Contains("$_$"))
                 {
@@ -889,12 +883,13 @@ namespace As_Far_as_the_Light_Reaches
                     int damage = br.ReadInt32();
                     int armor = br.ReadInt32();
                     int dir = br.ReadInt32();
+                    int speed = br.ReadInt32();
 
                     if (dir == 0) directional = true;
                     if (dir == 1) directional = false;
 
                     //Create the enemy and add it to the enemies list in game1
-                    Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional);
+                    Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional, speed);
                     e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
                     e.EnemyTexture = protag;
                     enemies.Add(e);
@@ -921,14 +916,27 @@ namespace As_Far_as_the_Light_Reaches
                     walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
                     walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
                     //set enemies, will eventually use file reading
-                    TestGoon = new Enemy(15, 1, 3, "Enemy", 1, true);
-                    TestGoon.Pos = new Rectangle(0, 0, 75, 85);
+
+                    TestGoon = new Enemy(20, 1, 3, "TestGoon", 1, true,6);
+                    TestGoon.Pos = new Rectangle(240, 0, 75, 85);
                     enemies.Add(TestGoon);
-                    Enemy E = new Enemy(15, 1, 3, "Enemy2", 1, true);
-                    E.Pos = new Rectangle(200, 400, 75, 85);
+
+                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
+                    E.Pos = new Rectangle(360, 0, 75, 85);
                     enemies.Add(E);
+
+                    Enemy E2 = new Enemy(16, 1, 7, "Enemy2", 1, true, 5);
+                    E2.Pos = new Rectangle(480, 0, 75, 85);
+                    enemies.Add(E2);
+
+                    Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
+                    E3.Pos = new Rectangle(600, 0, 75, 85);
+                    enemies.Add(E3);
+
+                    Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
+                    E4.Pos = new Rectangle(720, 0, 75, 85);
+                    enemies.Add(E4);
                     //set tunnel, rectangle to transfer level on collide.
-                    tunnel = new Rectangle(350, 1000, 300, 300);
                     break;
                 case 1:
                     //set player location and camera position

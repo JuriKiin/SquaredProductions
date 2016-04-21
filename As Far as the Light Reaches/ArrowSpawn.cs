@@ -64,18 +64,18 @@ namespace As_Far_as_the_Light_Reaches
 
             List<Arrow> cArrow = new List<Arrow>();     //List that generates a custom set of arrow keys every time the method is called.
 
-            for(int i = 0; i<=numberOfArrows;i++)   //Loop through this list until no more arrows should be spawned.
+            for (int i = 0; i <= numberOfArrows; i++)   //Loop through this list until no more arrows should be spawned.
             {
                 if (dir == true)
                 {
-                    int h = rnd.Next(0,4);
-                    Arrow ar = new Arrow(loadArrows[h], dict[h]);
+                    int h = rnd.Next(0, 4);
+                    Arrow ar = new Arrow(loadArrows[h], dict[h], new Rectangle(1174 + (i * 150), 300, 150, 150));
                     cArrow.Add(ar);
                 }
                 if (dir == false)
                 {
                     int j = rnd.Next(0, loadArrows.Count);
-                    Arrow arr = new Arrow(loadArrows[j], dict[j]);
+                    Arrow arr = new Arrow(loadArrows[j], dict[j], new Rectangle(1174 + (i * 150), 300, 150, 150));
                     cArrow.Add(arr);   //Adds the random key to the list.
                 }
 

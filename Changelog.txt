@@ -130,7 +130,14 @@
 //Dustin Knowlton 7:52 PM 4/8/16
 	-Blocking sequence functions as intended, except for "hitbox" issues.
 	-X coordinates set as limits for hitbox seem to somehow disagree with what is displayed, including the hitbox graphic. 
+	- Map Collisions
 
+//Juri Kiin 9:31 PM 4/20/16
+
+	- Finished combat mechanics.
+	- Fixed Enemy Collision
+	- Added an attack speed factor in the Enemy Creation App.
+	- Added enemies into test map
 
 
 

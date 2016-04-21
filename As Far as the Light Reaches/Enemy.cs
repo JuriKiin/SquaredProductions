@@ -21,15 +21,15 @@ namespace As_Far_as_the_Light_Reaches
         private int health;
         private int damage;
         public int numArrow;
-        private int boxwidth;
         private int armor;
+        private int speed;
         private bool directional;
         private Rectangle pos;
         private Texture2D enemyTex;
 
         Game1 game = new Game1();
 
-        public Enemy(int hp, int dam, int numArr, string nm,int arm,bool dir)
+        public Enemy(int hp, int dam, int numArr, string nm, int arm, bool dir, int spd)
         {
             name = nm;
             currHealth = hp;
@@ -38,6 +38,7 @@ namespace As_Far_as_the_Light_Reaches
             numArrow = numArr;
             armor = arm;
             directional = dir;
+            speed = spd;
         }
 
         //Properties
@@ -46,28 +47,23 @@ namespace As_Far_as_the_Light_Reaches
             get { return pos; }
             set { pos = value; }
         }
-
         public int NumArrow
         {
             get { return numArrow; }
         }
-
         public int Armor
         {
             get { return armor; }
         }
-
         public Texture2D EnemyTexture
         {
             get { return enemyTex; }
             set { enemyTex = value; }
         }
-
         public bool Directional
         {
             get { return directional; }
         }
-
         public int CurrHealth
         {
             get { return currHealth; }
@@ -78,32 +74,10 @@ namespace As_Far_as_the_Light_Reaches
             get { return damage; }
             set { damage = value; }
         }
-
-
-        public void PlayerAttack(int dmg, int rec) //pass in player's damage. It will also pass in the x value that the meterobj was stopped at.
+        public int Speed
         {
-            int mult = 0;
-            if (pos.X <= rec) //sample values assume the bar is 100 units to the right and 100 units long, and that the window is 300 units long. Obviously all wrong, but this is just example stuff right now.
-            {
-                mult = 0;
-            }
-            else if (pos.X <= rec)
-            {
-                mult = 1;
-            }
-            else if (pos.X <= rec)
-            {
-                mult = 2;
-            }
-            else if (pos.X <= rec)
-            {
-                mult = 3;
-            }
-            int hit = dmg * mult;
-            currHealth -= hit;
+            get { return speed; }
+            set { speed = value; }
         }
-
-        public void PlayerDefend(int dmg)
-        { }
     }
 }

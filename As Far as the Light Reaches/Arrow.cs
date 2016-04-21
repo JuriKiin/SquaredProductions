@@ -19,14 +19,15 @@ namespace As_Far_as_the_Light_Reaches
 
         public Keys KeyValue
         {
-            get{ return keyValue; }
-            set{ keyValue = value; }
+            get { return keyValue; }
+            set { keyValue = value; }
         }
 
-        public Arrow(Texture2D tex, Keys key)
+        public Arrow(Texture2D tex, Keys key, Rectangle rec)
         {
             curTexture = tex;
             keyValue = key;
+            this.rec = rec;
         }
 
         public Texture2D CurTexture
@@ -40,6 +41,7 @@ namespace As_Far_as_the_Light_Reaches
             get { return rec; }
             set { rec = value; }
         }
+
 
 
     }
