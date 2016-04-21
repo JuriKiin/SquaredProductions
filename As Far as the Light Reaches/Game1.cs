@@ -757,10 +757,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.H) && potsAmount > 0)
                     {
                         potsAmount--;
-                        if (potsAmount <= 0)
-                        {
-                            potsAmount = 0;
-                        }
+                        player.CurHealth += 10;
                     }
 
                     //Draw items menu
