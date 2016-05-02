@@ -143,3 +143,6 @@
 	- Added a class system into the game for the player to choose before they start the game.
 	- This affects the stats that they start out with
 
+// Dustin Knowlton 11:55AM 5/2/2016
+	-Dialogue method still progressing, currently displaying line permanently
+	-BUG FOUND: armor or something of the like is causing the player to gain health from damage instead of losing it.

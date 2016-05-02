@@ -152,6 +152,9 @@ namespace As_Far_as_the_Light_Reaches
         bool canLeft = true;
         bool canRight = true;
 
+        //list for dialogue strings
+        List<string> lines;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -188,6 +191,16 @@ namespace As_Far_as_the_Light_Reaches
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
 
+            //Load in dialogue lines
+            StreamReader Read = new StreamReader("Dialogue.txt"); //pull up text file.
+            string got;
+            lines = new List<string>();
+            while ((got = Read.ReadLine()) != null)
+            {
+                lines.Add(got);
+            }
+            Read.Close();
+
             //Run Levelgen for level 1
             LevelGen();
 
@@ -195,7 +208,7 @@ namespace As_Far_as_the_Light_Reaches
             cam = new Camera(GraphicsDevice.Viewport);
            
             ReadFiles();    //Creates each enemy
-            arrowSpawner.LoadArrow(Content);   //This should load all of the arrow keys into arrows.
+            arrowSpawner.LoadArrow(Content); //This should load all of the arrow keys into arrows.
 
             base.Initialize();
         }
@@ -257,6 +270,7 @@ namespace As_Far_as_the_Light_Reaches
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game over screen.
             meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
+            
         }
 
 
@@ -592,7 +606,6 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Class:
 
-
                     bool canPlay = false;
 
                     if (SingleKeyPress(Keys.D1))
@@ -623,14 +636,10 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
-
                 case GameState.Over:
                     break;
-
                 default: break;
-
             }
-
             base.Update(gameTime);
         }
 
@@ -674,7 +683,9 @@ namespace As_Far_as_the_Light_Reaches
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                    
+
+                    Dialogue(0, false);
+
                     switch (Moving)
                     {
                         case Motion.StandDown: spriteBatch.Draw(protagDownStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
@@ -845,7 +856,7 @@ namespace As_Far_as_the_Light_Reaches
             KeyboardState ks = Keyboard.GetState();
 
             //Make sprite move, and change sprite if the player looks differently
-            if (ks.IsKeyDown(Keys.A) && canLeft)
+            if (ks.IsKeyDown(Keys.A) && canLeft)//Move Left
             {
                 cam.Position -= new Vector2(3, 0);
                 foreach(Enemy e in enemies)
@@ -857,8 +868,8 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X + 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
 
-            }//Move Left
-            if (ks.IsKeyDown(Keys.D) && canRight)
+            }
+            if (ks.IsKeyDown(Keys.D) && canRight)//Move Right
             {
                 cam.Position -= new Vector2(-3, 0);
                 foreach (Enemy e in enemies)
@@ -870,8 +881,8 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X - 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
 
-            } //Move Right
-            if (ks.IsKeyDown(Keys.W) && canUp)
+            } 
+            if (ks.IsKeyDown(Keys.W) && canUp)//Move Up
             {
                 cam.Position -= new Vector2(0, 3);
                 foreach (Enemy e in enemies)
@@ -883,8 +894,7 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + 3, w.Pos.Width, w.Pos.Height);
                 }
             }
-            //Move Up
-            if (ks.IsKeyDown(Keys.S) && canDown)
+            if (ks.IsKeyDown(Keys.S) && canDown) //Move Down
             {
                 cam.Position -= new Vector2(0, -3);
                 foreach (Enemy e in enemies)
@@ -895,7 +905,14 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
-            } //Move Down
+            } 
+            if(ks.IsKeyDown(Keys.Space))
+            {
+                canUp = true;
+                canDown = true;
+                canRight = true;
+                canLeft = true;
+            }
         }
 
         //THIS METHOD LOADS ENEMIES IN FROM THE ENEMY FILES
@@ -970,6 +987,7 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
                     E4.Pos = new Rectangle(720, 0, 75, 85);
                     enemies.Add(E4);
+
                     //set tunnel, rectangle to transfer level on collide.
                     break;
                 case 1:
@@ -997,29 +1015,33 @@ namespace As_Far_as_the_Light_Reaches
         }
 
         //dialogue takes an actor and a line number and writes it out in the dialogue box.
-        public void Dialogue(string actor, int linum, bool combat)
+        public void Dialogue(int linum, bool combat)
         {
-            StreamReader Read = new StreamReader(File.OpenRead("Dialogue\\" + actor + ".txt")); //pull up text file based on inserted actor.
-            //fills an array with needed lines.
-            string got;
-            int i = 0;
-            string[] lines = new string[20];
-            while ((got = Read.ReadLine()) != null)
-            {
-                lines[i] = got;
-                i++;
-            }
+            string line1 = lines[linum];
+            string line2 = lines[linum];
+            string line3 = lines[linum];
+            Vector2 lineplace1;
+            Vector2 lineplace2;
+            Vector2 lineplace3;
 
             if (combat == true)
             {
-                //lineplace = wherever it needs to be.
+                lineplace1 = new Vector2(450, 578);
+                lineplace2 = new Vector2(450, 578);
+                lineplace3 = new Vector2(450, 578);
             }
             else
             {
-                //lineplace = wherever it needs to be
+                lineplace1 = new Vector2(355, 605);
+                lineplace2 = new Vector2(355, 605);
+                lineplace3 = new Vector2(355, 605);
             }
-            //whence we have a spritefont ready
-            //spriteBatch.DrawString(SpriteFont, lines[linum], position, Color.White); 
+            //draw strings needed
+            spriteBatch.DrawString(font, line1, lineplace1, Color.White);
+            spriteBatch.DrawString(font, line2, lineplace2, Color.White);
+            spriteBatch.DrawString(font, line3, lineplace3, Color.White);
+
+            
         }
     }
 }

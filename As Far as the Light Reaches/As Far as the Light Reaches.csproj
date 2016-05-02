@@ -122,6 +122,9 @@
     <Content Include="Content\Characters\Protag\ProtagUpWalk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Dialogue.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Maps\1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
