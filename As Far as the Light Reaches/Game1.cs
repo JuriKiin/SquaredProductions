@@ -663,7 +663,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(0, 0, 1000, 1800), Color.White);   //Draws the level background
+                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   //Draws the level background
                     mapBatch.End();
 
                     //Draw each enemy
@@ -756,7 +756,6 @@ namespace As_Far_as_the_Light_Reaches
                             //Draw each arrow
                             foreach(Arrow a in curArrows)        
                             {
-
                                 //Draw each arrow to the screen
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X, a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
                             }
