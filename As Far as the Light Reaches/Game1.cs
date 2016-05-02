@@ -113,7 +113,7 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
-        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats};
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class};
         GameState curState;
 
         enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
@@ -137,6 +137,8 @@ namespace As_Far_as_the_Light_Reaches
         Random rnd = new Random();
         LevelManager manager;
         ArrowSpawn arrowSpawner = new ArrowSpawn();
+        Class classSystem = new Class();
+
         Enemy TestGoon;
         Rectangle tunnel;
         int totalHits = 0;
@@ -306,7 +308,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Space))
                     {
-                        curState = GameState.Walk;      //Change the gamestate to walk (normal gameplay)
+                        curState = GameState.Class;      //Change the gamestate to walk (normal gameplay)
                         level = 0;
                     }
                     break;
@@ -510,7 +512,9 @@ namespace As_Far_as_the_Light_Reaches
 
                             if (curArrows.Count <= 0)
                             {
-                                player.CurHealth -= totalHits * curEnemy.Damage;  //Subtract the health 
+                                int damage = (totalHits * curEnemy.Damage) - (player.Armor / 2);
+
+                                player.CurHealth -= damage;  //Subtract the health 
 
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
                                 meterObjRec.X = 25;
@@ -585,6 +589,40 @@ namespace As_Far_as_the_Light_Reaches
                         curState = GameState.Walk;
                     }
                     break;
+
+                case GameState.Class:
+
+
+                    bool canPlay = false;
+
+                    if (SingleKeyPress(Keys.D1))
+                    {
+                        classSystem.Warrior();
+                        canPlay = true;
+                    }
+                    if (SingleKeyPress(Keys.D2))
+                    {
+                        classSystem.Assassin();
+                        canPlay = true;
+                    }
+                    if (SingleKeyPress(Keys.D3))
+                    {
+                        classSystem.Tank();
+                        canPlay = true;
+                    }
+                    if (SingleKeyPress(Keys.D4))
+                    {
+                        classSystem.Barbarian();
+                        canPlay = true;
+                    }
+
+                    if(canPlay)
+                    {
+                        curState = GameState.Walk;
+                    }
+
+                    break;
+
 
                 case GameState.Over:
                     break;
@@ -929,7 +967,7 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
                     E3.Pos = new Rectangle(600, 0, 75, 85);
                     enemies.Add(E3);
-
+                     
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
                     E4.Pos = new Rectangle(720, 0, 75, 85);
                     enemies.Add(E4);
@@ -955,24 +993,6 @@ namespace As_Far_as_the_Light_Reaches
                     //set enemies, will eventually use file reading
                     //set tunnel, rectangle to transfer level on collide.
                     break;
-                case 4:
-                    //set player location
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set tunnel, rectangle to transfer level on collide.
-                    break;
-                case 5:
-                    //set player location
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set tunnel, rectangle to transfer level on collide.
-                    break;
-                case 6:
-                    //set player location
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set tunnel, rectangle to transfer level on collide.
-                    break;
             }
             levelgenreq = false;
         }
@@ -991,7 +1011,6 @@ namespace As_Far_as_the_Light_Reaches
                 i++;
             }
 
-            Vector2 lineplace;
             if (combat == true)
             {
                 //lineplace = wherever it needs to be.

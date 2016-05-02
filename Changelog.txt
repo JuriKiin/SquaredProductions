@@ -139,5 +139,7 @@
 	- Added an attack speed factor in the Enemy Creation App.
 	- Added enemies into test map
 
-
+// Juri Kiin 9:48 AM 5/2/16
+	- Added a class system into the game for the player to choose before they start the game.
+	- This affects the stats that they start out with
 
