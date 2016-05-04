@@ -274,6 +274,9 @@ namespace As_Far_as_the_Light_Reaches
             //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game over screen.
             meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
+            // test maps 
+    
+
             
         }
 
@@ -707,7 +710,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   //Draws the level background
+                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   //Draws the level background                  
                     mapBatch.End();
 
                     //Draw each enemy

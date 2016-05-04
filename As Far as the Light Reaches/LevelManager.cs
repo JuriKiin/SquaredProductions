@@ -21,7 +21,9 @@ namespace As_Far_as_the_Light_Reaches
         List<Texture2D> levelBackgrounds = new List<Texture2D>();   //List of background textures for each level
         Texture2D curLevelTexture;
         string path = "Maps\\";
-
+        // 2737 2965 dimensions for each underground piece 
+        int[,] underground;
+        
 
         public int CurLevel
         {
@@ -40,15 +42,10 @@ namespace As_Far_as_the_Light_Reaches
         {
             int count = 1;
             curLevel = -1;
-            while (true)
-            {
-                try
-                {
-                    levelBackgrounds.Add(cont.Load<Texture2D>(path + count.ToString()));
-                    count++;
-                }
-                catch { break; }
-            }
+  
+            levelBackgrounds.Add(cont.Load<Texture2D>(path + count.ToString()));
+            count++;
+          
         }
 
 
@@ -58,7 +55,7 @@ namespace As_Far_as_the_Light_Reaches
             curLevelTexture = levelBackgrounds[curLevel];
         }
 
-
+    
 
 
     }
