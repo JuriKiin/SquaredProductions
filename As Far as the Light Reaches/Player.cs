@@ -19,6 +19,9 @@ namespace As_Far_as_the_Light_Reaches
         private int y;              //Y position of Rec
         private int width;
         private int height;
+        private int velocityX;
+        private int velocityY;
+        
 
         //Character attributes
         private int maxHealth;
@@ -28,6 +31,16 @@ namespace As_Far_as_the_Light_Reaches
         private int boost;
 
         //Properties
+        public int VelocityX
+        {
+            get { return velocityX; }
+            set { velocityX = 0; }
+        }
+        public int VelocityY
+        {
+            get { return velocityY; }
+            set { velocityY = 0; }
+        }
         public int X
         {
             get { return playerRec.X; }

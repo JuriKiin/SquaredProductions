@@ -535,6 +535,11 @@ namespace As_Far_as_the_Light_Reaches
 
                                 player.CurHealth -= damage;  //Subtract the health 
 
+                                if(player.CurHealth <= 0)
+                                {
+                                    curState = GameState.Over;
+                                }
+
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
                                 meterObjRec.X = 25;
                                 mState = MoveState.Left;    //Reset the meter rectangle location and set its moving state.
@@ -642,7 +647,13 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Over:
+                    if(SingleKeyPress(Keys.Space))
+                    {
+                        Exit();
+                    }
+
                     break;
+
                 default: break;
             }
             base.Update(gameTime);
@@ -868,6 +879,8 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A) && canLeft)//Move Left
             {
+                player.VelocityX += 10;
+
                 cam.Position -= new Vector2(3, 0);
                 foreach(Enemy e in enemies)
                 {
@@ -881,6 +894,8 @@ namespace As_Far_as_the_Light_Reaches
             }
             if (ks.IsKeyDown(Keys.D) && canRight)//Move Right
             {
+                player.VelocityX += 10;
+
                 cam.Position -= new Vector2(-3, 0);
                 foreach (Enemy e in enemies)
                 {
@@ -894,6 +909,8 @@ namespace As_Far_as_the_Light_Reaches
             } 
             if (ks.IsKeyDown(Keys.W) && canUp)//Move Up
             {
+                player.VelocityY += 10;
+
                 cam.Position -= new Vector2(0, 3);
                 foreach (Enemy e in enemies)
                 {
@@ -906,6 +923,8 @@ namespace As_Far_as_the_Light_Reaches
             }
             if (ks.IsKeyDown(Keys.S) && canDown) //Move Down
             {
+                player.VelocityY += 10;
+
                 cam.Position -= new Vector2(0, -3);
                 foreach (Enemy e in enemies)
                 {
@@ -915,7 +934,18 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
-            } 
+            }
+            
+            if(canUp == false || canDown == false)
+            {
+                player.VelocityY = 0;
+            }
+             
+            if(canLeft == false || canRight == false)
+            {
+                player.VelocityX = 0;
+            }
+
             if(ks.IsKeyDown(Keys.Space))
             {
                 canUp = true;
@@ -923,6 +953,7 @@ namespace As_Far_as_the_Light_Reaches
                 canRight = true;
                 canLeft = true;
             }
+
         }
 
         //THIS METHOD LOADS ENEMIES IN FROM THE ENEMY FILES
