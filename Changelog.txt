@@ -154,3 +154,6 @@
 	- Placed enemies in different places in level
 	- improved attack system.
 
+//Dustin Knowlton 4:47PM 5/4/16
+	-Dialogue functioning out of/before combat, but only for one line.
+
