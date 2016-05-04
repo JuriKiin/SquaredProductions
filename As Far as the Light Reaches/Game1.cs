@@ -203,6 +203,7 @@ namespace As_Far_as_the_Light_Reaches
             manager.LoadNextLevel();
 
             //Load in dialogue lines
+            /*
             StreamReader Read = new StreamReader("Dialogue.txt"); //pull up text file.
             string got;
             while ((got = Read.ReadLine()) != "END")
@@ -210,7 +211,7 @@ namespace As_Far_as_the_Light_Reaches
                 lines.Add(got);
             }
             Read.Close();
-
+            */
             //Run Levelgen for level 1
             LevelGen();
 
@@ -397,7 +398,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (e.Pos.Intersects(player.PlayerRec))
                         {
-                            Dialogue(13,false);
+                            //Dialogue(13,false);
                             curEnemy = e;   //Sets the enemy
                             if(SingleKeyPress(Keys.Space))
                             {
@@ -993,25 +994,12 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
             }
-<<<<<<< Updated upstream
-            
-            if(canUp == false || canDown == false)
-            {
-                player.VelocityY = 0;
-            }
-             
-            if(canLeft == false || canRight == false)
-            {
-                player.VelocityX = 0;
-            }
 
             if(SingleKeyPress(Keys.Space))
             {
                 dialoguing = false;
 
             }
-=======
->>>>>>> Stashed changes
 
         }
 
@@ -1089,7 +1077,7 @@ namespace As_Far_as_the_Light_Reaches
                     enemies.Add(E4);
 
                     //logline sets beginning of map dialogue to write
-                    Dialogue(0, false);
+                    //Dialogue(0, false);
 
                     //set tunnel, rectangle to transfer level on collide.
                     break;
@@ -1117,7 +1105,7 @@ namespace As_Far_as_the_Light_Reaches
             levelgenreq = false;
         }
 
-        
+        /*
         //dialogue takes an actor and a line number and writes it out in the dialogue box.
         public void Dialogue(int linum, bool combat)
         {
@@ -1143,6 +1131,6 @@ namespace As_Far_as_the_Light_Reaches
             
             
         }
-        
+        */
     }
 }
