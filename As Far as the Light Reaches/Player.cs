@@ -10,6 +10,8 @@ namespace As_Far_as_the_Light_Reaches
 {
     class Player
     {
+        //MAYBE THINK ABOUT ADDING A CLASS ATTRIBUTE TO THE MAIN PLAYER CLASS INSTEAD OF AHAVING A SEPERATE CLASS FOR CLASS SYSTEM
+
         //Draw attributes
         private Texture2D playerTexture;    //Player Texture
         private Rectangle playerRec;        //Player Rectangle
@@ -19,7 +21,7 @@ namespace As_Far_as_the_Light_Reaches
         private int height;
 
         //Character attributes
-        private int maxHealth = 20;
+        private int maxHealth;
         private int curHealth;
         private int damage;
         private int armor;
@@ -73,7 +75,6 @@ namespace As_Far_as_the_Light_Reaches
             set { playerRec = value; }
 
         }
-
         public Texture2D PlayerTexture
         {
             get { return playerTexture; }

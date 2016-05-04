@@ -143,6 +143,9 @@
     <Content Include="Content\UI\ArrowKey\3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\ClassSelectionUI.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\combatMeterObj.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

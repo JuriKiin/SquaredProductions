@@ -28,6 +28,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D basicUI;
         Texture2D battleUI;
         Texture2D hitbox;
+        Texture2D classSelect;
         SpriteFont font;
         int potsAmount = 10;
 
@@ -192,6 +193,8 @@ namespace As_Far_as_the_Light_Reaches
             manager.LoadNextLevel();
 
             //Load in dialogue lines
+
+            /*
             StreamReader Read = new StreamReader("Dialogue.txt"); //pull up text file.
             string got;
             lines = new List<string>();
@@ -200,6 +203,7 @@ namespace As_Far_as_the_Light_Reaches
                 lines.Add(got);
             }
             Read.Close();
+            */
 
             //Run Levelgen for level 1
             LevelGen();
@@ -235,6 +239,7 @@ namespace As_Far_as_the_Light_Reaches
             loadScreen = Content.Load<Texture2D>("UI\\LoadingScreen.png"); // Loading in load screen between levels
             overScreen = Content.Load<Texture2D>("UI\\GameOverScreen.png"); // Loading in Game Over screen
             hitbox = Content.Load<Texture2D>("UI\\ArrowHitbox.png"); // Loading in hitbox texture for block phase
+            classSelect = Content.Load<Texture2D>("UI\\ClassSelectionUI.png"); //Loading in Class Select UI
 
             // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -608,22 +613,22 @@ namespace As_Far_as_the_Light_Reaches
 
                     bool canPlay = false;
 
-                    if (SingleKeyPress(Keys.D1))
+                    if (SingleKeyPress(Keys.W))
                     {
                         classSystem.Warrior();
                         canPlay = true;
                     }
-                    if (SingleKeyPress(Keys.D2))
+                    if (SingleKeyPress(Keys.A))
                     {
                         classSystem.Assassin();
                         canPlay = true;
                     }
-                    if (SingleKeyPress(Keys.D3))
+                    if (SingleKeyPress(Keys.T))
                     {
                         classSystem.Tank();
                         canPlay = true;
                     }
-                    if (SingleKeyPress(Keys.D4))
+                    if (SingleKeyPress(Keys.B))
                     {
                         classSystem.Barbarian();
                         canPlay = true;
@@ -664,6 +669,11 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.Draw(title, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     break;
 
+                case GameState.Class:
+
+                    spriteBatch.Draw(classSelect, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    break;
+
                 case GameState.Walk:
 
                     //Draw HP in Walking UI
@@ -684,7 +694,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-                    Dialogue(0, false);
+                    //Dialogue(0, false);
 
                     switch (Moving)
                     {
@@ -1014,6 +1024,7 @@ namespace As_Far_as_the_Light_Reaches
             levelgenreq = false;
         }
 
+        /*
         //dialogue takes an actor and a line number and writes it out in the dialogue box.
         public void Dialogue(int linum, bool combat)
         {
@@ -1040,8 +1051,7 @@ namespace As_Far_as_the_Light_Reaches
             spriteBatch.DrawString(font, line1, lineplace1, Color.White);
             spriteBatch.DrawString(font, line2, lineplace2, Color.White);
             spriteBatch.DrawString(font, line3, lineplace3, Color.White);
-
-            
         }
+        */
     }
 }

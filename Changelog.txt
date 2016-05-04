@@ -13,8 +13,7 @@
 //James Friedenberg 3/2/2016 2:26pm
 	-Created class for Buttons
 	-Attempted to implement buttons into the pause menu
-	-Loaded seperate Texture Files for the button assets so I could give the rectangles that represent the buttons 
-	their own coordinates
+	-Loaded seperate Texture Files for the button assets so I could give the rectangles that represent the buttons their own coordinates
 
 //Dustin Knowlton 2/29/2016 11:30 
 	-Added Camera.cs
@@ -49,7 +48,6 @@
 	- Blaze it
 	- Camera fully added, except for actual map draw statement (in but not correct, commented out)
 
-
 //Juri Kiin  3/9/16 4:51 PM
 	- Worked on the attack combat.
 	- Added a dictionary for future level management.
@@ -76,7 +74,6 @@
 
 //Dustin Knowlton 7:17pm
 	-few small adjustments to the move class, failed to fix enemy collision.
-
 
 //Juri Kiin 3:07 PM	3/23/16
 	- Created the Enemy Creation tool that allows the user to input stats for the enemy, and it creates a binary file with those stats stored.
@@ -124,16 +121,16 @@
 //Juri Kiin 10:52 AM 4/18/16
 	- Added the combat code for attacking.
 	- Subtracts the enemies health, and displays both the enemy and player health.
+
 //James Friedenberg 6:15pm 4/18/2016
 	-cleaned up the UI and have the health potions properly decrementing. Need to figure out how to make them properly restore player HP
 
 //Dustin Knowlton 7:52 PM 4/8/16
 	-Blocking sequence functions as intended, except for "hitbox" issues.
 	-X coordinates set as limits for hitbox seem to somehow disagree with what is displayed, including the hitbox graphic. 
-	- Map Collisions
+	-Map Collisions
 
 //Juri Kiin 9:31 PM 4/20/16
-
 	- Finished combat mechanics.
 	- Fixed Enemy Collision
 	- Added an attack speed factor in the Enemy Creation App.
@@ -146,3 +143,7 @@
 // Dustin Knowlton 11:55AM 5/2/2016
 	-Dialogue method still progressing, currently displaying line permanently
 	-BUG FOUND: armor or something of the like is causing the player to gain health from damage instead of losing it.
+
+//James Friedenberg 8:40 PM 5/3/2015
+	-Created and loaded in the Class System UI
+	-Suggested fix for class not working: Add parameters to the player class for class changes instead of making a seperate class for the class system
