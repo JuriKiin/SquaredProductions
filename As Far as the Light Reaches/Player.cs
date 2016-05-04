@@ -19,8 +19,10 @@ namespace As_Far_as_the_Light_Reaches
         private int y;              //Y position of Rec
         private int width;
         private int height;
-        private int velocityX;
-        private int velocityY;
+        private int velocityLeft;
+        private int velocityRight;
+        private int velocityUp;
+        private int velocityDown;
         
 
         //Character attributes
@@ -31,21 +33,36 @@ namespace As_Far_as_the_Light_Reaches
         private int boost;
 
         //Properties
-        public int VelocityX
+        public int VelocityRight
         {
-            get { return velocityX; }
-            set { velocityX = 0; }
+            get { return velocityRight; }
+            set { velocityRight = 10; }
         }
-        public int VelocityY
+
+        public int VelocityLeft
         {
-            get { return velocityY; }
-            set { velocityY = 0; }
+            get { return velocityLeft; }
+            set { velocityLeft = 10; }
         }
+
+        public int VelocityUp
+        {
+            get { return velocityUp; }
+            set { velocityUp = 10; }
+        }
+
+        public int VelocityDown
+        {
+            get { return velocityDown; }
+            set { velocityDown = 10; }
+        }
+
         public int X
         {
             get { return playerRec.X; }
             set { playerRec.X = value; }
         }
+
         public int Y
         {
             get { return playerRec.Y; }

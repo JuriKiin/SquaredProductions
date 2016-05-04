@@ -30,6 +30,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D hitbox;
         Texture2D classSelect;
         SpriteFont font;
+        SpriteFont font2;
         int potsAmount = 10;
 
         //Player Rectangle
@@ -153,6 +154,8 @@ namespace As_Far_as_the_Light_Reaches
         bool canDown = true;
         bool canLeft = true;
         bool canRight = true;
+
+        bool canMove = true;
 
         //list for dialogue strings
         List<string> lines = new List<string>();
@@ -348,6 +351,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     //moves the camera, therefore the map and map elements.
                     Move();
+                    
 
                     if(!protag.IsKeyDown(Keys.W) && !protag.IsKeyDown(Keys.S) && !protag.IsKeyDown(Keys.A) && !protag.IsKeyDown(Keys.D))
                     {
@@ -415,28 +419,54 @@ namespace As_Far_as_the_Light_Reaches
                         }
                         else if (w.Pos.Intersects(player.PlayerRec))
                         {
+                            Rectangle deathRec = new Rectangle(playerRec.X, playerRec.Y, playerRec.Width - 50, playerRec.Height - 50);
+                            playerRec = deathRec;
+
+                            if(playerRec.X == deathRec.X)
+                            {
+                                curState = GameState.Over;
+                            }
+
+                            /*
                             switch (w.Blocks)
                             {
                                 case Wall.direction.up:
-                                    canUp = false;
+                                    player.VelocityUp = 0;
+
+                                    if(player.VelocityUp == 0)
+                                    {
+                                        player.Y -= 0;
+                                    }
                                     break;
+
                                 case Wall.direction.down:
-                                    canDown = false;
+                                    player.VelocityDown = 0;
+
+                                    if (player.VelocityDown == 0)
+                                    {
+                                        player.Y -= 0;
+                                    }
                                     break;
+
                                 case Wall.direction.left:
-                                    canLeft = false;
+                                    player.VelocityLeft = 0;
+
+                                    if (player.VelocityLeft == 0)
+                                    {
+                                        player.X -= 0;
+                                    }
+
                                     break;
                                 case Wall.direction.right:
-                                    canRight = false;
+                                    player.VelocityRight = 0;
+
+                                    if(player.VelocityRight == 0)
+                                    {
+                                        player.X -= 0;
+                                    }
                                     break;
                             }
-                        }
-                        else
-                        {
-                            canUp = true;
-                            canDown = true;
-                            canLeft = true;
-                            canRight = true;
+                            */
                         }
                     }
 
@@ -913,8 +943,6 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A) && canLeft)//Move Left
             {
-                player.VelocityX += 10;
-
                 cam.Position -= new Vector2(3, 0);
                 foreach(Enemy e in enemies)
                 {
@@ -923,13 +951,12 @@ namespace As_Far_as_the_Light_Reaches
                 foreach (Wall w in walls)
                 {
                     w.Pos = new Rectangle(w.Pos.X + 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
-                }
+                } 
 
             }
+
             if (ks.IsKeyDown(Keys.D) && canRight)//Move Right
             {
-                player.VelocityX += 10;
-
                 cam.Position -= new Vector2(-3, 0);
                 foreach (Enemy e in enemies)
                 {
@@ -939,12 +966,10 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X - 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
-
             } 
+
             if (ks.IsKeyDown(Keys.W) && canUp)//Move Up
             {
-                player.VelocityY += 10;
-
                 cam.Position -= new Vector2(0, 3);
                 foreach (Enemy e in enemies)
                 {
@@ -955,10 +980,9 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + 3, w.Pos.Width, w.Pos.Height);
                 }
             }
+
             if (ks.IsKeyDown(Keys.S) && canDown) //Move Down
             {
-                player.VelocityY += 10;
-
                 cam.Position -= new Vector2(0, -3);
                 foreach (Enemy e in enemies)
                 {
@@ -969,6 +993,7 @@ namespace As_Far_as_the_Light_Reaches
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
             }
+<<<<<<< Updated upstream
             
             if(canUp == false || canDown == false)
             {
@@ -985,6 +1010,8 @@ namespace As_Far_as_the_Light_Reaches
                 dialoguing = false;
 
             }
+=======
+>>>>>>> Stashed changes
 
         }
 
