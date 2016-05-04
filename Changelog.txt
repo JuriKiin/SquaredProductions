@@ -147,3 +147,10 @@
 //James Friedenberg 8:40 PM 5/3/2015
 	-Created and loaded in the Class System UI
 	-Suggested fix for class not working: Add parameters to the player class for class changes instead of making a seperate class for the class system
+
+
+//Juri Kiin 4:28 PM	5/4/16
+	- Fixed class system.
+	- Placed enemies in different places in level
+	- improved attack system.
+

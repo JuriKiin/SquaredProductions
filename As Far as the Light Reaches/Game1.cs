@@ -138,7 +138,6 @@ namespace As_Far_as_the_Light_Reaches
         Random rnd = new Random();
         LevelManager manager;
         ArrowSpawn arrowSpawner = new ArrowSpawn();
-        Class classSystem = new Class();
 
         Enemy TestGoon;
         Rectangle tunnel;
@@ -461,15 +460,15 @@ namespace As_Far_as_the_Light_Reaches
                                 meterLocation = meterObjRec.X;  //Store its location
                                 attackPercentage = 100 * (meterLocation / 925);     //Set the attack percentage based on where it is on the meter.
 
-                                if (attackPercentage <= 0 && attackPercentage >= 15 || attackPercentage >= 85 && attackPercentage <= 100)   //Set the attack modifier.
+                                if ((attackPercentage >= 0 && attackPercentage <= 15) || (attackPercentage >= 85 && attackPercentage <= 100))   //Set the attack modifier.
                                 {
                                     curEnemy.CurrHealth -= (int)(player.Damage * 0.5);  //Poor hit.
                                 }
-                                else if (attackPercentage <= 16 && attackPercentage >= 33 || attackPercentage >= 67 && attackPercentage <= 84)
+                                else if ((attackPercentage >= 16 && attackPercentage <= 33) || (attackPercentage >= 67 && attackPercentage <= 84))
                                 {
                                     curEnemy.CurrHealth -= (int)(player.Damage * 0.75); //Weak hit
                                 }
-                                else if (attackPercentage <= 34 && attackPercentage >= 45 || attackPercentage >= 55 && attackPercentage <= 66)
+                                else if ((attackPercentage >= 34 && attackPercentage <= 45) || (attackPercentage >= 55 && attackPercentage <= 66))
                                 {
                                     curEnemy.CurrHealth -= player.Damage;   //Normal hit.
                                 }
@@ -477,7 +476,10 @@ namespace As_Far_as_the_Light_Reaches
                                 {
                                     curEnemy.CurrHealth -= (int)(player.Damage * 1.5);   //Critical hit.
                                 }
-                                else { curEnemy.CurrHealth -= 0; }
+                                else
+                                {
+                                    curEnemy.CurrHealth -= 0;
+                                }
 
                                 System.Threading.Thread.Sleep(500);
 
@@ -531,7 +533,7 @@ namespace As_Far_as_the_Light_Reaches
 
                             if (curArrows.Count <= 0)
                             {
-                                int damage = (totalHits * curEnemy.Damage) - (player.Armor / 2);
+                                int damage = (int)((totalHits * curEnemy.Damage) * player.Armor);
 
                                 player.CurHealth -= damage;  //Subtract the health 
 
@@ -565,7 +567,7 @@ namespace As_Far_as_the_Light_Reaches
                         //Checks if health potion is used 
                         if (SingleKeyPress(Keys.H) && potsAmount > 0)
                         {
-                            player.CurHealth += 10;
+                            player.CurHealth = player.MaxHealth;
 
                             potsAmount--;
                             if (potsAmount <= 0)
@@ -618,24 +620,36 @@ namespace As_Far_as_the_Light_Reaches
 
                     bool canPlay = false;
 
-                    if (SingleKeyPress(Keys.W))
+                    if (SingleKeyPress(Keys.T))
                     {
-                        classSystem.Warrior();
+                        player.MaxHealth = 26;
+                        player.CurHealth = 26;
+                        player.Damage = 3;
+                        player.Armor = 0.5;
                         canPlay = true;
                     }
                     if (SingleKeyPress(Keys.A))
                     {
-                        classSystem.Assassin();
+                        player.MaxHealth = 14;
+                        player.CurHealth = 14;
+                        player.Damage = 5;
+                        player.Armor = 1.5;
                         canPlay = true;
                     }
-                    if (SingleKeyPress(Keys.T))
+                    if (SingleKeyPress(Keys.W))
                     {
-                        classSystem.Tank();
+                        player.MaxHealth = 18;
+                        player.CurHealth = 18;
+                        player.Damage = 7;
+                        player.Armor = 0.75;
                         canPlay = true;
                     }
                     if (SingleKeyPress(Keys.B))
                     {
-                        classSystem.Barbarian();
+                        player.MaxHealth = 20;
+                        player.CurHealth = 20;
+                        player.Damage = 6;
+                        player.Armor = 0.1;
                         canPlay = true;
                     }
 
@@ -1009,12 +1023,12 @@ namespace As_Far_as_the_Light_Reaches
                     walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
                     //set enemies, will eventually use file reading
 
-                    TestGoon = new Enemy(20, 1, 3, "TestGoon", 1, true,6);
-                    TestGoon.Pos = new Rectangle(240, 0, 75, 85);
+                    TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
+                    TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
                     enemies.Add(TestGoon);
 
                     Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
-                    E.Pos = new Rectangle(360, 0, 75, 85);
+                    E.Pos = new Rectangle(-450, -2300, 75, 85);
                     enemies.Add(E);
 
                     Enemy E2 = new Enemy(16, 1, 7, "Enemy2", 1, true, 5);

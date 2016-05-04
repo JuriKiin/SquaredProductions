@@ -42,7 +42,6 @@
     <Compile Include="ArrowSpawn.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="Class.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="LevelManager.cs" />
