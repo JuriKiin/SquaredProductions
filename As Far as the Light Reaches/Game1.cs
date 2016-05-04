@@ -142,6 +142,8 @@ namespace As_Far_as_the_Light_Reaches
         Enemy TestGoon;
         Rectangle tunnel;
         int totalHits = 0;
+        bool dialoguing;
+        int logline;
 
         //does the level need to be genned?
         bool levelgenreq;
@@ -153,7 +155,13 @@ namespace As_Far_as_the_Light_Reaches
         bool canRight = true;
 
         //list for dialogue strings
-        List<string> lines;
+        List<string> lines = new List<string>();
+        string line1;
+        string line2;
+        string line3;
+        Vector2 lineplace1;
+        Vector2 lineplace2;
+        Vector2 lineplace3;
 
         public Game1()
         {
@@ -192,17 +200,13 @@ namespace As_Far_as_the_Light_Reaches
             manager.LoadNextLevel();
 
             //Load in dialogue lines
-
-            /*
             StreamReader Read = new StreamReader("Dialogue.txt"); //pull up text file.
             string got;
-            lines = new List<string>();
-            while ((got = Read.ReadLine()) != null)
+            while ((got = Read.ReadLine()) != "END")
             {
                 lines.Add(got);
             }
             Read.Close();
-            */
 
             //Run Levelgen for level 1
             LevelGen();
@@ -389,16 +393,27 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (e.Pos.Intersects(player.PlayerRec))
                         {
+                            Dialogue(13,false);
                             curEnemy = e;   //Sets the enemy
-                            curState = GameState.Combat;    //Set the gamestate to combat
-                            cmbState = CombatState.Attack;
-                            mState = MoveState.Left;
+                            if(SingleKeyPress(Keys.Space))
+                            {
+                                curState = GameState.Combat;    //Set the gamestate to combat
+                                cmbState = CombatState.Attack;
+                                mState = MoveState.Left;
+                            }
                         }
                     }
 
                     foreach (Wall w in walls)
                     {
-                        if (w.Pos.Intersects(player.PlayerRec))
+                        if (dialoguing)
+                        {
+                            canUp = false;
+                            canDown = false;
+                            canLeft = false;
+                            canRight = false;
+                        }
+                        else if (w.Pos.Intersects(player.PlayerRec))
                         {
                             switch (w.Blocks)
                             {
@@ -722,7 +737,12 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
-                    //Dialogue(0, false);
+                    if (dialoguing)
+                    {
+                        spriteBatch.DrawString(font, line1, lineplace1, Color.White);
+                        spriteBatch.DrawString(font, line2, lineplace2, Color.White);
+                        spriteBatch.DrawString(font, line3, lineplace3, Color.White);
+                    }
 
                     switch (Moving)
                     {
@@ -829,7 +849,6 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Over:
 
                     spriteBatch.Draw(overScreen,new Rectangle(0,0,winX,winY),Color.White);    //Draw the game over screen.
-
                     break;
 
                 case GameState.Pause:
@@ -848,7 +867,6 @@ namespace As_Far_as_the_Light_Reaches
 
                     //Draw items menu
                     spriteBatch.Draw(itemsMenu, new Vector2(0, 0), Color.White); 
-
                     spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(670, 275), Color.White);
                     break;
 
@@ -866,7 +884,6 @@ namespace As_Far_as_the_Light_Reaches
                 default: break;
 
             }
-
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -963,12 +980,10 @@ namespace As_Far_as_the_Light_Reaches
                 player.VelocityX = 0;
             }
 
-            if(ks.IsKeyDown(Keys.Space))
+            if(SingleKeyPress(Keys.Space))
             {
-                canUp = true;
-                canDown = true;
-                canRight = true;
-                canLeft = true;
+                dialoguing = false;
+
             }
 
         }
@@ -1046,6 +1061,9 @@ namespace As_Far_as_the_Light_Reaches
                     E4.Pos = new Rectangle(720, 0, 75, 85);
                     enemies.Add(E4);
 
+                    //logline sets beginning of map dialogue to write
+                    Dialogue(0, false);
+
                     //set tunnel, rectangle to transfer level on collide.
                     break;
                 case 1:
@@ -1072,16 +1090,14 @@ namespace As_Far_as_the_Light_Reaches
             levelgenreq = false;
         }
 
-        /*
+        
         //dialogue takes an actor and a line number and writes it out in the dialogue box.
         public void Dialogue(int linum, bool combat)
         {
-            string line1 = lines[linum];
-            string line2 = lines[linum];
-            string line3 = lines[linum];
-            Vector2 lineplace1;
-            Vector2 lineplace2;
-            Vector2 lineplace3;
+            dialoguing = true;
+            line1 = lines[linum];
+            line2 = lines[linum+=1];
+            line3 = lines[linum+=1];
 
             if (combat == true)
             {
@@ -1092,14 +1108,14 @@ namespace As_Far_as_the_Light_Reaches
             else
             {
                 lineplace1 = new Vector2(355, 605);
-                lineplace2 = new Vector2(355, 605);
-                lineplace3 = new Vector2(355, 605);
+                lineplace2 = new Vector2(355, 625);
+                lineplace3 = new Vector2(355, 645);
             }
+
             //draw strings needed
-            spriteBatch.DrawString(font, line1, lineplace1, Color.White);
-            spriteBatch.DrawString(font, line2, lineplace2, Color.White);
-            spriteBatch.DrawString(font, line3, lineplace3, Color.White);
+            
+            
         }
-        */
+        
     }
 }
