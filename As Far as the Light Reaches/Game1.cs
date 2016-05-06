@@ -30,7 +30,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D hitbox;
         Texture2D classSelect;
         SpriteFont font;
-        SpriteFont font2;
+        Texture2D ChoiceScreen;
         int potsAmount = 10;
 
         //Player Rectangle
@@ -61,6 +61,7 @@ namespace As_Far_as_the_Light_Reaches
         Facing Direction;
         Motion Moving;
 
+        //Frame data
         int frame;
         double timePerFrame = 200;
         double timePerFrame1 = 300;
@@ -68,8 +69,7 @@ namespace As_Far_as_the_Light_Reaches
         int numFrames = 2;
         int framesElapsed;
 
-        // Antag Textures 
-
+        //Antag Textures 
         Texture2D curTex;
 
         Texture2D antagDownStill;
@@ -90,17 +90,17 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D meterObj; //This is the meter object that will be moving back and forth when the player is attacking.
         Rectangle meterObjRec = new Rectangle(100,425,25,100);  //This is the rectangle that will keep track of the position of the meter obj;
 
-        Texture2D overScreen;   //Game over Screen. (Class, our names. etc.)
-        Texture2D loadScreen;   //Loading screen between levels
+        Texture2D overScreen;  //Game over Screen. (Class, our names. etc.)
+        Texture2D loadScreen;  //Loading screen between levels
 
-        Texture2D protag;   //Protag Texture
-        Texture2D antag;    //Antag texture
+        Texture2D protag;  //Protag Texture
+        Texture2D antag;   //Antag texture
 
-        // Maps 
+        //Maps 
         Texture2D Quarter;
         Texture2D underground;
 
-        // Vector attributes
+        //Vector attributes
         Vector2 pauseVec;
         Vector2 spawnVec = new Vector2(500, 450);
         public Vector2 Barpos { get; set; }
@@ -124,7 +124,6 @@ namespace As_Far_as_the_Light_Reaches
         //Keyboard States
         KeyboardState kbState;
         KeyboardState prevState = Keyboard.GetState();
-
 
         //Attributes to resize window
         int winX = 1024;
@@ -253,10 +252,11 @@ namespace As_Far_as_the_Light_Reaches
             overScreen = Content.Load<Texture2D>("UI\\GameOverScreen.png"); // Loading in Game Over screen
             hitbox = Content.Load<Texture2D>("UI\\ArrowHitbox.png"); // Loading in hitbox texture for block phase
             classSelect = Content.Load<Texture2D>("UI\\ClassSelectionUI.png"); //Loading in Class Select UI
+            ChoiceScreen = Content.Load<Texture2D>("UI\\Choice.png"); //Loading in choice between protag and antag screen
 
-            // ACTUAL PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
+            //PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
-            // Protag Textures 
+            //Protag Textures 
             protagDownStill = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownStill.png");
             protagDownWalk1 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk1.png");
             protagDownWalk2 = Content.Load<Texture2D>("Characters\\Protag\\ProtagDownWalk2.png");
@@ -270,7 +270,7 @@ namespace As_Far_as_the_Light_Reaches
             protagUpWalk1 = Content.Load<Texture2D>("Characters\\Protag\\ProtagUpWalk1.png");
             protagUpWalk2 = Content.Load<Texture2D>("Characters\\Protag\\ProtagUpWalk2.png");
 
-            // Antag Textures 
+            //Antag Textures 
             antagDownStill = Content.Load<Texture2D>("Characters\\Antag\\AntagDownStill.png");
             antagDownWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagDownWalk1.png");
             antagDownWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagDownWalk2.png");
@@ -286,10 +286,8 @@ namespace As_Far_as_the_Light_Reaches
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
 
             //Moving meter object for attacking in combat
-            meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
-
-            // test maps 
-            
+            meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");
+ 
         }
 
 
@@ -644,7 +642,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
-                //CHOOISNG CLASS STATE
+                //CHOOSING CLASS STATE
                 case GameState.Class:
 
                     bool canPlay = false;

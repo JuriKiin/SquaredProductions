@@ -161,7 +161,9 @@
 	- Solution for collisions found: death by falling off map when player collides with wall
 	- Found a solution to font issues: http://dylanwilson.net/bmfont-rendering-with-monogame-extended
 
-
 //Juri Kiin 4:31 PM 5/6/16
 	- Fixed collisions so that if you reach the boundary of the level, reset the level (but not the health!)
 
+//James Friedenberg 4:51 5/6/2016
+	- Added protag vs antag choice UI for end of the game
+	- Installed MonoGame.Extended package to the project for font installation
