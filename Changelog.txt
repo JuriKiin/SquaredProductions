@@ -148,12 +148,15 @@
 	-Created and loaded in the Class System UI
 	-Suggested fix for class not working: Add parameters to the player class for class changes instead of making a seperate class for the class system
 
-
 //Juri Kiin 4:28 PM	5/4/16
 	- Fixed class system.
 	- Placed enemies in different places in level
 	- improved attack system.
 
 //Dustin Knowlton 4:47PM 5/4/16
-	-Dialogue functioning out of/before combat, but only for one line.
+	- Dialogue functioning out of/before combat, but only for one line.
 
+//James Friedenberg 1:58 AM 5/6/2016
+	- Cleaned up code and comments
+	- Solution for collisions found: death by falling off map when player collides with wall
+	- Found a solution to font issues: http://dylanwilson.net/bmfont-rendering-with-monogame-extended

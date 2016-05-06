@@ -212,6 +212,7 @@ namespace As_Far_as_the_Light_Reaches
             }
             Read.Close();
             */
+
             //Run Levelgen for level 1
             LevelGen();
 
@@ -219,7 +220,7 @@ namespace As_Far_as_the_Light_Reaches
             cam = new Camera(GraphicsDevice.Viewport);
            
             ReadFiles();    //Creates each enemy
-            arrowSpawner.LoadArrow(Content); //This should load all of the arrow keys into arrows.
+            arrowSpawner.LoadArrow(Content); //This loads all of the arrow keys into arrows.
 
             base.Initialize();
         }
@@ -234,6 +235,7 @@ namespace As_Far_as_the_Light_Reaches
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapBatch = new SpriteBatch(GraphicsDevice);
+
             // TODO: use this.Content to load your game content here
 
             startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");  // Loading in the start menu
@@ -278,13 +280,11 @@ namespace As_Far_as_the_Light_Reaches
             antagUpStill = Content.Load<Texture2D>("Characters\\Antag\\AntagUpStill.png");
             antagUpWalk1 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk1.png");
             antagUpWalk2 = Content.Load<Texture2D>("Characters\\Antag\\AntagUpWalk2.png");
-                       
-            //overScreen = Content.Load<Texture2D>("UI\\overScreen.png");   //Loading in the game over screen.
+
+            //Moving meter object for attacking in combat
             meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");   //Loading in the combat meter object
 
             // test maps 
-    
-
             
         }
 
@@ -311,7 +311,7 @@ namespace As_Far_as_the_Light_Reaches
 
             // TODO: Add your update logic here
 
-            // keybaard state for player movement 
+            //Keyboard state for player movement 
             KeyboardState protag = Keyboard.GetState();
 
             //Gets current state of mouse
@@ -321,18 +321,21 @@ namespace As_Far_as_the_Light_Reaches
             prevState = kbState;
             kbState = Keyboard.GetState();
 
+            //Frame Data
             framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame);
             frame = framesElapsed % numFrames;
 
             framesElapsed = (int)(gameTime.TotalGameTime.TotalMilliseconds / timePerFrame1);
             frame1 = framesElapsed % numFrames;
 
+            //Setting player's rectangle = to player's position
             player.X = player.PlayerRec.X;
             player.Y = player.PlayerRec.Y;
 
             //Switching between states
             switch (curState)
             {
+                //START MENU
                 case GameState.Menu:
 
                     if (SingleKeyPress(Keys.Space))
@@ -341,7 +344,8 @@ namespace As_Far_as_the_Light_Reaches
                         level = 0;
                     }
                     break;
-
+                
+                //OVERWORLD STATE
                 case GameState.Walk:
 
                     //if level needs to be generated, run LevelGen
@@ -420,13 +424,8 @@ namespace As_Far_as_the_Light_Reaches
                         }
                         else if (w.Pos.Intersects(player.PlayerRec))
                         {
-                            Rectangle deathRec = new Rectangle(playerRec.X, playerRec.Y, playerRec.Width - 50, playerRec.Height - 50);
-                            playerRec = deathRec;
-
-                            if(playerRec.X == deathRec.X)
-                            {
-                                curState = GameState.Over;
-                            }
+                            System.Threading.Thread.Sleep(2000);
+                            curState = GameState.Over;
 
                             /*
                             switch (w.Blocks)
@@ -479,16 +478,18 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
-                case GameState.Combat:  //Begin combat
-
-                       //This int keeps track of the number of times the player tries to tap the correct button. If there are no more arrows, then reset the list and then go to attacking.
+                //FIGHTING ENEMIES STATE
+                case GameState.Combat:  
+                    
                     double attackPercentage = 0;    //This will be the modifier of damage we do to the enemy.
                     double meterLocation = 0;  //This will set the X value of the meterobj rectangle.
 
                     switch (cmbState)
                     {
+                        //ATTACK PHASE OF COMBAT
                         case CombatState.Attack:
 
+                            //MAKES COMBAT METER MOVE BACK AND FORTH ON SCREEN
                             switch(mState)
                             {
                                 case MoveState.Left: meterObjRec = new Rectangle(meterObjRec.X + 15, meterObjRec.Y, 25, 150);
@@ -503,6 +504,7 @@ namespace As_Far_as_the_Light_Reaches
                                     break;
                             }
 
+                            //SERIES OF STATEMENTS TO DETERMINE DAMAGE 
                             if (SingleKeyPress(Keys.Space))
                             {
                                 mState = MoveState.Still;   //Stop the meter    
@@ -543,6 +545,7 @@ namespace As_Far_as_the_Light_Reaches
 
                             break;
 
+                        //BLOCKING PHASE OF COMBAT
                         case CombatState.Block:
 
                             if (curArrows.Count == 0)  //If the arrow list is empty, fill it.
@@ -577,9 +580,7 @@ namespace As_Far_as_the_Light_Reaches
                                 }
                             }
 
-
-                            //--    WHAT TO DO IF WE WANT TO CHANGE THE PHASE THE COMBAT IS IN  --//
-
+                            //CHANGES PHASE OF COMBAT OR LOADS GAME OVER 
                             if (curArrows.Count <= 0)
                             {
                                 int damage = (int)((totalHits * curEnemy.Damage) * player.Armor);
@@ -598,17 +599,18 @@ namespace As_Far_as_the_Light_Reaches
                                 meterLocation = 0;
                                 totalHits = 0;
                             }
-
-
                             break;
 
                         default: break;
                     }
                     break;
 
+                //GAME PAUSED STATE
                 case GameState.Pause:
-                    this.IsMouseVisible = true; //Make the mouse visable
 
+                    IsMouseVisible = true; //Make the mouse visable
+
+                    //SERIES TO CHECK FOR MENU SWITCHING
                     if (SingleKeyPress(Keys.I))     //If 'i' is pressed, switch the gamestate to Items
                     {
                         curState = GameState.Item;
@@ -625,46 +627,58 @@ namespace As_Far_as_the_Light_Reaches
                             }
                         }
                     }
+
                     else if (SingleKeyPress(Keys.U))    //If 'u' is pressed, switch the gamState to Stats
                     {
                         curState = GameState.Stats;
                     }
+
                     else if (SingleKeyPress(Keys.Enter))     //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
                     }
+
                     break;
 
                 case GameState.Stats:
+
                     if (SingleKeyPress(Keys.I)) //Switch to item menu
                     {
                         curState = GameState.Item;
                     }
+
                     else if (SingleKeyPress(Keys.P))       //Switch to normal pause method.
                     {
                         curState = GameState.Pause;
                     }
+
                     else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
                     }
+
                     break;
 
                 case GameState.Item:
+
                     if (SingleKeyPress(Keys.U))     //Go to Stats menu
                     {
                         curState = GameState.Stats;
                     }
-                    else if (SingleKeyPress(Keys.P))    //To go normal pause screen.
+
+                    else if (SingleKeyPress(Keys.P))    //Go to normal pause screen.
                     {
                         curState = GameState.Pause;
                     }
+
                     else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
                     }
+
                     break;
 
+                //CHOOISNG CLASS STATE
                 case GameState.Class:
 
                     bool canPlay = false;
@@ -677,6 +691,7 @@ namespace As_Far_as_the_Light_Reaches
                         player.Armor = 0.5;
                         canPlay = true;
                     }
+
                     if (SingleKeyPress(Keys.A))
                     {
                         player.MaxHealth = 14;
@@ -685,6 +700,7 @@ namespace As_Far_as_the_Light_Reaches
                         player.Armor = 1.5;
                         canPlay = true;
                     }
+
                     if (SingleKeyPress(Keys.W))
                     {
                         player.MaxHealth = 18;
@@ -693,6 +709,7 @@ namespace As_Far_as_the_Light_Reaches
                         player.Armor = 0.75;
                         canPlay = true;
                     }
+
                     if (SingleKeyPress(Keys.B))
                     {
                         player.MaxHealth = 20;
@@ -708,7 +725,8 @@ namespace As_Far_as_the_Light_Reaches
                     }
 
                     break;
-
+                
+                //END GAME STATE
                 case GameState.Over:
                     if(SingleKeyPress(Keys.Space))
                     {
@@ -732,8 +750,7 @@ namespace As_Far_as_the_Light_Reaches
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-
-            // spawn in the menu
+            
             spriteBatch.Begin();
 
             switch (curState)
@@ -756,7 +773,10 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw map
                     var viewMatrix = cam.GrabMatrix();
                     mapBatch.Begin(transformMatrix: viewMatrix);
-                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   //Draws the level background                  
+
+                    //Draws the map background
+                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   
+                                   
                     mapBatch.End();
 
                     //Draw each enemy
@@ -784,7 +804,6 @@ namespace As_Far_as_the_Light_Reaches
                         case Motion.StandLeft: spriteBatch.Draw(protagLeftStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
 
                         case Motion.StandRight: spriteBatch.Draw(protagRightStill, new Rectangle(player.PlayerRec.X, player.PlayerRec.Y, 75, 85), Color.White); break;
-
 
                         case Motion.WalkDown:
                             if (frame1 == 1)
@@ -839,6 +858,7 @@ namespace As_Far_as_the_Light_Reaches
                     switch (cmbState)
                     {
                         case CombatState.Attack:
+
                             //Draw the UI for combat
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
@@ -893,7 +913,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.H) && potsAmount > 0)
                     {
                         potsAmount--;
-                        player.CurHealth += 10;
+                        player.CurHealth = player.MaxHealth;
                     }
 
                     //Draw items menu
@@ -920,7 +940,8 @@ namespace As_Far_as_the_Light_Reaches
             base.Draw(gameTime);
         }
 
-        //Method to initialize the pause menu
+
+        //METHOD TO INITIALIZE SERIES OF PAUSE MENUS
         public void Pause()
         {
             KeyboardState ks = Keyboard.GetState();
@@ -929,6 +950,7 @@ namespace As_Far_as_the_Light_Reaches
             //Player will hit the resume button to continue playing.
         }
 
+        //METHOD TO CHECK FOR A SINGLE PRESS OF A KEY
         public bool SingleKeyPress(Keys key)
         {
             //kbState = Keyboard.GetState();
@@ -937,6 +959,7 @@ namespace As_Far_as_the_Light_Reaches
             else { return false; }
         }
 
+        //MAIN METHOD FOR MOVEMENT OF PLAYER
         public void Move()
         {
             KeyboardState ks = Keyboard.GetState();
@@ -998,7 +1021,6 @@ namespace As_Far_as_the_Light_Reaches
             if(SingleKeyPress(Keys.Space))
             {
                 dialoguing = false;
-
             }
 
         }
@@ -1039,9 +1061,9 @@ namespace As_Far_as_the_Light_Reaches
             }
         }
 
+        //LEVEL GENERATING METHOD
         public void LevelGen()
         {
-
             //Let's think about maybe putting random enemies in from the list with a random object.
             //clear list of walls
             walls.Clear();
@@ -1126,10 +1148,7 @@ namespace As_Far_as_the_Light_Reaches
                 lineplace2 = new Vector2(355, 625);
                 lineplace3 = new Vector2(355, 645);
             }
-
             //draw strings needed
-            
-            
         }
         */
     }
