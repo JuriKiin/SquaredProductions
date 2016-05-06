@@ -166,6 +166,10 @@ namespace As_Far_as_the_Light_Reaches
         Vector2 lineplace2;
         Vector2 lineplace3;
 
+
+        Rectangle startRec;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -413,60 +417,22 @@ namespace As_Far_as_the_Light_Reaches
                         }
                     }
 
-                    foreach (Wall w in walls)
+                    if (dialoguing)
                     {
-                        if (dialoguing)
+                        canUp = false;
+                        canDown = false;
+                        canLeft = false;
+                        canRight = false;
+                    }
+
+                    for(int i=0;i<walls.Count;i++)
+                    {
+                        if (walls[i].Pos.Intersects(player.PlayerRec))
                         {
-                            canUp = false;
-                            canDown = false;
-                            canLeft = false;
-                            canRight = false;
-                        }
-                        else if (w.Pos.Intersects(player.PlayerRec))
-                        {
-                            System.Threading.Thread.Sleep(2000);
-                            curState = GameState.Over;
-
-                            /*
-                            switch (w.Blocks)
-                            {
-                                case Wall.direction.up:
-                                    player.VelocityUp = 0;
-
-                                    if(player.VelocityUp == 0)
-                                    {
-                                        player.Y -= 0;
-                                    }
-                                    break;
-
-                                case Wall.direction.down:
-                                    player.VelocityDown = 0;
-
-                                    if (player.VelocityDown == 0)
-                                    {
-                                        player.Y -= 0;
-                                    }
-                                    break;
-
-                                case Wall.direction.left:
-                                    player.VelocityLeft = 0;
-
-                                    if (player.VelocityLeft == 0)
-                                    {
-                                        player.X -= 0;
-                                    }
-
-                                    break;
-                                case Wall.direction.right:
-                                    player.VelocityRight = 0;
-
-                                    if(player.VelocityRight == 0)
-                                    {
-                                        player.X -= 0;
-                                    }
-                                    break;
-                            }
-                            */
+                            walls.Clear();
+                            enemies.Clear();
+                            LevelGen();
+                            cam.Position -= cam.Position;
                         }
                     }
 
@@ -730,7 +696,7 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Over:
                     if(SingleKeyPress(Keys.Space))
                     {
-                        Exit();
+                        curState = GameState.Menu;
                     }
 
                     break;
@@ -775,7 +741,7 @@ namespace As_Far_as_the_Light_Reaches
                     mapBatch.Begin(transformMatrix: viewMatrix);
 
                     //Draws the map background
-                    mapBatch.Draw(manager.CurLevelTexture, new Rectangle(-4000, -7600, 5000, 8000), Color.White);   
+                    mapBatch.Draw(manager.CurLevelTexture, startRec, Color.White);   
                                    
                     mapBatch.End();
 
@@ -1072,6 +1038,10 @@ namespace As_Far_as_the_Light_Reaches
                 case 0:
                     //set player location and cam if possible
                     //set bounding box for level (?)
+
+                    startRec = new Rectangle(-4000, -7600, 5000, 8000);
+
+
                     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
                     walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
                     walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
@@ -1098,9 +1068,6 @@ namespace As_Far_as_the_Light_Reaches
                     E4.Pos = new Rectangle(720, 0, 75, 85);
                     enemies.Add(E4);
 
-                    //logline sets beginning of map dialogue to write
-                    //Dialogue(0, false);
-
                     //set tunnel, rectangle to transfer level on collide.
                     break;
                 case 1:
@@ -1126,6 +1093,8 @@ namespace As_Far_as_the_Light_Reaches
             }
             levelgenreq = false;
         }
+
+
 
         /*
         //dialogue takes an actor and a line number and writes it out in the dialogue box.
