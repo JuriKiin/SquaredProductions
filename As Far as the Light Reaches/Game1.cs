@@ -205,16 +205,7 @@ namespace As_Far_as_the_Light_Reaches
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
 
-            //Load in dialogue lines
-            /*
-            StreamReader Read = new StreamReader("Dialogue.txt"); //pull up text file.
-            string got;
-            while ((got = Read.ReadLine()) != "END")
-            {
-                lines.Add(got);
-            }
-            Read.Close();
-            */
+            
 
             //Run Levelgen for level 1
             LevelGen();
