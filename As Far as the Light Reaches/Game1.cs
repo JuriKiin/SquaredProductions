@@ -138,6 +138,7 @@ namespace As_Far_as_the_Light_Reaches
         Random rnd = new Random();
         LevelManager manager;
         ArrowSpawn arrowSpawner = new ArrowSpawn();
+        DialogueManager Story;
 
         Enemy TestGoon;
         Rectangle tunnel;
@@ -153,21 +154,14 @@ namespace As_Far_as_the_Light_Reaches
         bool canDown = true;
         bool canLeft = true;
         bool canRight = true;
-
         bool canMove = true;
 
-        //list for dialogue strings
-        List<string> lines = new List<string>();
-        string line1;
-        string line2;
-        string line3;
+        //Vectors where dialogue lines will be placed
         Vector2 lineplace1;
         Vector2 lineplace2;
         Vector2 lineplace3;
 
-
         Rectangle startRec;
-
 
         public Game1()
         {
@@ -201,11 +195,15 @@ namespace As_Far_as_the_Light_Reaches
             player = new Player(20, 20, 4, 12, 0);
             player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - (int)37.5, GraphicsDevice.Viewport.Height / 2 - 143, 75, 85);
 
-            //define manager
+            //define level manager
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
 
-            
+            //define dialogue manager
+            Story = new DialogueManager();
+            lineplace1 = new Vector2(355, 605); //positions for
+            lineplace2 = new Vector2(355, 625); //strings in
+            lineplace3 = new Vector2(355, 645); //dialogue box (Y values need tweaking with new font)
 
             //Run Levelgen for level 1
             LevelGen();
@@ -395,7 +393,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (e.Pos.Intersects(player.PlayerRec))
                         {
-                            //Dialogue(13,false);
+                            //Story.WriteDialogue(e.startlines);// e.startlines (and endlines later) would be a new int for enemies that determines where their lines start. Would this need to be added to the ext. tool?
                             curEnemy = e;   //Sets the enemy
                             if(SingleKeyPress(Keys.Space))
                             {
@@ -406,7 +404,7 @@ namespace As_Far_as_the_Light_Reaches
                         }
                     }
 
-                    if (dialoguing)
+                    if (dialoguing) //Might get replaced.
                     {
                         canUp = false;
                         canDown = false;
@@ -418,6 +416,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (walls[i].Pos.Intersects(player.PlayerRec))
                         {
+                            //Could probably have some dialogue here. It might make being reset jarring but not confusing.
                             walls.Clear();
                             enemies.Clear();
                             LevelGen();
@@ -426,11 +425,12 @@ namespace As_Far_as_the_Light_Reaches
                     }
 
                     if (tunnel.Intersects(player.PlayerRec))
-                    {
-                        manager.LoadNextLevel();
-                        levelgenreq = true; //if levelgenreq is true, the next update will run the levelgen. 
+                    {                        
+                        //LEVEL END dialogue
+                        //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
+                        manager.LoadNextLevel(); //Prepare map for next level.
+                        levelgenreq = true; //If levelgenreq is true, the next update will run the levelgen. 
                     }
-
                     break;
 
                 //FIGHTING ENEMIES STATE
@@ -726,8 +726,7 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
                     //Draw map
-                    var viewMatrix = cam.GrabMatrix();
-                    mapBatch.Begin(transformMatrix: viewMatrix);
+                    mapBatch.Begin(transformMatrix: cam.GrabMatrix());
 
                     //Draws the map background
                     mapBatch.Draw(manager.CurLevelTexture, startRec, Color.White);   
@@ -742,13 +741,6 @@ namespace As_Far_as_the_Light_Reaches
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-
-                    if (dialoguing)
-                    {
-                        spriteBatch.DrawString(font, line1, lineplace1, Color.White);
-                        spriteBatch.DrawString(font, line2, lineplace2, Color.White);
-                        spriteBatch.DrawString(font, line3, lineplace3, Color.White);
-                    }
 
                     switch (Moving)
                     {
@@ -1019,7 +1011,6 @@ namespace As_Far_as_the_Light_Reaches
         //LEVEL GENERATING METHOD
         public void LevelGen()
         {
-            //Let's think about maybe putting random enemies in from the list with a random object.
             //clear list of walls
             walls.Clear();
             switch (manager.CurLevel)
@@ -1029,7 +1020,6 @@ namespace As_Far_as_the_Light_Reaches
                     //set bounding box for level (?)
 
                     startRec = new Rectangle(-4000, -7600, 5000, 8000);
-
 
                     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
                     walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
@@ -1083,31 +1073,5 @@ namespace As_Far_as_the_Light_Reaches
             levelgenreq = false;
         }
 
-
-
-        /*
-        //dialogue takes an actor and a line number and writes it out in the dialogue box.
-        public void Dialogue(int linum, bool combat)
-        {
-            dialoguing = true;
-            line1 = lines[linum];
-            line2 = lines[linum+=1];
-            line3 = lines[linum+=1];
-
-            if (combat == true)
-            {
-                lineplace1 = new Vector2(450, 578);
-                lineplace2 = new Vector2(450, 578);
-                lineplace3 = new Vector2(450, 578);
-            }
-            else
-            {
-                lineplace1 = new Vector2(355, 605);
-                lineplace2 = new Vector2(355, 625);
-                lineplace3 = new Vector2(355, 645);
-            }
-            //draw strings needed
-        }
-        */
     }
 }

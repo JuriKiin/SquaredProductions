@@ -173,3 +173,11 @@
 	-Dialogue text should be edited and formatted. Please read it so we can catch any errors and/or writing you don't like. 
 	-Dialogue doc is in /bin/WindowsGL/Debug/Dialogue.txt
 	-Started basis for dialogue functions, will get to that soon. Gonna be a lot of changes all over.
+
+//Dustin Knowlton 2:50AM 5/7/2016
+	-Oh god why am I still up
+	-DialogueManager and its features are nearly done, but there are a few issues that, so most of it is currently commented. I'm not eating up more sleep by working any further tonight. 
+	-Feedback on DialogueManager.cs and see the couple of lines I've put commented WriteDialogue() calls in Game1 would be appreciated. Btw, that's the sole method for dialogue now. Far nicer.
+	-Enemy class will most likely need two new int attributes for what line their Combat Start and Combat End dialogue sections begin on. Or we could do some silly switch for however many enemies you've faced so far, if adding that would require an unsavory update to the external tool.
+	-One of the largest issues with WriteDialogue() is that it has a statement to hold you in it until you progress through the section, but it has to trigger strings being drawn immediately when no trigger is in the Draw() method. Is it at all plausible to create a spritebatch and draw in the method, outside of Draw()? A different way of waiting that still allows Draw() to function could solve this as well.
+	
