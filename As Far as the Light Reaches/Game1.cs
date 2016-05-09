@@ -255,7 +255,7 @@ namespace As_Far_as_the_Light_Reaches
             undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\32.png"));
             undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\33.png"));
 
-            manager.CurLevel = 2;
+            manager.CurLevel = 0;
 
             base.Initialize();
         }
