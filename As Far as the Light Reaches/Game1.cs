@@ -157,6 +157,8 @@ namespace As_Far_as_the_Light_Reaches
         bool canRight = true;
         bool canMove = true;
 
+        int moveSpeed = 5;
+
         //Vectors where dialogue lines will be placed
         Vector2 lineplace1;
         Vector2 lineplace2;
@@ -1066,59 +1068,59 @@ namespace As_Far_as_the_Light_Reaches
             //Make sprite move, and change sprite if the player looks differently
             if (ks.IsKeyDown(Keys.A) && canLeft)//Move Left
             {
-                cam.Position -= new Vector2(3, 0);
+                cam.Position -= new Vector2(moveSpeed, 0);
                 foreach(Enemy e in enemies)
                 {
-                    e.Pos = new Rectangle(e.Pos.X + 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                    e.Pos = new Rectangle(e.Pos.X + moveSpeed, e.Pos.Y, e.Pos.Width, e.Pos.Height);
                 }
                 foreach (Wall w in walls)
                 {
-                    w.Pos = new Rectangle(w.Pos.X + 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
+                    w.Pos = new Rectangle(w.Pos.X + moveSpeed, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
-                tunnel = new Rectangle(tunnel.X + 3, tunnel.Y, tunnel.Width, tunnel.Height);
+                tunnel = new Rectangle(tunnel.X + moveSpeed, tunnel.Y, tunnel.Width, tunnel.Height);
 
             }
 
             if (ks.IsKeyDown(Keys.D) && canRight)//Move Right
             {
-                cam.Position -= new Vector2(-3, 0);
+                cam.Position -= new Vector2(-moveSpeed, 0);
                 foreach (Enemy e in enemies)
                 {
-                    e.Pos = new Rectangle(e.Pos.X - 3, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                    e.Pos = new Rectangle(e.Pos.X - moveSpeed, e.Pos.Y, e.Pos.Width, e.Pos.Height);
                 }
                 foreach (Wall w in walls)
                 {
-                    w.Pos = new Rectangle(w.Pos.X - 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
+                    w.Pos = new Rectangle(w.Pos.X - moveSpeed, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
-                tunnel = new Rectangle(tunnel.X - 3, tunnel.Y, tunnel.Width, tunnel.Height);
+                tunnel = new Rectangle(tunnel.X - moveSpeed, tunnel.Y, tunnel.Width, tunnel.Height);
             } 
 
             if (ks.IsKeyDown(Keys.W) && canUp)//Move Up
             {
-                cam.Position -= new Vector2(0, 3);
+                cam.Position -= new Vector2(0, moveSpeed);
                 foreach (Enemy e in enemies)
                 {
-                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y + 3, e.Pos.Width, e.Pos.Height);
+                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y + moveSpeed, e.Pos.Width, e.Pos.Height);
                 }
                 foreach (Wall w in walls)
                 {
-                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + 3, w.Pos.Width, w.Pos.Height);
+                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + moveSpeed, w.Pos.Width, w.Pos.Height);
                 }
-                tunnel = new Rectangle(tunnel.X, tunnel.Y + 3, tunnel.Width, tunnel.Height);
+                tunnel = new Rectangle(tunnel.X, tunnel.Y + moveSpeed, tunnel.Width, tunnel.Height);
             }
 
             if (ks.IsKeyDown(Keys.S) && canDown) //Move Down
             {
-                cam.Position -= new Vector2(0, -3);
+                cam.Position -= new Vector2(0, -moveSpeed);
                 foreach (Enemy e in enemies)
                 {
-                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y - 3, e.Pos.Width, e.Pos.Height);
+                    e.Pos = new Rectangle(e.Pos.X, e.Pos.Y - moveSpeed, e.Pos.Width, e.Pos.Height);
                 }
                 foreach (Wall w in walls)
                 {
-                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
+                    w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - moveSpeed, w.Pos.Width, w.Pos.Height);
                 }
-                tunnel = new Rectangle(tunnel.X,tunnel.Y - 3,tunnel.Width,tunnel.Height);
+                tunnel = new Rectangle(tunnel.X,tunnel.Y - moveSpeed, tunnel.Width,tunnel.Height);
             }
 
             if(SingleKeyPress(Keys.Space))
