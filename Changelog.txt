@@ -195,3 +195,6 @@
 
 //Juri Kiin 9:15 AM 5/9/2016
 	- Fixed end level collision placement.
+
+//Juri Kiin 9:53 AM 5/9/2016
+	- Added an end game check.

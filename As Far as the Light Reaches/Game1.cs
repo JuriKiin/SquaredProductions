@@ -190,7 +190,9 @@ namespace As_Far_as_the_Light_Reaches
 
         Texture2D cow;
         Texture2D horseboy;
-        Texture2D unlucky; 
+        Texture2D unlucky;
+
+        bool endGame = false;
 
 
         public Game1()
@@ -560,6 +562,11 @@ namespace As_Far_as_the_Light_Reaches
 
                                 if (curEnemy.CurrHealth <= 0)
                                 {
+                                    if (endGame)
+                                    {
+                                        curState = GameState.Over;
+                                        return;
+                                    }
                                     curState = GameState.Walk;
                                     enemies.Remove(curEnemy);   //Get rid of the enemy in the list of them.
                                 }
@@ -766,6 +773,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         curEnemy = new Enemy((player.MaxHealth)*2,player.Damage,14,"Player",4,true,6);
 
+                        endGame = true;
                         curState = GameState.Combat;
                         cam.Position -= cam.Position;
                     }
@@ -773,6 +781,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         curEnemy = new Enemy((player.MaxHealth + 2)*2,player.Damage + 2, 16, "Boss", 3, true, 6);
 
+                        endGame = true;
                         curState = GameState.Combat;
                         cam.Position -= cam.Position;
                     }
@@ -1235,6 +1244,7 @@ namespace As_Far_as_the_Light_Reaches
                     //set bounding box for level (?)
                     //set enemies, will eventually use file reading
                     //set tunnel, rectangle to transfer level on collide.
+                    tunnel = new Rectangle(0,0,0,0);
                     enemies.Clear();
                     break;
                 case 3:
