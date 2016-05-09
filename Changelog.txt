@@ -183,4 +183,7 @@
 
 //James Friedenberg 8:56PM 5/8/2016
 	- Created and implemented instructions screen before class select
+
+//Juri Kiin 11:39 PM 5/8/2016
+	- Placed some enemies.
 	

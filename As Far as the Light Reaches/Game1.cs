@@ -406,12 +406,10 @@ namespace As_Far_as_the_Light_Reaches
                         {
                             //Story.WriteDialogue(e.startlines);// e.startlines (and endlines later) would be a new int for enemies that determines where their lines start. Would this need to be added to the ext. tool?
                             curEnemy = e;   //Sets the enemy
-                            if(SingleKeyPress(Keys.Space))
-                            {
                                 curState = GameState.Combat;    //Set the gamestate to combat
                                 cmbState = CombatState.Attack;
                                 mState = MoveState.Left;
-                            }
+                           
                         }
                     }
 
@@ -1037,11 +1035,10 @@ namespace As_Far_as_the_Light_Reaches
 
                     startRec = new Rectangle(-4000, -7600, 5000, 8000);
 
-                    walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
+               //     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
                     walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
                     walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
-                    walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
-                    //set enemies, will eventually use file reading
+                   // walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
 
                     TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
                     TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
@@ -1056,11 +1053,11 @@ namespace As_Far_as_the_Light_Reaches
                     enemies.Add(E2);
 
                     Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
-                    E3.Pos = new Rectangle(600, 0, 75, 85);
+                    E3.Pos = new Rectangle(-750, -4000, 75, 85);
                     enemies.Add(E3);
                      
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
-                    E4.Pos = new Rectangle(720, 0, 75, 85);
+                    E4.Pos = new Rectangle(-700, -3000, 75, 85);
                     enemies.Add(E4);
 
                     //set tunnel, rectangle to transfer level on collide.
