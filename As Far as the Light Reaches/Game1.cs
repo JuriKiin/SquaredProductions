@@ -394,6 +394,7 @@ namespace As_Far_as_the_Light_Reaches
                         enemies.Clear();
                         walls.Clear();
                         LevelGen();
+                        
                     }
                     break;
 
@@ -504,6 +505,7 @@ namespace As_Far_as_the_Light_Reaches
                         manager.CurLevel++;
                         LevelGen();
                         cam.Position -= cam.Position;
+                        System.Threading.Thread.Sleep(200);
                     }
                     break;
 
@@ -864,6 +866,7 @@ namespace As_Far_as_the_Light_Reaches
                             mapBatch.Draw(underTunnel, new Rectangle(195, -850, underTunnel.Width, underTunnel.Height), Color.White);
                             if (cam.Position.Y <= -1062)
                             {
+                                System.Threading.Thread.Sleep(200);
                                 manager.CurLevel = 3;
                                 enemies.Clear();
                             }
