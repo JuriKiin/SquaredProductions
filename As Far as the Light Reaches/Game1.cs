@@ -164,6 +164,33 @@ namespace As_Far_as_the_Light_Reaches
 
         Rectangle startRec;
 
+        //loading in pieces of underground map
+        Texture2D one1;
+        Texture2D one2;
+        Texture2D one3;
+
+        Texture2D two1;
+        Texture2D two2;
+        Texture2D two3;
+
+        Texture2D three1;
+        Texture2D three2;
+        Texture2D three3;
+
+        // load for other mapz 
+
+        Texture2D upperground;
+        Texture2D underTunnel;
+        Texture2D palace;
+        List<Texture2D> undergroundmaplist = new List<Texture2D>();
+
+        // enemies 
+
+        Texture2D cow;
+        Texture2D horseboy;
+        Texture2D unlucky; 
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -214,6 +241,19 @@ namespace As_Far_as_the_Light_Reaches
            
             ReadFiles();    //Creates each enemy
             arrowSpawner.LoadArrow(Content); //This loads all of the arrow keys into arrows.
+
+            // add underground map pieces to the list 
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\11.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\12.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\13.png"));
+
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\21.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\22.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\23.png"));
+
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\31.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\32.png"));
+            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\33.png"));
 
             base.Initialize();
         }
@@ -278,7 +318,17 @@ namespace As_Far_as_the_Light_Reaches
 
             //Moving meter object for attacking in combat
             meterObj = Content.Load<Texture2D>("UI\\combatMeterObj.png");
- 
+
+            // MAPS 
+            upperground = Content.Load<Texture2D>("Maps\\1.png");
+            palace = Content.Load<Texture2D>("Maps\\palace.png");
+            underTunnel = Content.Load<Texture2D>("Maps\\underTunnel.png");
+
+            // enemies 
+
+            cow = Content.Load<Texture2D>("Enemies\\Cow.png");
+            horseboy = Content.Load<Texture2D>("Enemies\\HorseBoy.png");
+            unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
         }
 
 
@@ -740,17 +790,33 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
                     //Draw map
-                    mapBatch.Begin(transformMatrix: cam.GrabMatrix());
+                    mapBatch.Begin(transformMatrix: cam.GrabMatrix());                 
+                    // 2737 2965 dimensions for each underground piece 
+                    switch (manager.CurLevel)
+                    {
+                        case 1:
+                            mapBatch.Draw(upperground, new Rectangle(-4000, -7600, 5000, 8000), Color.White); break;
+                        case 2:
+                            mapBatch.Draw(undergroundmaplist[0], new Rectangle(0, 0, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[1], new Rectangle(2737, 0, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[2], new Rectangle(5469, 0, 2737, 2965), Color.White);
 
-                    //Draws the map background
-                    mapBatch.Draw(manager.CurLevelTexture, startRec, Color.White);   
-                                   
+                            mapBatch.Draw(undergroundmaplist[3], new Rectangle(0, 2965, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[4], new Rectangle(2750, 2965, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[5], new Rectangle(5469, 2965, 2737, 2965), Color.White);
+
+                            mapBatch.Draw(undergroundmaplist[6], new Rectangle(0, 5930, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[7], new Rectangle(2750, 5930, 2737, 2965), Color.White);
+                            mapBatch.Draw(undergroundmaplist[8], new Rectangle(5469, 5930, 2737, 2965), Color.White); break;
+                    }
+
+
                     mapBatch.End();
 
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        spriteBatch.Draw(protagDownStill, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
+                        spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
                     }
 
                     //Draw basic UI

@@ -16,14 +16,12 @@ using Microsoft.Xna.Framework.Content;
 namespace As_Far_as_the_Light_Reaches
 {
     class LevelManager
-    {
-        int curLevel;   //Current level the player is on.
-        List<Texture2D> levelBackgrounds = new List<Texture2D>();   //List of background textures for each level
+    {      
         Texture2D curLevelTexture;
-        string path = "Maps\\";
+
         // 2737 2965 dimensions for each underground piece 
-        int[,] underground;
-        
+
+        int curLevel = 0; // this int is the level we are on change this int to change the level. 
 
         public int CurLevel
         {
@@ -40,22 +38,21 @@ namespace As_Far_as_the_Light_Reaches
 
         public LevelManager(ContentManager cont)
         {
-            int count = 1;
-            curLevel = -1;
-  
-            levelBackgrounds.Add(cont.Load<Texture2D>(path + count.ToString()));
-            count++;
-          
+            // int count = 1;
+
+
+            //   levelBackgrounds.Add(cont.Load<Texture2D>(path + count.ToString()));
+            //  count++;
+
         }
 
 
         public void LoadNextLevel()  //This Loads the next level
         {
-            if(curLevel < levelBackgrounds.Count) curLevel++;
-            curLevelTexture = levelBackgrounds[curLevel];
+            //  if(curLevel < levelBackgrounds.Count) curLevel++;
+            //  curLevelTexture = levelBackgrounds[curLevel];
         }
 
-    
 
 
     }

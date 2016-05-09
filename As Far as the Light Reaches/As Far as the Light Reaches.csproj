@@ -126,6 +126,15 @@
     <Content Include="Content\Characters\Protag\ProtagUpWalk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Enemies\Cow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Enemies\HorseBoy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Enemies\Unlucky.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\Choice.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -162,13 +171,10 @@
     <Content Include="Content\Maps\33.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Maps\Actual palace entrance.png">
+    <Content Include="Content\Maps\palace.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Maps\2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Maps\Upperground Underground Tunnel.png">
+    <Content Include="Content\Maps\underTunnel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\ArrowHitbox.png">
