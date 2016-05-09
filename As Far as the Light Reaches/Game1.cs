@@ -31,6 +31,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D classSelect;
         SpriteFont font;
         Texture2D ChoiceScreen;
+        Texture2D DirectionsScreen;
         int potsAmount = 10;
 
         //Player Rectangle
@@ -115,7 +116,7 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
-        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class};
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions};
         GameState curState;
 
         enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
@@ -242,6 +243,7 @@ namespace As_Far_as_the_Light_Reaches
             hitbox = Content.Load<Texture2D>("UI\\ArrowHitbox.png"); // Loading in hitbox texture for block phase
             classSelect = Content.Load<Texture2D>("UI\\ClassSelectionUI.png"); //Loading in Class Select UI
             ChoiceScreen = Content.Load<Texture2D>("UI\\Choice.png"); //Loading in choice between protag and antag screen
+            DirectionsScreen = Content.Load<Texture2D>("UI\\DirectionsScreen.png");
 
             //PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -331,9 +333,18 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Space))
                     {
-                        curState = GameState.Class;      //Change the gamestate to walk (normal gameplay)
+                        curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
                         level = 0;
                     }
+                    break;
+
+                case GameState.Directions:
+                    
+                    if(SingleKeyPress(Keys.Space))
+                    {
+                        curState = GameState.Class;
+                    }
+                    
                     break;
                 
                 //OVERWORLD STATE
@@ -715,6 +726,11 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.Draw(title, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     break;
 
+                case GameState.Directions:
+
+                    spriteBatch.Draw(DirectionsScreen, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    break;
+
                 case GameState.Class:
 
                     spriteBatch.Draw(classSelect, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
@@ -852,7 +868,7 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Pause:
 
                     //Draw pause menu
-                    spriteBatch.Draw(startMenu, new Vector2(-188,0), Color.White);
+                    spriteBatch.Draw(startMenu, new Vector2(0, 0), Color.White);
                     break;
 
                 case GameState.Item:
@@ -871,12 +887,12 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Stats:
 
                     //Draw the stats menu.
-                    spriteBatch.Draw(statsMenu, new Vector2(-188,0), Color.White);
+                    spriteBatch.Draw(statsMenu, new Vector2(0,0), Color.White);
 
                     //Prints out player stats in their own respective sections in the menu
-                    spriteBatch.DrawString(font, "" + player.Armor, new Vector2(580, 195), Color.White);
-                    spriteBatch.DrawString(font, "" + player.Damage, new Vector2(580, 375), Color.White);
-                    spriteBatch.DrawString(font, "" + player.Boost, new Vector2(580, 550), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Armor, new Vector2(550, 195), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Damage, new Vector2(550, 375), Color.White);
+                    spriteBatch.DrawString(font, "" + player.Boost, new Vector2(550, 550), Color.White);
                     break;
 
                 default: break;

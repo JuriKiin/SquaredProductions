@@ -26,6 +26,7 @@ namespace As_Far_as_the_Light_Reaches
             get { return speaking; }
         }
 
+        /*
         public DialogueManager()
         {
             //Load in dialogue lines
@@ -36,6 +37,7 @@ namespace As_Far_as_the_Light_Reaches
             }
             Read.Close();
         }
+        */
 
         //SingleKeyPress for progressing through dialog.
         public bool SingleKeyPress(Keys key)

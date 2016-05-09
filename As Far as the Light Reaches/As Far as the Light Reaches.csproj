@@ -198,6 +198,9 @@
     <Content Include="Content\UI\Battle UI.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\DirectionsScreen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\GameOverScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
