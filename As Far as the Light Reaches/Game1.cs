@@ -116,7 +116,7 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
-        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions};
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions, Choose};
         GameState curState;
 
         enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
@@ -254,6 +254,8 @@ namespace As_Far_as_the_Light_Reaches
             undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\31.png"));
             undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\32.png"));
             undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\33.png"));
+
+            manager.CurLevel = 2;
 
             base.Initialize();
         }
@@ -488,7 +490,13 @@ namespace As_Far_as_the_Light_Reaches
                         //LEVEL END dialogue
                         //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
                         manager.LoadNextLevel(); //Prepare map for next level.
+
                         levelgenreq = true; //If levelgenreq is true, the next update will run the levelgen. 
+                        walls.Clear();
+                        enemies.Clear();
+                        manager.CurLevel++;
+                        LevelGen();
+                        cam.Position -= cam.Position;
                     }
                     break;
 
@@ -749,6 +757,27 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
+
+
+                case GameState.Choose:
+                    if (SingleKeyPress(Keys.A))
+                    {
+                        curEnemy = new Enemy((player.MaxHealth)*2,player.Damage,14,"Player",4,true,6);
+
+                        curState = GameState.Combat;
+                        cam.Position -= cam.Position;
+                    }
+                    if (SingleKeyPress(Keys.D))
+                    {
+                        curEnemy = new Enemy((player.MaxHealth + 2)*2,player.Damage + 2, 16, "Boss", 3, true, 6);
+
+                        curState = GameState.Combat;
+                        cam.Position -= cam.Position;
+                    }
+
+
+                    break;
+
                 default: break;
             }
             base.Update(gameTime);
@@ -794,9 +823,14 @@ namespace As_Far_as_the_Light_Reaches
                     // 2737 2965 dimensions for each underground piece 
                     switch (manager.CurLevel)
                     {
+                        case 0:
+                            mapBatch.Draw(upperground, new Rectangle(-4000, -7600, 5000, 8000), Color.White);
+
+
+
+
+                            break;
                         case 1:
-                            mapBatch.Draw(upperground, new Rectangle(-4000, -7600, 5000, 8000), Color.White); break;
-                        case 2:
                             mapBatch.Draw(undergroundmaplist[0], new Rectangle(0, 0, 2737, 2965), Color.White);
                             mapBatch.Draw(undergroundmaplist[1], new Rectangle(2737, 0, 2737, 2965), Color.White);
                             mapBatch.Draw(undergroundmaplist[2], new Rectangle(5469, 0, 2737, 2965), Color.White);
@@ -807,17 +841,48 @@ namespace As_Far_as_the_Light_Reaches
 
                             mapBatch.Draw(undergroundmaplist[6], new Rectangle(0, 5930, 2737, 2965), Color.White);
                             mapBatch.Draw(undergroundmaplist[7], new Rectangle(2750, 5930, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[8], new Rectangle(5469, 5930, 2737, 2965), Color.White); break;
+                            mapBatch.Draw(undergroundmaplist[8], new Rectangle(5469, 5930, 2737, 2965), Color.White);
+
+
+                            break;
+
+                        case 2:
+                            mapBatch.Draw(underTunnel, new Rectangle(195, -850, underTunnel.Width, underTunnel.Height), Color.White);
+                            if (cam.Position.Y <= -1062)
+                            {
+                                manager.CurLevel = 3;
+                                enemies.Clear();
+                            }
+
+
+                            break;
+
+                        case 3:
+                            Rectangle r = new Rectangle(450, -1030, (int)(antagDownStill.Width * 1.15), (int)(antagDownStill.Height * 1.15));
+
+                            mapBatch.Draw(palace, new Rectangle(0, -1400, palace.Width/2, palace.Height/2), Color.White);
+                            mapBatch.Draw(antagDownStill,r,Color.White);
+
+                            if (cam.Position.Y <= -1020)
+                            {
+                                curState = GameState.Choose;
+                            }
+
+                            break;
+
+
                     }
 
-
-                    mapBatch.End();
 
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
                         spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
                     }
+
+
+                    mapBatch.End();
+
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
@@ -959,6 +1024,13 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.DrawString(font, "" + player.Boost, new Vector2(550, 550), Color.White);
                     break;
 
+
+                case GameState.Choose:
+
+                    spriteBatch.Draw(ChoiceScreen, new Vector2(0,0), Color.White);
+
+                    break;
+
                 default: break;
 
             }
@@ -1002,7 +1074,8 @@ namespace As_Far_as_the_Light_Reaches
                 foreach (Wall w in walls)
                 {
                     w.Pos = new Rectangle(w.Pos.X + 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
-                } 
+                }
+                tunnel = new Rectangle(tunnel.X + 3, tunnel.Y, tunnel.Width, tunnel.Height);
 
             }
 
@@ -1017,6 +1090,7 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X - 3, w.Pos.Y, w.Pos.Width, w.Pos.Height);
                 }
+                tunnel = new Rectangle(tunnel.X - 3, tunnel.Y, tunnel.Width, tunnel.Height);
             } 
 
             if (ks.IsKeyDown(Keys.W) && canUp)//Move Up
@@ -1030,6 +1104,7 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y + 3, w.Pos.Width, w.Pos.Height);
                 }
+                tunnel = new Rectangle(tunnel.X, tunnel.Y + 3, tunnel.Width, tunnel.Height);
             }
 
             if (ks.IsKeyDown(Keys.S) && canDown) //Move Down
@@ -1043,6 +1118,7 @@ namespace As_Far_as_the_Light_Reaches
                 {
                     w.Pos = new Rectangle(w.Pos.X, w.Pos.Y - 3, w.Pos.Width, w.Pos.Height);
                 }
+                tunnel = new Rectangle(tunnel.X,tunnel.Y - 3,tunnel.Width,tunnel.Height);
             }
 
             if(SingleKeyPress(Keys.Space))
@@ -1079,7 +1155,6 @@ namespace As_Far_as_the_Light_Reaches
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional, speed);
                     e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
-                    e.EnemyTexture = protag;
                     enemies.Add(e);
 
                     // close when we are done
@@ -1119,14 +1194,28 @@ namespace As_Far_as_the_Light_Reaches
                     enemies.Add(E2);
 
                     Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
-                    E3.Pos = new Rectangle(-750, -4000, 75, 85);
+                    E3.Pos = new Rectangle(-450, -4000, 75, 85);
                     enemies.Add(E3);
                      
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
                     E4.Pos = new Rectangle(-700, -3000, 75, 85);
                     enemies.Add(E4);
 
+                    Enemy E5 = new Enemy(13, 2, 8, "Enemy5", 1, true, 5);
+                    E5.Pos = new Rectangle(-300, -3500, 75, 85);
+                    enemies.Add(E5);
+
+                    Enemy E6 = new Enemy(10, 3, 5, "Enemy6", 1, true, 6);
+                    E6.Pos = new Rectangle(-550, -5500, 75, 85);
+                    enemies.Add(E6);
+
+                    Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
+                    E7.Pos = new Rectangle(-800, -6000, 75, 85);
+                    enemies.Add(E7);
+
                     //set tunnel, rectangle to transfer level on collide.
+                    tunnel = new Rectangle(-4000, -7400,500,500);
+
                     break;
                 case 1:
                     //set player location and camera position
@@ -1135,18 +1224,25 @@ namespace As_Far_as_the_Light_Reaches
                     //set enemies, will eventually use file reading
                     //set box that will take the player to the next level
 
+
+                    tunnel = new Rectangle(3000, 2965,250,250);
+
                     break;
                 case 2:
                     //set player location
                     //set bounding box for level (?)
                     //set enemies, will eventually use file reading
                     //set tunnel, rectangle to transfer level on collide.
+                    enemies.Clear();
+                    tunnel = new Rectangle(0,-200,500,100);
                     break;
                 case 3:
                     //set player location
                     //set bounding box for level (?)
                     //set enemies, will eventually use file reading
                     //set tunnel, rectangle to transfer level on collide.
+                    cam.Position -= cam.Position;
+
                     break;
             }
             levelgenreq = false;

@@ -186,4 +186,9 @@
 
 //Juri Kiin 11:39 PM 5/8/2016
 	- Placed some enemies.
+
+
+//Juri Kiin 4:23 AM 5/9/2016
+	- Put together the game.
+	- Placed enemies, tweaked stats, fumbled with enumerators
 	
