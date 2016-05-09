@@ -390,7 +390,10 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.Space))
                     {
                         curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
-                        level = 0;
+                        manager.CurLevel = 0;
+                        enemies.Clear();
+                        walls.Clear();
+                        LevelGen();
                     }
                     break;
 
@@ -746,7 +749,7 @@ namespace As_Far_as_the_Light_Reaches
                         player.MaxHealth = 20;
                         player.CurHealth = 20;
                         player.Damage = 6;
-                        player.Armor = 0.1;
+                        player.Armor = 1;
                         canPlay = true;
                     }
 
@@ -769,7 +772,7 @@ namespace As_Far_as_the_Light_Reaches
 
 
                 case GameState.Choose:
-                    if (SingleKeyPress(Keys.A))
+                    if (SingleKeyPress(Keys.Left))
                     {
                         curEnemy = new Enemy((player.MaxHealth)*2,player.Damage,14,"Player",4,true,6);
 
@@ -777,7 +780,7 @@ namespace As_Far_as_the_Light_Reaches
                         curState = GameState.Combat;
                         cam.Position -= cam.Position;
                     }
-                    if (SingleKeyPress(Keys.D))
+                    if (SingleKeyPress(Keys.Right))
                     {
                         curEnemy = new Enemy((player.MaxHealth + 2)*2,player.Damage + 2, 16, "Boss", 3, true, 6);
 

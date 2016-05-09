@@ -198,3 +198,6 @@
 
 //Juri Kiin 9:53 AM 5/9/2016
 	- Added an end game check.
+
+//Juri Kiin 10:10 AM 5/9/2016
+	- Fixed starting game so the level resets if you want to play again or die.
