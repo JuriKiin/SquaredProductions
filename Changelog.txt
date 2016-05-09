@@ -192,3 +192,6 @@
 	- Put together the game.
 	- Placed enemies, tweaked stats, fumbled with enumerators
 	
+
+//Juri Kiin 9:15 AM 5/9/2016
+	- Fixed end level collision placement.

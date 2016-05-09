@@ -1225,7 +1225,7 @@ namespace As_Far_as_the_Light_Reaches
                     //set box that will take the player to the next level
 
 
-                    tunnel = new Rectangle(3000, 2965,250,250);
+                    tunnel = new Rectangle(3640, 2697,500,500);
 
                     break;
                 case 2:
@@ -1234,7 +1234,6 @@ namespace As_Far_as_the_Light_Reaches
                     //set enemies, will eventually use file reading
                     //set tunnel, rectangle to transfer level on collide.
                     enemies.Clear();
-                    tunnel = new Rectangle(0,-200,500,100);
                     break;
                 case 3:
                     //set player location
