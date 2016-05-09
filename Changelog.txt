@@ -201,3 +201,8 @@
 
 //Juri Kiin 10:10 AM 5/9/2016
 	- Fixed starting game so the level resets if you want to play again or die.
+
+
+//Juri 10:53 AM 5/9/2016
+	- Added enemy sprites in background of combat.
+

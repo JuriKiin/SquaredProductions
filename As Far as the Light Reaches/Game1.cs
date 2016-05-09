@@ -193,6 +193,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D unlucky;
 
         bool endGame = false;
+        bool endTex;
 
 
         public Game1()
@@ -777,7 +778,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.Left))
                     {
                         curEnemy = new Enemy((player.MaxHealth)*2,player.Damage,14,"Player",4,true,6);
-
+                        endTex = true;
                         endGame = true;
                         curState = GameState.Combat;
                         cam.Position -= cam.Position;
@@ -785,7 +786,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.Right))
                     {
                         curEnemy = new Enemy((player.MaxHealth + 2)*2,player.Damage + 2, 16, "Boss", 3, true, 6);
-
+                        endTex = false;
                         endGame = true;
                         curState = GameState.Combat;
                         cam.Position -= cam.Position;
@@ -970,6 +971,24 @@ namespace As_Far_as_the_Light_Reaches
 
                             //Draw the UI for combat
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            
+
+                            if (endGame)
+                            {
+                                if (endTex)
+                                {
+                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                }
+                                else
+                                {
+                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                }
+
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                            }
 
                             //Draw the meter going back and forth on the screen.
                             spriteBatch.Draw(meterObj, meterObjRec, Color.White);   
@@ -982,8 +1001,26 @@ namespace As_Far_as_the_Light_Reaches
 
                         case CombatState.Block:
 
+                            if (endGame)
+                            {
+                                if (endTex)
+                                {
+                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                }
+                                else
+                                {
+                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                }
+
+                            }
+                            else
+                            {
+                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                            }
+
+
                             //Draw each arrow
-                            foreach(Arrow a in curArrows)        
+                            foreach (Arrow a in curArrows)        
                             {
                                 //Draw each arrow to the screen
                                 spriteBatch.Draw(a.CurTexture,new Rectangle(a.Rec.X, a.Rec.Y, a.Rec.Width, a.Rec.Height),Color.White);
@@ -994,6 +1031,7 @@ namespace As_Far_as_the_Light_Reaches
 
                             //Draw the UI for combat
                             spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                            
 
                             //Draw the hp values of each fighter
                             spriteBatch.DrawString(font, "Player Health: " + player.CurHealth, new Vector2(10, 60), Color.White);
