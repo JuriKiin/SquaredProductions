@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace As_Far_as_the_Light_Reaches
@@ -73,34 +71,42 @@ namespace As_Far_as_the_Light_Reaches
         //Write: Targets a spot in the list that is the start of a dialogue section, freezes the player, displays 3 lines, waits for a spacebar press, then continues giving messages or breaks.
         public void WriteDialogue(int lindex)//Oh, because of the wait, one method should work for all the triggers! Whatever happens after the dialogue can happen actually after the method. Yay for only one method.
         {
-            speaking = true; //cuts ability to move
+            //speaking = true; //cuts ability to move
 
-            //Would it be healthy to draw them through this function? I know there's a way to do it, but I think drawing outside of Draw() can cause issues. It works perfectly if it doesn't create issues.
-            batch.Begin();
-            batch.DrawString(font, lines[lindex], new Vector2(355, 605), Color.White);
-            batch.DrawString(font, lines[lindex], new Vector2(355, 625), Color.White);
-            batch.DrawString(font, lines[lindex], new Vector2(355, 645), Color.White);
-            batch.End();
-            //draw a spacebar icon next to the dialogue box? Keeps it nice and clear, and it shouldn't take long at all.
+            ////Would it be healthy to draw them through this function? I know there's a way to do it, but I think drawing outside of Draw() can cause issues. It works perfectly if it doesn't create issues.
+            //batch.Begin();
+            //batch.DrawString(font, lines[lindex], new Vector2(355, 605), Color.White);
+            //batch.DrawString(font, lines[lindex+1], new Vector2(355, 625), Color.White);
+            //batch.DrawString(font, lines[lindex+2], new Vector2(355, 645), Color.White);
+            ////batch.Draw(
+            //batch.End();
 
-            while (true) //until we hit spacebar to progress...
-            {
-                if (SingleKeyPress(Keys.Space))
-                {
-                    break;
-                }
-                //Wait? Somehow...? My first idea was just an empty while you had to escape from, but that would run without getting to the very Draw() that should show us the strings.
-                //I don't know what in the world will keep us from doing things such as switching state or running LevelGen(), but still allow Draw() to run. 
-                //If the drawing goes straight through this method, this isn't an issue. The empty while is fine. If not that, we could try adding different conditionals to those statements.
-            }
-            if (lines[lindex + 3] == "-") //If the division is a dash, there's still more dialogue to go in this section. Need to make sure we don't have any spare spaces on lines with divisions.
-            {
-                WriteDialogue(lindex + 4); //Recurses to continue showing dialogue.
-            }
-            else if (lines[lindex + 3] == "~") //If the division is a tilde, we've reached the end of this dialogue section. Need to make sure we don't have any spare spaces on lines with divisions.
-            {
-                speaking = false; //ability to move returns
-            }
+            //while (true) //until we hit spacebar to progress...
+            //{
+            //    int i = 0;
+            //    curKB = Keyboard.GetState();
+            //    if(curKB.IsKeyDown(Keys.Space)) //singlekeypress was also used and also didn't work.
+            //    {
+            //        break;
+            //    }
+
+            //    i++;
+            //    if(i>5)
+            //    {
+            //        break;
+            //    }
+            //    //Wait? Somehow...? My first idea was just an empty while you had to escape from, but that would run without getting to the very Draw() that should show us the strings.
+            //    //I don't know what in the world will keep us from doing things such as switching state or running LevelGen(), but still allow Draw() to run. 
+            //    //If the drawing goes straight through this method, this isn't an issue. The empty while is fine. If not that, we could try adding different conditionals to those statements.
+            //}
+            //if (lines[lindex + 3] == "-") //If the division is a dash, there's still more dialogue to go in this section. Need to make sure we don't have any spare spaces on lines with divisions.
+            //{
+            //    WriteDialogue(lindex + 4); //Recurses to continue showing dialogue.
+            //}
+            //else if (lines[lindex + 3] == "~") //If the division is a tilde, we've reached the end of this dialogue section. Need to make sure we don't have any spare spaces on lines with divisions.
+            //{
+            //    speaking = false; //ability to move returns
+            //}
         }
     }
 }

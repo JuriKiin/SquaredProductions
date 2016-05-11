@@ -477,19 +477,20 @@ namespace As_Far_as_the_Light_Reaches
                         if (walls[i].Pos.Intersects(player.PlayerRec))
                         {
                             //Could probably have some dialogue here. It might make being reset jarring but not confusing.
-
                             walls.Clear();
-                              enemies.Clear();
+                            enemies.Clear();
                             LevelGen();
-                             cam.Position -= cam.Position;
-
+                            cam.Position -= cam.Position;
                         }
                     }
 
                     if (tunnel.Intersects(player.PlayerRec))
                     {                        
                         //LEVEL END dialogue
-                        //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
+                        //if(level==0)
+                        //{
+                        //    Story.WriteDialogue(62);
+                        //}
                         manager.LoadNextLevel(); //Prepare map for next level.
                         walls.Clear();
                         enemies.Clear();
@@ -497,18 +498,7 @@ namespace As_Far_as_the_Light_Reaches
                         LevelGen();
                         cam.Position -= cam.Position;
                         System.Threading.Thread.Sleep(200);
-                    }
-                    if (tunnel.Intersects(player.PlayerRec))
-                    {
-                        //LEVEL END dialogue
-                        //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
-                        manager.LoadNextLevel(); //Prepare map for next level.
-                        walls.Clear();
-                        enemies.Clear();
-                        manager.CurLevel++;
-                        LevelGen();
-                        cam.Position -= cam.Position;
-                        System.Threading.Thread.Sleep(200);
+
                     }
                     break;
 
