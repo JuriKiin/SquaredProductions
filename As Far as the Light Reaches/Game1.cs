@@ -116,7 +116,7 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
-        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions, Choose};
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions, Choose, Scene};
         GameState curState;
 
         enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
@@ -157,8 +157,8 @@ namespace As_Far_as_the_Light_Reaches
         bool canRight = true;
         bool canMove = true;
 
-        // controls how fast the player moves ! changed ultra fast for collision testing purposes
-        int moveSpeed = 5;
+        // controls how fast the player moves ! @@@@@@@@@@@@@
+        int moveSpeed = 4;
 
         //Vectors where dialogue lines will be placed
         Vector2 lineplace1;
@@ -368,7 +368,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.Space))
                     {
                         curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
-                        manager.CurLevel = 0;
+                        manager.CurLevel = 2;
                         enemies.Clear();
                         walls.Clear();
                         LevelGen();
@@ -812,7 +812,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     spriteBatch.Draw(classSelect, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
                     break;
-
+                
                 case GameState.Walk:
 
                     //Draw HP in Walking UI
@@ -846,20 +846,12 @@ namespace As_Far_as_the_Light_Reaches
                             break;
 
                         case 3:
-                            Rectangle r = new Rectangle(450, -1030, (int)(antagDownStill.Width * 1.15), (int)(antagDownStill.Height * 1.15));
 
-                            mapBatch.Draw(palace, new Rectangle(0, -1400, palace.Width/2, palace.Height/2), Color.White);
-                            mapBatch.Draw(antagDownStill,r,Color.White);
-
-                            if (cam.Position.Y <= -1020)
-                            {
-                                curState = GameState.Choose;
-                            }
-
+                           curState = GameState.Scene;                                                        
                             break;
-
-
                     }
+
+                
 
 
                     //Draw each enemy
@@ -1055,6 +1047,12 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.Draw(ChoiceScreen, new Vector2(0,0), Color.White);
 
                     break;
+                case GameState.Scene:
+                    spriteBatch.Draw(palace, new Rectangle(-175, 50, palace.Width / 2, palace.Height / 3), Color.White);                  
+                    System.Timers.Timer timer = new System.Timers.Timer(5000);
+                    timer.Start();
+                    timer.Elapsed += Timer_Elapsed1;           
+                    break;
 
                 default: break;
 
@@ -1063,6 +1061,13 @@ namespace As_Far_as_the_Light_Reaches
 
             base.Draw(gameTime);
         }
+
+        private void Timer_Elapsed1(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            curState = GameState.Choose;
+        }
+
+
 
 
         //METHOD TO INITIALIZE SERIES OF PAUSE MENUS
@@ -1207,46 +1212,52 @@ namespace As_Far_as_the_Light_Reaches
                     walls.Add(new Wall(-20, 385, 1000, 1, Wall.direction.up));
                     walls.Add(new Wall(95, -5555, 900, 2835, Wall.direction.left));
 
-                    // for sake of testing i commented out enemies 
+                    walls.Add(new Wall(-3055, -4490, 2075, 2790, Wall.direction.left));
+                    walls.Add(new Wall(-4020, -6570, 990, 2095, Wall.direction.left));
+                    walls.Add(new Wall(-2050, -7640, 2140, 2120, Wall.direction.left));
+                    walls.Add(new Wall(-4020, -8200, 2000, 600, Wall.direction.left));
+                    
 
-               /*     TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
-                    TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
-                    enemies.Add(TestGoon);
 
-                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
-                    E.Pos = new Rectangle(-450, -2300, 75, 85);
-                    enemies.Add(E);
+                         TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
+                         TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
+                         enemies.Add(TestGoon);
 
-                    Enemy E2 = new Enemy(16, 1, 7, "Enemy2", 1, true, 5);
-                    E2.Pos = new Rectangle(480, 0, 75, 85);
-                    enemies.Add(E2);
+                         Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
+                         E.Pos = new Rectangle(-450, -2300, 75, 85);
+                         enemies.Add(E);
 
-                    Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
-                    E3.Pos = new Rectangle(-450, -4000, 75, 85);
-                    enemies.Add(E3);
-                     
-                    Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
-                    E4.Pos = new Rectangle(-700, -3000, 75, 85);
-                    enemies.Add(E4);
+                         Enemy E2 = new Enemy(16, 1, 7, "Enemy2", 1, true, 5);
+                         E2.Pos = new Rectangle(480, 0, 75, 85);
+                         enemies.Add(E2);
 
-                    Enemy E5 = new Enemy(13, 2, 8, "Enemy5", 1, true, 5);
-                    E5.Pos = new Rectangle(-300, -3500, 75, 85);
-                    enemies.Add(E5);
+                         Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
+                         E3.Pos = new Rectangle(-450, -4000, 75, 85);
+                         enemies.Add(E3);
 
-                    Enemy E6 = new Enemy(10, 3, 5, "Enemy6", 1, true, 6);
-                    E6.Pos = new Rectangle(-550, -5500, 75, 85);
-                    enemies.Add(E6);
+                         Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
+                         E4.Pos = new Rectangle(-700, -3000, 75, 85);
+                         enemies.Add(E4);
 
-                    Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
-                    E7.Pos = new Rectangle(-800, -6000, 75, 85);
-                    enemies.Add(E7);
-                    */
+                         Enemy E5 = new Enemy(13, 2, 8, "Enemy5", 1, true, 5);
+                         E5.Pos = new Rectangle(-300, -3500, 75, 85);
+                         enemies.Add(E5);
+
+                         Enemy E6 = new Enemy(10, 3, 5, "Enemy6", 1, true, 6);
+                         E6.Pos = new Rectangle(-550, -5500, 75, 85);
+                         enemies.Add(E6);
+
+                         Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
+                         E7.Pos = new Rectangle(-800, -6000, 75, 85);
+                         enemies.Add(E7);
+                         
 
                     //set tunnel, rectangle to transfer level on collide.
                     tunnel = new Rectangle(-4000, -7400,500,500);
 
                     break;
-                case 1:
+                case 1: // underground 
+
                     //set player location and camera position
                     //curleveltexture set LoadNextLevel
                     //set bounding box for level (?)
@@ -1257,12 +1268,10 @@ namespace As_Far_as_the_Light_Reaches
                     tunnel = new Rectangle(2810, 2590,410,170);
 
                     break;
-                case 2:
-                    //set player location
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set tunnel, rectangle to transfer level on collide.
-                    tunnel = new Rectangle(0,0,0,0);
+                case 2: // alleyway tunnel 
+                    walls.Add(new Wall(180, -868, 152, 1284, Wall.direction.right));
+                    walls.Add(new Wall(720, -864, 72, 1280, Wall.direction.left));
+                    //tunnel = new Rectangle(0,0,0,0);
                     enemies.Clear();
                     break;
                 case 3:
