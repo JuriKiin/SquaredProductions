@@ -1,4 +1,173 @@
-THIS IS A DIALOGUE SAMPLE
-SAMPLE TEXT
-MEEMS LMAO
-END
+//DIALOGUE FILE
+//START LEVEL: 1/QM, LINE 4
+~
+Our story begins, as many do, with an unlikely protagonist. 
+A college student named Mason, who’s just woken up without 
+his alarm, rushing out the door to his first class.
+-
+The roads are empty, what with the rush to classes paused for now. 
+Strange... Who are those shady figures over by the forest? 
+Bandits of some kind!? 
+-
+On a college campus? Our protagonist is curious, more importantly 
+he is concerned. From over here, just happening to avoid their sight,
+he could tell that these men were dangerous.
+-
+Mason searched the area. It seems a cosplayer has left their gear 
+nearby! A stroke of luck. Our protagonist arms himself with the 
+surprisingly real gear. Perhaps he could defend himself...
+~
+//START COMBAT: Enemy 1, LINE 22
+~
+"Hey, boys, we've been spotted!" the first bandit shouts, moving to
+engage immediately. Seems it was prudent to use the equipment, 
+he draws a knife and lunges!
+~
+//END COMBAT: Enemy 1, LINE 28
+~
+The bandit falls defeated. The other two are coming toward the path, 
+but our protagonist moves to meet them head on. They attacked him
+for no reason, Mason knew he had to protect the other students! 
+~
+//START COMBAT: Enemy 2, LINE 34
+~
+The second bandit approaches the path, hefting a club. "How'd a
+fighter get here? I ain't going back underground, hear me? It's all dark
+and horrible down there!" He shouts, charging our protagonist.
+~
+//END COMBAT: ENEMY 2, LINE 40 
+~
+The second bandit finally falls. What "underground" did he try 
+to escape from? A jail perhaps? Really, where had any of these 
+bandits come from? Their accent was very strange...
+~
+//START COMBAT: ENEMY 3, LINE 46
+~
+Our protagonist reaches the last bandit that seems to be around.
+He's a lanky man, clad in a black cloak. He draws two jagged blades,
+whirling them around threateningly.
+-
+"Unfortunate you've killed those two. Good fighters. But it doesn’t 
+matter. I’m out of there, and I’m never going back." Out of where? 
+His blades flash in Mason's direction. Our protagonist engages!
+~
+//END COMBAT: Enemy 3, LINE 56
+~
+Finally, the duel wielder falls. Mason is exhausted, but victorious.
+Now he just had to find where the bandits had even come from...
+
+~
+//END LEVEL: 1, LINE  62
+~
+If there was anything that could have brought them from a strange
+land, it was this... A strange glittering, warping space floated in 
+the air. What if our protagonist were to touch it...?
+-
+A flood of dead leaves fills Mason's vision! There is a sensation of 
+falling along with them for at least a minute straight. Suddenly, he 
+lands in a soft leaf pile. Our protagonist pulls himself up...
+~
+//START LEVEL: 2/TUNNELS, LINE 72
+~
+He finds himself in an underground tunnel of some kind! The thing
+was colossal! Could this be the tunnel below the quarter mile, Mason 
+thought? No, it was a titanic cavernous place. "The underground."
+-
+Shuffling feet and drawn blades echo through the tunnel. More 
+bandits, confirming our protagonist's conclusion. Looking around, 
+our protagonist finds a dead end with no portal. Forward it is... 
+~
+//START COMBAT: Enemy 4, LINE 82
+~
+"How have we been found?" The bandit mutters, brandishing a knife.
+He looks far more competant than the first bandit who'd used one. 
+"Doesn’t matter. This passage to the palace is our secret alone..."
+~
+//END COMBAT: Enemy 4, LINE 88
+~
+Palace? Where did that portal take me? Our protagonist wonders. 
+Still no way out in sight. He had to press on if he were to find his
+way home. And possibly take care of more bandits...
+~
+//START COMBAT: ENEMY 5, LINE 92
+~
+"No way buddy! The only ones getting out of this hole are me and 
+my gang! You’ll never reach that portal!" A scrappy looking bandit 
+shouts, drawing a longsword as he charges from the darkness!
+~
+//END COMBAT: ENEMY 5, LINE 100
+~
+It seems the bandits are looking for a way out as well. Perhaps you 
+can find the palace by following their path. It seems Mason made a
+better adventurer, or protagonist as it were, than he expected!
+~
+//START COMBAT: ENEMY 6, LINE 106
+~
+A huge bandit, armored unimpressively in worn leather, stands 
+between our protagonist and his path. He twirls a knife in one hand,
+gripping another. "Curiosity? You killed the cats, so..." He says.
+-
+"I don't see why they think it's so bad down here. Plenty nicer parts
+where folks got good lives. But I got hired, and I do my jobs."
+The huge bandit snatches his twirling dagger. He stalks forward...
+-
+Our protagonist attacks first, but the assassin dodges, unnaturally 
+fast for his size. Something glints in his black eyes, something 
+unsettling. Mason flinches. The bandit grins and strikes again...
+~
+//END COMBAT: ENEMY 6, LINE 120
+~
+The huge bandit falls. Our protagonist is exhausted and disturbed, 
+but he had finally outfought the huge assassin with the twisted smile. 
+The tunnel ahead has a small door at the end. The secret passage!
+~
+//NOTE: NO EXIT FOR LEVEL 2
+//NOTE: NO ENTRANCE NOR EXIT FOR THE TUNNEL
+//START LEVEL: 4/PALACE, LINE 128
+~
+The palace, finally! Our protagonist wanted to run and find his way
+home, but someone blocked the way. A tall, shadowy man, dressed 
+to kill, quite literally considering the ornate rapier he held.
+-
+"My scout said that you’d defeated the bandits." He says. "I thank 
+you for that. But I’m afraid that I can’t let you go further. This 
+gate leads to the portal, and if you return above..."  
+-
+"The people I rule over are happy, but if this portal is opened, our 
+worlds will collide. What then? Your people invade? Usurp me, and 
+ravage my lands, my people? No." Mason hadn't thought of it...
+-
+"So I, Baron Methias, will end you myself. For my sake, and for my 
+people’s sake." He finishes. Our protagonist sees only this man's 
+pride. He was wrong. The above ground wouldn't do such a thing.
+-
+Our protagonist raised his weapon, and the baron did the same. 
+As he leveled his rapier, Mason couldn't see pride, nor greed.
+Methias stood firm, guarding the gate. He had something to defend.
+-
+How shall this story end...?
+
+
+~
+//NOTE: NO BEFORE COMBAT.
+//END TEXT: PROTAG WIN, LINE 155
+~
+Our protagonist is finally victorious, and returns home. There, he
+tells the world of what he'd found. First scientists come to the portal,
+then reporters, then explorers. And then came the opportunists.
+-
+Everything the world had to give it gave, the people Methias had
+once protected oppressed, and the land abused. Eventually outcry
+motivated diplomatic efforts, and the two lands might find peace.
+~
+//END TEXT: ANTAG WIN, LINE 165
+~
+Our protagonist finally falls, lost to the underground. His portal 
+home sealed away again for generations to come. Methias returns 
+to his throne, and reigns long and happy.
+-
+His people are defended, his lands rich, and some say these years
+are the golden age of the underground. In the forest, the distortion 
+winks out of existence, the underground propsering in secret.
+~
+KILLREADER

@@ -192,7 +192,6 @@ namespace As_Far_as_the_Light_Reaches
             graphics.PreferredBackBufferWidth = winX;  // set this value to the desired width of your window
             graphics.PreferredBackBufferHeight = winY;   // set this value to the desired height of your window
             graphics.ApplyChanges();
-
             Content.RootDirectory = "Content";
 
         }
@@ -219,9 +218,6 @@ namespace As_Far_as_the_Light_Reaches
             //define level manager
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
-
-            //Run Levelgen for level 1
-            LevelGen();
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
@@ -307,7 +303,7 @@ namespace As_Far_as_the_Light_Reaches
             unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
 
             //Dialoguemanager
-            //Story = new DialogueManager(spriteBatch, font);
+            Story = new DialogueManager(spriteBatch, font);
         }
 
 
@@ -363,7 +359,7 @@ namespace As_Far_as_the_Light_Reaches
                     if (SingleKeyPress(Keys.Space))
                     {
                         curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
-                        manager.CurLevel = 2;
+                        manager.CurLevel = 0;
                         enemies.Clear();
                         walls.Clear();
                         LevelGen();
@@ -438,28 +434,28 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (e.Pos.Intersects(player.PlayerRec))
                         {
-                            enemyNum++;
-                            switch (enemyNum)
-                            {
-                                case 1:
-                                    Story.WriteDialogue(22);
-                                    break;
-                                case 2:
-                                    Story.WriteDialogue(34);
-                                    break;
-                                case 3:
-                                    Story.WriteDialogue(46);
-                                    break;
-                                case 4:
-                                    Story.WriteDialogue(82);
-                                    break;
-                                case 5:
-                                    Story.WriteDialogue(92);
-                                    break;
-                                case 6:
-                                    Story.WriteDialogue(106);
-                                    break;
-                            }
+                            //enemyNum++;
+                            //switch (enemyNum)
+                            //{
+                            //    case 1:
+                            //        Story.WriteDialogue(22);
+                            //        break;
+                            //    case 2:
+                            //        Story.WriteDialogue(34);
+                            //        break;
+                            //    case 3:
+                            //        Story.WriteDialogue(46);
+                            //        break;
+                            //    case 4:
+                            //        Story.WriteDialogue(82);
+                            //        break;
+                            //    case 5:
+                            //        Story.WriteDialogue(92);
+                            //        break;
+                            //    case 6:
+                            //        Story.WriteDialogue(106);
+                            //        break;
+                            //}
                             curEnemy = e;   //Sets the enemy
                             curState = GameState.Combat;    //Set the gamestate to combat
                             cmbState = CombatState.Attack;
@@ -1311,7 +1307,6 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
             }
-            levelgenreq = false;
         }
 
     }
