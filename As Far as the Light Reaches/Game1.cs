@@ -183,6 +183,7 @@ namespace As_Far_as_the_Light_Reaches
 
         bool endGame = false;
         bool endTex;
+        int timer = 0;
 
 
         public Game1()
@@ -491,6 +492,20 @@ namespace As_Far_as_the_Light_Reaches
                         cam.Position -= cam.Position;
                         System.Threading.Thread.Sleep(200);
                     }
+                    if (tunnel.Intersects(player.PlayerRec))
+                    {
+                        //LEVEL END dialogue
+                        //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
+                        manager.LoadNextLevel(); //Prepare map for next level.
+
+                        levelgenreq = true; //If levelgenreq is true, the next update will run the levelgen. 
+                        walls.Clear();
+                        enemies.Clear();
+                        manager.CurLevel++;
+                        LevelGen();
+                        cam.Position -= cam.Position;
+                        System.Threading.Thread.Sleep(200);
+                    }
                     break;
 
                 //FIGHTING ENEMIES STATE
@@ -778,6 +793,14 @@ namespace As_Far_as_the_Light_Reaches
 
                     break;
 
+                case GameState.Scene:
+                    timer += gameTime.ElapsedGameTime.Milliseconds;
+                    if(timer > 5000)
+                    {
+                        curState = GameState.Choose;
+                    }
+                    break;
+
                 default: break;
             }
             base.Update(gameTime);
@@ -1052,9 +1075,8 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.Draw(palace, new Rectangle(-175, 50, palace.Width / 2, palace.Height / 3), Color.White);
                     spriteBatch.Draw(antagDownStill, new Rectangle(509, 310, antagDownStill.Width, antagDownStill.Height), Color.White);
                     spriteBatch.Draw(protagUpStill, new Rectangle(510, 575, protagUpStill.Width, protagUpStill.Height), Color.White);                   
-                     System.Timers.Timer timer = new System.Timers.Timer(5000);
-                     timer.Start();
-                     timer.Elapsed += Timer_Elapsed1;                   
+
+                                         
                     break;
 
                 default: break;
@@ -1063,11 +1085,6 @@ namespace As_Far_as_the_Light_Reaches
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        private void Timer_Elapsed1(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            curState = GameState.Choose;       
         }
 
 
