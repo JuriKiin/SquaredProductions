@@ -206,3 +206,6 @@
 //Juri 10:53 AM 5/9/2016
 	- Added enemy sprites in background of combat.
 
+//Juri Kiin 10:37 PM 5/10/2016
+	- Added a wider rectangle for the player to hit an enemy.
+

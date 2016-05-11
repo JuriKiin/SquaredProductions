@@ -179,6 +179,8 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D three2;
         Texture2D three3;
 
+        Texture2D engage;
+
         // load for other mapz 
 
         Texture2D upperground;
@@ -237,6 +239,7 @@ namespace As_Far_as_the_Light_Reaches
             lineplace1 = new Vector2(355, 605); //positions for
             lineplace2 = new Vector2(355, 625); //strings in
             lineplace3 = new Vector2(355, 645); //dialogue box (Y values need tweaking with new font)
+
 
             //Run Levelgen for level 1
             LevelGen();
@@ -336,6 +339,8 @@ namespace As_Far_as_the_Light_Reaches
             cow = Content.Load<Texture2D>("Enemies\\Cow.png");
             horseboy = Content.Load<Texture2D>("Enemies\\HorseBoy.png");
             unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
+
+            engage = Content.Load<Texture2D>("UI\\engage.png");
         }
 
 
@@ -397,6 +402,12 @@ namespace As_Far_as_the_Light_Reaches
                         LevelGen();
                         
                     }
+
+                    if (SingleKeyPress(Keys.E))
+                    {
+                        Exit();
+                    }
+
                     break;
 
                 case GameState.Directions:
@@ -463,10 +474,15 @@ namespace As_Far_as_the_Light_Reaches
 
                     foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
-                        if (e.Pos.Intersects(player.PlayerRec))
+                        Rectangle r = new Rectangle((e.Pos.X - e.Pos.Width), (e.Pos.Y - e.Pos.Height), (3 * e.Pos.Width), (3 * e.Pos.Height));
+
+                        // if (e.TrigRect.Intersects(player.PlayerRec))
+                        if (player.PlayerRec.Intersects(r))
                         {
+
                             //Story.WriteDialogue(e.startlines);// e.startlines (and endlines later) would be a new int for enemies that determines where their lines start. Would this need to be added to the ext. tool?
-                            curEnemy = e;   //Sets the enemy
+
+                                curEnemy = e;   //Sets the enemy
                                 curState = GameState.Combat;    //Set the gamestate to combat
                                 cmbState = CombatState.Attack;
                                 mState = MoveState.Left;
@@ -832,6 +848,8 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
+
+
                     //Draw HP in Walking UI
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
@@ -895,7 +913,10 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
+                        mapBatch.Draw(engage, e.TrigRect, Color.White);
                         spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
+                        
+
                     }
 
 
@@ -1210,6 +1231,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional, speed);
                     e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
+                   
                     enemies.Add(e);
 
                     // close when we are done
@@ -1231,16 +1253,16 @@ namespace As_Far_as_the_Light_Reaches
 
                     startRec = new Rectangle(-4000, -7600, 5000, 8000);
 
-               //     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
+                    //     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
                     walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
                     walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
-                   // walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
+                    // walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
 
-                    TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
+                    TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true, 6);
                     TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
                     enemies.Add(TestGoon);
 
-                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
+                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true, 5);
                     E.Pos = new Rectangle(-450, -2300, 75, 85);
                     enemies.Add(E);
 
@@ -1251,7 +1273,7 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
                     E3.Pos = new Rectangle(-450, -4000, 75, 85);
                     enemies.Add(E3);
-                     
+
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
                     E4.Pos = new Rectangle(-700, -3000, 75, 85);
                     enemies.Add(E4);
@@ -1267,6 +1289,11 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
                     E7.Pos = new Rectangle(-800, -6000, 75, 85);
                     enemies.Add(E7);
+
+                    foreach (Enemy e in enemies)
+                    {
+                        e.TrigRect = new Rectangle((e.Pos.X - e.Pos.Width), (e.Pos.Y - e.Pos.Height), (5 * e.Pos.Width), (5 * e.Pos.Height));
+                    }
 
                     //set tunnel, rectangle to transfer level on collide.
                     tunnel = new Rectangle(-4000, -7400,500,500);
