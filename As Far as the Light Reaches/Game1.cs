@@ -157,6 +157,7 @@ namespace As_Far_as_the_Light_Reaches
         bool canRight = true;
         bool canMove = true;
 
+        // controls how fast the player moves ! changed ultra fast for collision testing purposes
         int moveSpeed = 5;
 
         //Vectors where dialogue lines will be placed
@@ -166,27 +167,13 @@ namespace As_Far_as_the_Light_Reaches
 
         Rectangle startRec;
 
-        //loading in pieces of underground map
-        Texture2D one1;
-        Texture2D one2;
-        Texture2D one3;
-
-        Texture2D two1;
-        Texture2D two2;
-        Texture2D two3;
-
-        Texture2D three1;
-        Texture2D three2;
-        Texture2D three3;
-
-        Texture2D engage;
 
         // load for other mapz 
 
         Texture2D upperground;
         Texture2D underTunnel;
         Texture2D palace;
-        List<Texture2D> undergroundmaplist = new List<Texture2D>();
+        Texture2D underGsmall; 
 
         // enemies 
 
@@ -240,7 +227,6 @@ namespace As_Far_as_the_Light_Reaches
             lineplace2 = new Vector2(355, 625); //strings in
             lineplace3 = new Vector2(355, 645); //dialogue box (Y values need tweaking with new font)
 
-
             //Run Levelgen for level 1
             LevelGen();
 
@@ -249,19 +235,6 @@ namespace As_Far_as_the_Light_Reaches
            
             ReadFiles();    //Creates each enemy
             arrowSpawner.LoadArrow(Content); //This loads all of the arrow keys into arrows.
-
-            // add underground map pieces to the list 
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\11.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\12.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\13.png"));
-
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\21.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\22.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\23.png"));
-
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\31.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\32.png"));
-            undergroundmaplist.Add(Content.Load<Texture2D>("Maps\\33.png"));
 
             manager.CurLevel = 0;
 
@@ -333,14 +306,13 @@ namespace As_Far_as_the_Light_Reaches
             upperground = Content.Load<Texture2D>("Maps\\1.png");
             palace = Content.Load<Texture2D>("Maps\\palace.png");
             underTunnel = Content.Load<Texture2D>("Maps\\underTunnel.png");
+            underGsmall = Content.Load<Texture2D>("Maps\\underGsmall.png");
 
             // enemies 
 
             cow = Content.Load<Texture2D>("Enemies\\Cow.png");
             horseboy = Content.Load<Texture2D>("Enemies\\HorseBoy.png");
             unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
-
-            engage = Content.Load<Texture2D>("UI\\engage.png");
         }
 
 
@@ -402,12 +374,6 @@ namespace As_Far_as_the_Light_Reaches
                         LevelGen();
                         
                     }
-
-                    if (SingleKeyPress(Keys.E))
-                    {
-                        Exit();
-                    }
-
                     break;
 
                 case GameState.Directions:
@@ -430,7 +396,11 @@ namespace As_Far_as_the_Light_Reaches
 
                     //moves the camera, therefore the map and map elements.
                     Move();
-                    
+
+                    if (SingleKeyPress(Keys.L))
+                    {
+                        cam.Position = cam.Position;
+                    }
 
                     if(!protag.IsKeyDown(Keys.W) && !protag.IsKeyDown(Keys.S) && !protag.IsKeyDown(Keys.A) && !protag.IsKeyDown(Keys.D))
                     {
@@ -474,15 +444,10 @@ namespace As_Far_as_the_Light_Reaches
 
                     foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
-                        Rectangle r = new Rectangle((e.Pos.X - e.Pos.Width), (e.Pos.Y - e.Pos.Height), (3 * e.Pos.Width), (3 * e.Pos.Height));
-
-                        // if (e.TrigRect.Intersects(player.PlayerRec))
-                        if (player.PlayerRec.Intersects(r))
+                        if (e.Pos.Intersects(player.PlayerRec))
                         {
-
                             //Story.WriteDialogue(e.startlines);// e.startlines (and endlines later) would be a new int for enemies that determines where their lines start. Would this need to be added to the ext. tool?
-
-                                curEnemy = e;   //Sets the enemy
+                            curEnemy = e;   //Sets the enemy
                                 curState = GameState.Combat;    //Set the gamestate to combat
                                 cmbState = CombatState.Attack;
                                 mState = MoveState.Left;
@@ -503,10 +468,12 @@ namespace As_Far_as_the_Light_Reaches
                         if (walls[i].Pos.Intersects(player.PlayerRec))
                         {
                             //Could probably have some dialogue here. It might make being reset jarring but not confusing.
+
                             walls.Clear();
-                            enemies.Clear();
+                              enemies.Clear();
                             LevelGen();
-                            cam.Position -= cam.Position;
+                             cam.Position -= cam.Position;
+
                         }
                     }
 
@@ -848,36 +815,21 @@ namespace As_Far_as_the_Light_Reaches
 
                 case GameState.Walk:
 
-
-
                     //Draw HP in Walking UI
                     spriteBatch.DrawString(font, "HP: " + player.CurHealth, new Vector2(180, 900), Color.White);
                     
                     //Draw map
                     mapBatch.Begin(transformMatrix: cam.GrabMatrix());                 
-                    // 2737 2965 dimensions for each underground piece 
+
                     switch (manager.CurLevel)
                     {
-                        case 0:
+                        case 0: // above ground 
                             mapBatch.Draw(upperground, new Rectangle(-4000, -7600, 5000, 8000), Color.White);
 
-
-
-
                             break;
-                        case 1:
-                            mapBatch.Draw(undergroundmaplist[0], new Rectangle(0, 0, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[1], new Rectangle(2737, 0, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[2], new Rectangle(5469, 0, 2737, 2965), Color.White);
+                        case 1: // undergound 
 
-                            mapBatch.Draw(undergroundmaplist[3], new Rectangle(0, 2965, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[4], new Rectangle(2750, 2965, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[5], new Rectangle(5469, 2965, 2737, 2965), Color.White);
-
-                            mapBatch.Draw(undergroundmaplist[6], new Rectangle(0, 5930, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[7], new Rectangle(2750, 5930, 2737, 2965), Color.White);
-                            mapBatch.Draw(undergroundmaplist[8], new Rectangle(5469, 5930, 2737, 2965), Color.White);
-
+                            mapBatch.Draw(underGsmall, new Rectangle(0, 0, 6000, 8000), Color.White);
 
                             break;
 
@@ -913,10 +865,7 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        mapBatch.Draw(engage, e.TrigRect, Color.White);
                         spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
-                        
-
                     }
 
 
@@ -1231,7 +1180,6 @@ namespace As_Far_as_the_Light_Reaches
                     //Create the enemy and add it to the enemies list in game1
                     Enemy e = new Enemy(health, damage, numArrow, "Enemy", armor, directional, speed);
                     e.Pos = new Rectangle(rnd.Next(-200, 500), rnd.Next(-200, 590), 75, 85);
-                   
                     enemies.Add(e);
 
                     // close when we are done
@@ -1253,16 +1201,19 @@ namespace As_Far_as_the_Light_Reaches
 
                     startRec = new Rectangle(-4000, -7600, 5000, 8000);
 
-                    //     walls.Add(new Wall(0, 0, 1000, 1, Wall.direction.up));
-                    walls.Add(new Wall(0, 0, 1, 1800, Wall.direction.left));
-                    walls.Add(new Wall(1000, 0, 1, 1800, Wall.direction.right));
-                    // walls.Add(new Wall(0, 1800, 1000, 1, Wall.direction.down));
+                    // walls 
+                    walls.Add(new Wall(-1015, -1705, 1025, 2100, Wall.direction.right));
+                    walls.Add(new Wall(995, -2785, 30, 3180, Wall.direction.left));
+                    walls.Add(new Wall(-20, 385, 1000, 1, Wall.direction.up));
+                    walls.Add(new Wall(95, -5555, 900, 2835, Wall.direction.left));
 
-                    TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true, 6);
+                    // for sake of testing i commented out enemies 
+
+               /*     TestGoon = new Enemy(20, 1, 3, "Enemy0", 1, true,6);
                     TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
                     enemies.Add(TestGoon);
 
-                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true, 5);
+                    Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
                     E.Pos = new Rectangle(-450, -2300, 75, 85);
                     enemies.Add(E);
 
@@ -1273,7 +1224,7 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E3 = new Enemy(15, 1, 9, "Enemy3", 1, true, 5);
                     E3.Pos = new Rectangle(-450, -4000, 75, 85);
                     enemies.Add(E3);
-
+                     
                     Enemy E4 = new Enemy(16, 1, 12, "Enemy4", 1, true, 5);
                     E4.Pos = new Rectangle(-700, -3000, 75, 85);
                     enemies.Add(E4);
@@ -1289,11 +1240,7 @@ namespace As_Far_as_the_Light_Reaches
                     Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
                     E7.Pos = new Rectangle(-800, -6000, 75, 85);
                     enemies.Add(E7);
-
-                    foreach (Enemy e in enemies)
-                    {
-                        e.TrigRect = new Rectangle((e.Pos.X - e.Pos.Width), (e.Pos.Y - e.Pos.Height), (5 * e.Pos.Width), (5 * e.Pos.Height));
-                    }
+                    */
 
                     //set tunnel, rectangle to transfer level on collide.
                     tunnel = new Rectangle(-4000, -7400,500,500);
@@ -1307,7 +1254,7 @@ namespace As_Far_as_the_Light_Reaches
                     //set box that will take the player to the next level
 
 
-                    tunnel = new Rectangle(3640, 2697,500,500);
+                    tunnel = new Rectangle(2810, 2590,410,170);
 
                     break;
                 case 2:
