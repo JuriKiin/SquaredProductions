@@ -147,9 +147,6 @@ namespace As_Far_as_the_Light_Reaches
         bool dialoguing;
         int logline;
 
-        //does the level need to be genned?
-        bool levelgenreq;
-
         //movement abilities
         bool canUp = true;
         bool canDown = true;
@@ -185,6 +182,7 @@ namespace As_Far_as_the_Light_Reaches
         bool endTex;
         int timer = 0;
 
+        int enemyNum = 0;
 
         public Game1()
         {
@@ -221,12 +219,6 @@ namespace As_Far_as_the_Light_Reaches
             //define level manager
             manager = new LevelManager(Content);
             manager.LoadNextLevel();
-
-            //define dialogue manager
-            Story = new DialogueManager();
-            lineplace1 = new Vector2(355, 605); //positions for
-            lineplace2 = new Vector2(355, 625); //strings in
-            lineplace3 = new Vector2(355, 645); //dialogue box (Y values need tweaking with new font)
 
             //Run Levelgen for level 1
             LevelGen();
@@ -310,10 +302,12 @@ namespace As_Far_as_the_Light_Reaches
             underGsmall = Content.Load<Texture2D>("Maps\\underGsmall.png");
 
             // enemies 
-
             cow = Content.Load<Texture2D>("Enemies\\Cow.png");
             horseboy = Content.Load<Texture2D>("Enemies\\HorseBoy.png");
             unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
+
+            //Dialoguemanager
+            //Story = new DialogueManager(spriteBatch, font);
         }
 
 
@@ -389,9 +383,6 @@ namespace As_Far_as_the_Light_Reaches
                 //OVERWORLD STATE
                 case GameState.Walk:
 
-                    //if level needs to be generated, run LevelGen
-                    if (levelgenreq == true) LevelGen();
-
                     //If P is hit, pause the game.
                     if (SingleKeyPress(Keys.P)) curState = GameState.Pause;
 
@@ -447,16 +438,37 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (e.Pos.Intersects(player.PlayerRec))
                         {
-                            //Story.WriteDialogue(e.startlines);// e.startlines (and endlines later) would be a new int for enemies that determines where their lines start. Would this need to be added to the ext. tool?
+                            enemyNum++;
+                            switch (enemyNum)
+                            {
+                                case 1:
+                                    Story.WriteDialogue(22);
+                                    break;
+                                case 2:
+                                    Story.WriteDialogue(34);
+                                    break;
+                                case 3:
+                                    Story.WriteDialogue(46);
+                                    break;
+                                case 4:
+                                    Story.WriteDialogue(82);
+                                    break;
+                                case 5:
+                                    Story.WriteDialogue(92);
+                                    break;
+                                case 6:
+                                    Story.WriteDialogue(106);
+                                    break;
+                            }
                             curEnemy = e;   //Sets the enemy
-                                curState = GameState.Combat;    //Set the gamestate to combat
-                                cmbState = CombatState.Attack;
-                                mState = MoveState.Left;
+                            curState = GameState.Combat;    //Set the gamestate to combat
+                            cmbState = CombatState.Attack;
+                            mState = MoveState.Left;
                            
                         }
                     }
 
-                    if (dialoguing) //Might get replaced.
+                    if (Story.Speaking) //no moving during dialogue
                     {
                         canUp = false;
                         canDown = false;
@@ -483,8 +495,6 @@ namespace As_Far_as_the_Light_Reaches
                         //LEVEL END dialogue
                         //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
                         manager.LoadNextLevel(); //Prepare map for next level.
-
-                        levelgenreq = true; //If levelgenreq is true, the next update will run the levelgen. 
                         walls.Clear();
                         enemies.Clear();
                         manager.CurLevel++;
@@ -497,8 +507,6 @@ namespace As_Far_as_the_Light_Reaches
                         //LEVEL END dialogue
                         //Story.WriteDialogue(level); //This one works easily. The second you hit the tunnel, you're stopped, look through the dialogue, then transfer levels.
                         manager.LoadNextLevel(); //Prepare map for next level.
-
-                        levelgenreq = true; //If levelgenreq is true, the next update will run the levelgen. 
                         walls.Clear();
                         enemies.Clear();
                         manager.CurLevel++;
