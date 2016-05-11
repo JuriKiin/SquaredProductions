@@ -27,6 +27,8 @@ namespace As_Far_as_the_Light_Reaches
         private Rectangle pos;
         private Texture2D enemyTex;
 
+        private Rectangle trigRect;
+
         Game1 game = new Game1();
 
         public Enemy(int hp, int dam, int numArr, string nm, int arm, bool dir, int spd)
@@ -39,6 +41,14 @@ namespace As_Far_as_the_Light_Reaches
             armor = arm;
             directional = dir;
             speed = spd;
+
+        }
+
+
+        public Rectangle TrigRect
+        {
+            get { return trigRect; }
+            set { trigRect = value; }
         }
 
         //Properties

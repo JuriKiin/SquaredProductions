@@ -21,7 +21,7 @@ namespace As_Far_as_the_Light_Reaches
 
         // 2737 2965 dimensions for each underground piece 
 
-        int curLevel = 0; // this int is the level we are on change this int to change the level. 
+        int curLevel = 1; // this int is the level we are on change this int to change the level. 
 
         public int CurLevel
         {
