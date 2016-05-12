@@ -34,7 +34,7 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D Spacebar;
         Texture2D Controls;
         Texture2D tankItem;
-        Texture2D asstem;
+        Texture2D assItem;
         Texture2D warItem;
         Texture2D barItem;
         int potsAmount = 10;
@@ -264,6 +264,9 @@ namespace As_Far_as_the_Light_Reaches
             Spacebar = Content.Load<Texture2D>("UI\\SpaceBarContinue.png"); //Loading in spacebar icon for dialogue continuation
             Controls = Content.Load<Texture2D>("UI\\ControlsScreen.png"); //Loading in controls portion of pause menu
             tankItem = Content.Load<Texture2D>("UI\\tankItems.png");  //Loading in items menu for tank class
+            assItem = Content.Load<Texture2D>("UI\\assItems.png");  //Loading in items menu for assassin class
+            warItem = Content.Load<Texture2D>("UI\\warItems.png");  //Loading in items menu for warrior class
+            barItem = Content.Load<Texture2D>("UI\\barItems.png");  //Loading in items menu for barbarian class
             engage = Content.Load<Texture2D>("UI\\engage.png");
 
             //PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
@@ -786,7 +789,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         player.MaxHealth = 14;
                         player.CurHealth = 14;
-                        player.Damage = 5;
+                        player.Damage = 10;
                         player.Armor = 1.5;
                         canPlay = true;
                     }
@@ -795,7 +798,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         player.MaxHealth = 18;
                         player.CurHealth = 18;
-                        player.Damage = 7;
+                        player.Damage = 6;
                         player.Armor = 0.75;
                         canPlay = true;
                     }
@@ -804,7 +807,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         player.MaxHealth = 20;
                         player.CurHealth = 20;
-                        player.Damage = 6;
+                        player.Damage = 8;
                         player.Armor = 1;
                         canPlay = true;
                     }
@@ -1101,10 +1104,25 @@ namespace As_Far_as_the_Light_Reaches
                         player.CurHealth = player.MaxHealth;
                     }
 
-                    //Draw items menu
+                    //Draw items menu depending on class
                     if(player.MaxHealth == 26)
                     {
                         spriteBatch.Draw(tankItem, new Vector2(0, 0), Color.White);
+                    }
+
+                    if(player.MaxHealth == 14)
+                    {
+                        spriteBatch.Draw(assItem, new Vector2(0, 0), Color.White);
+                    }
+
+                    if(player.MaxHealth == 18)
+                    {
+                        spriteBatch.Draw(warItem, new Vector2(0, 0), Color.White);
+                    }
+
+                    if(player.MaxHealth == 20)
+                    {
+                        spriteBatch.Draw(barItem, new Vector2(0, 0), Color.White);
                     }
 
                     //spriteBatch.Draw(itemsMenu, new Vector2(0, 0), Color.White); 
