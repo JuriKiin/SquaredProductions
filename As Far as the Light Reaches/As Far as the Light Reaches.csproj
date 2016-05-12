@@ -126,9 +126,6 @@
     <Content Include="Content\Characters\Protag\ProtagUpWalk2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Dialogue.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Enemies\Cow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -145,6 +142,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\Choice.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Dialogue.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\1.png">
@@ -180,6 +180,9 @@
     <Content Include="Content\UI\Battle UI.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\UI\ControlsScreen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\UI\DirectionsScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -189,16 +192,19 @@
     <Content Include="Content\UI\GameOverScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\Items Menu.png">
+    <Content Include="Content\UI\LoadingScreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\UI\LoadingScreen.png">
+    <Content Include="Content\UI\SpaceBarContinue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\Start Menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\Stats Menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\UI\tankItems.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\UI\Title Screen.png">

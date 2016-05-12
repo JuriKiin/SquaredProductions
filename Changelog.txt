@@ -209,3 +209,7 @@
 //Juri Kiin 10:37 PM 5/10/2016
 	- Added a wider rectangle for the player to hit an enemy.
 
+//James Friedenberg 9:48 5/11/2016
+	- Created Controls UI, created button for continuing dialogue, updated directions page, updated Choice UI, updated Class Selection UI
+	- In process of creating and implementing different Items menus for each individual class. Process works, just need to create the content
+	- Changed the buttons of the menu system and added the Controls page game state into the fray

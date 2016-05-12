@@ -23,7 +23,6 @@ namespace As_Far_as_the_Light_Reaches
         private bool pause = false;
         Texture2D startMenu;
         Texture2D statsMenu;
-        Texture2D itemsMenu;
         Texture2D title;
         Texture2D basicUI;
         Texture2D battleUI;
@@ -32,6 +31,12 @@ namespace As_Far_as_the_Light_Reaches
         SpriteFont font;
         Texture2D ChoiceScreen;
         Texture2D DirectionsScreen;
+        Texture2D Spacebar;
+        Texture2D Controls;
+        Texture2D tankItem;
+        Texture2D asstem;
+        Texture2D warItem;
+        Texture2D barItem;
         int potsAmount = 10;
 
         //Player Rectangle
@@ -116,7 +121,7 @@ namespace As_Far_as_the_Light_Reaches
         Rectangle arrowSpawnPoint = new Rectangle(500,500,256,256);
 
         //Game State machine
-        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions, Choose, Scene};
+        enum GameState { Menu, Walk, Combat, Over, Pause, Item, Stats, Class, Directions, Choose, Scene, Controls};
         GameState curState;
 
         enum CombatState { Attack, Block }; //This enum toggles between the attack and block phases of the combat gameplay.
@@ -154,7 +159,7 @@ namespace As_Far_as_the_Light_Reaches
         bool canRight = true;
         bool canMove = true;
 
-        // controls how fast the player moves ! @@@@@@@@@@@@@
+        // controls how fast the player moves !
         int moveSpeed = 4;
 
         //Vectors where dialogue lines will be placed
@@ -245,7 +250,6 @@ namespace As_Far_as_the_Light_Reaches
 
             startMenu = Content.Load<Texture2D>("UI\\Start Menu.png");  // Loading in the start menu
             statsMenu = Content.Load<Texture2D>("UI\\Stats Menu.png");  // Loading in the stats menu
-            itemsMenu = Content.Load<Texture2D>("UI\\Items Menu.png");  // Loading in the items menu
             title = Content.Load <Texture2D>("UI\\Title Screen.png");   // Loading in title screen
             basicUI = Content.Load<Texture2D>("UI\\Basic UI.png");      // Loading in basic UI
             battleUI = Content.Load<Texture2D>("UI\\Battle UI.png");    // Loading in the battle UI
@@ -255,7 +259,10 @@ namespace As_Far_as_the_Light_Reaches
             hitbox = Content.Load<Texture2D>("UI\\ArrowHitbox.png"); // Loading in hitbox texture for block phase
             classSelect = Content.Load<Texture2D>("UI\\ClassSelectionUI.png"); //Loading in Class Select UI
             ChoiceScreen = Content.Load<Texture2D>("UI\\Choice.png"); //Loading in choice between protag and antag screen
-            DirectionsScreen = Content.Load<Texture2D>("UI\\DirectionsScreen.png");
+            DirectionsScreen = Content.Load<Texture2D>("UI\\DirectionsScreen.png"); //Loading in screen to provide player with initial instructions
+            Spacebar = Content.Load<Texture2D>("UI\\SpaceBarContinue.png"); //Loading in spacebar icon for dialogue continuation
+            Controls = Content.Load<Texture2D>("UI\\ControlsScreen.png"); //Loading in controls portion of pause menu
+            tankItem = Content.Load<Texture2D>("UI\\tankItems.png");  //Loading in items menu for tank class
 
             //PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -640,7 +647,7 @@ namespace As_Far_as_the_Light_Reaches
                     IsMouseVisible = true; //Make the mouse visable
 
                     //SERIES TO CHECK FOR MENU SWITCHING
-                    if (SingleKeyPress(Keys.I))     //If 'i' is pressed, switch the gamestate to Items
+                    if (SingleKeyPress(Keys.I))     //Switch to items menu
                     {
                         curState = GameState.Item;
 
@@ -657,14 +664,19 @@ namespace As_Far_as_the_Light_Reaches
                         }
                     }
 
-                    else if (SingleKeyPress(Keys.U))    //If 'u' is pressed, switch the gamState to Stats
+                    else if (SingleKeyPress(Keys.S))    //Switch to stats menu
                     {
                         curState = GameState.Stats;
                     }
 
-                    else if (SingleKeyPress(Keys.Enter))     //Return to normal gameplay.
+                    else if (SingleKeyPress(Keys.R))     //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
+                    }
+
+                    else if (SingleKeyPress(Keys.C))  //Go to controls screen
+                    {
+                        curState = GameState.Controls;
                     }
 
                     break;
@@ -681,16 +693,21 @@ namespace As_Far_as_the_Light_Reaches
                         curState = GameState.Pause;
                     }
 
-                    else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
+                    else if (SingleKeyPress(Keys.R))    //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
+                    }
+
+                    else if (SingleKeyPress(Keys.C))  //Go to controls screen
+                    {
+                        curState = GameState.Controls;
                     }
 
                     break;
 
                 case GameState.Item:
 
-                    if (SingleKeyPress(Keys.U))     //Go to Stats menu
+                    if (SingleKeyPress(Keys.S))     //Go to stats menu
                     {
                         curState = GameState.Stats;
                     }
@@ -700,11 +717,35 @@ namespace As_Far_as_the_Light_Reaches
                         curState = GameState.Pause;
                     }
 
-                    else if (SingleKeyPress(Keys.Enter))    //Return to normal gameplay.
+                    else if (SingleKeyPress(Keys.R))    //Return to normal gameplay.
                     {
                         curState = GameState.Walk;
                     }
+                    else if (SingleKeyPress(Keys.C))  //Go to controls screen
+                    {
+                        curState = GameState.Controls;
+                    }
 
+                    break;
+
+                case GameState.Controls:
+
+                    if (SingleKeyPress(Keys.P))    //Go to pause menu
+                    {
+                        curState = GameState.Pause;
+                    }
+                    else if (SingleKeyPress(Keys.S))    //Go to stats menu
+                    {
+                        curState = GameState.Stats;
+                    }
+                    else if (SingleKeyPress(Keys.R))  //Go to normal gameplay
+                    {
+                        curState = GameState.Walk;
+                    }
+                    else if(SingleKeyPress(Keys.I))
+                    {
+                        curState = GameState.Item;
+                    }
                     break;
 
                 //CHOOSING CLASS STATE
@@ -1043,8 +1084,14 @@ namespace As_Far_as_the_Light_Reaches
                     }
 
                     //Draw items menu
-                    spriteBatch.Draw(itemsMenu, new Vector2(0, 0), Color.White); 
-                    spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(670, 275), Color.White);
+                    if(player.MaxHealth == 26)
+                    {
+                        spriteBatch.Draw(tankItem, new Vector2(0, 0), Color.White);
+                    }
+
+                    //spriteBatch.Draw(itemsMenu, new Vector2(0, 0), Color.White); 
+
+                    spriteBatch.DrawString(font, "x" + potsAmount, new Vector2(840, 210), Color.White);
                     break;
 
                 case GameState.Stats:
@@ -1058,6 +1105,12 @@ namespace As_Far_as_the_Light_Reaches
                     spriteBatch.DrawString(font, "" + player.Boost, new Vector2(550, 550), Color.White);
                     break;
 
+                case GameState.Controls:
+
+                    //Draw the controls screen
+                    spriteBatch.Draw(Controls, new Vector2(0, 0), Color.White);
+
+                    break;
 
                 case GameState.Choose:
 
