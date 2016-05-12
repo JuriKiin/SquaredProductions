@@ -213,3 +213,9 @@
 	- Created Controls UI, created button for continuing dialogue, updated directions page, updated Choice UI, updated Class Selection UI
 	- In process of creating and implementing different Items menus for each individual class. Process works, just need to create the content
 	- Changed the buttons of the menu system and added the Controls page game state into the fray
+
+//Juri Kiin 11:44 PM 5/11/2016
+	- Fixed the level switching
+	- Nerfed the final bosses
+	- Added a large box around every enemy
+	- Changed dying on the final boss.

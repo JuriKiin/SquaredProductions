@@ -175,9 +175,11 @@ namespace As_Far_as_the_Light_Reaches
         Texture2D upperground;
         Texture2D underTunnel;
         Texture2D palace;
-        Texture2D underGsmall; 
+        Texture2D underGsmall;
 
         // enemies 
+
+        Texture2D engage;
 
         Texture2D cow;
         Texture2D horseboy;
@@ -218,11 +220,10 @@ namespace As_Far_as_the_Light_Reaches
             
             //define player object and position
             player = new Player(20, 20, 4, 12, 0);
-            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - (int)37.5, GraphicsDevice.Viewport.Height / 2 - 143, 75, 85);
+
 
             //define level manager
-            manager = new LevelManager(Content);
-            manager.LoadNextLevel();
+            manager = new LevelManager();
 
             //camera object
             cam = new Camera(GraphicsDevice.Viewport);
@@ -263,6 +264,7 @@ namespace As_Far_as_the_Light_Reaches
             Spacebar = Content.Load<Texture2D>("UI\\SpaceBarContinue.png"); //Loading in spacebar icon for dialogue continuation
             Controls = Content.Load<Texture2D>("UI\\ControlsScreen.png"); //Loading in controls portion of pause menu
             tankItem = Content.Load<Texture2D>("UI\\tankItems.png");  //Loading in items menu for tank class
+            engage = Content.Load<Texture2D>("UI\\engage.png");
 
             //PLAYER SPRITE LOAD UP FOR PRO AND ANTAG 
 
@@ -311,6 +313,8 @@ namespace As_Far_as_the_Light_Reaches
 
             //Dialoguemanager
             Story = new DialogueManager(spriteBatch, font);
+
+            player.PlayerRec = new Rectangle(GraphicsDevice.Viewport.Width / 2 - (int)37.5, GraphicsDevice.Viewport.Height / 2 - 143, protagDownStill.Width, protagDownStill.Height);
         }
 
 
@@ -365,13 +369,25 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Space))
                     {
-                        curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
-                        manager.CurLevel = 0;
-                        enemies.Clear();
-                        walls.Clear();
-                        LevelGen();
-                        
+                        if (endGame)
+                        {
+                            manager.CurLevel = 2;
+                            curState = GameState.Walk;
+                            timer = 0;
+                        }
+                        else
+                        {
+                            curState = GameState.Directions;      //Change the gamestate to walk (normal gameplay)
+                            enemies.Clear();
+                            walls.Clear();
+                            LevelGen();
+                        }         
                     }
+                    if (SingleKeyPress(Keys.E)) //If we want to exit the game
+                    {
+                        Exit();
+                    }
+
                     break;
 
                 case GameState.Directions:
@@ -498,7 +514,6 @@ namespace As_Far_as_the_Light_Reaches
                         //{
                         //    Story.WriteDialogue(62);
                         //}
-                        manager.LoadNextLevel(); //Prepare map for next level.
                         walls.Clear();
                         enemies.Clear();
                         manager.CurLevel++;
@@ -625,6 +640,11 @@ namespace As_Far_as_the_Light_Reaches
 
                                 if(player.CurHealth <= 0)
                                 {
+                                    if (endGame)
+                                    {
+                                        manager.CurLevel = 2;
+                                        curState = GameState.Over;
+                                    }
                                     curState = GameState.Over;
                                 }
 
@@ -810,7 +830,7 @@ namespace As_Far_as_the_Light_Reaches
                 case GameState.Choose:
                     if (SingleKeyPress(Keys.Left))
                     {
-                        curEnemy = new Enemy((player.MaxHealth)*2,player.Damage,14,"Player",4,true,6);
+                        curEnemy = new Enemy((int)((player.MaxHealth)*1.5),player.Damage,14,"Player",4,true,6);
                         endTex = true;
                         endGame = true;
                         curState = GameState.Combat;
@@ -818,7 +838,7 @@ namespace As_Far_as_the_Light_Reaches
                     }
                     if (SingleKeyPress(Keys.Right))
                     {
-                        curEnemy = new Enemy((player.MaxHealth + 2)*2,player.Damage + 2, 16, "Boss", 3, true, 6);
+                        curEnemy = new Enemy((int)((player.MaxHealth + 2)*1.5),player.Damage + 2, 16, "Boss", 3, true, 6);
                         endTex = false;
                         endGame = true;
                         curState = GameState.Combat;
@@ -896,16 +916,11 @@ namespace As_Far_as_the_Light_Reaches
                             if (cam.Position.Y <= -1062)
                             {
                                 System.Threading.Thread.Sleep(200);
-                                manager.CurLevel = 3;
+                                curState = GameState.Scene;
                                 enemies.Clear();
                             }
 
 
-                            break;
-
-                        case 3:
-
-                           curState = GameState.Scene;                                                        
                             break;
                     }
 
@@ -916,6 +931,7 @@ namespace As_Far_as_the_Light_Reaches
                     foreach (Enemy e in enemies)
                     {
                         spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
+                        mapBatch.Draw(engage,e.TrigRect,Color.White);
                     }
 
 
@@ -989,26 +1005,28 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         case CombatState.Attack:
 
-                            //Draw the UI for combat
-                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
-                            
+                           
+
 
                             if (endGame)
                             {
                                 if (endTex)
                                 {
-                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((antagDownStill.Width*4) / 2), 10, antagDownStill.Width * 4, antagDownStill.Height * 4), Color.White);
                                 }
                                 else
                                 {
-                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((protagDownStill.Width*4) / 2), 10, protagDownStill.Width * 4, protagDownStill.Height * 4), Color.White);
                                 }
 
                             }
                             else
                             {
-                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((unlucky.Width*4) / 2), 100, unlucky.Width * 4, unlucky.Height * 4), Color.White);
                             }
+
+                            //Draw the UI for combat
+                            spriteBatch.Draw(battleUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
 
                             //Draw the meter going back and forth on the screen.
                             spriteBatch.Draw(meterObj, meterObjRec, Color.White);   
@@ -1025,17 +1043,17 @@ namespace As_Far_as_the_Light_Reaches
                             {
                                 if (endTex)
                                 {
-                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((antagDownStill.Width*4) / 2), 10, antagDownStill.Width * 4, antagDownStill.Height * 4), Color.White);
                                 }
                                 else
                                 {
-                                    spriteBatch.Draw(antagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                    spriteBatch.Draw(protagDownStill, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((protagDownStill.Width*4) / 2), 10, protagDownStill.Width * 4, protagDownStill.Height * 4), Color.White);
                                 }
 
                             }
                             else
                             {
-                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - 110, 100, unlucky.Width * 6, unlucky.Height * 6), Color.White);
+                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((unlucky.Width*4) / 2), 100, unlucky.Width * 4, unlucky.Height * 4), Color.White);
                             }
 
 
@@ -1317,6 +1335,11 @@ namespace As_Far_as_the_Light_Reaches
                          Enemy E7 = new Enemy(8, 2, 10, "Enemy7", 1, true, 6);
                          E7.Pos = new Rectangle(-800, -6000, 75, 85);
                          enemies.Add(E7);
+
+                    foreach (Enemy e in enemies)
+                    {
+                        e.TrigRect = new Rectangle((e.Pos.X-e.Pos.Width),(e.Pos.Y-e.Pos.Height),(e.Pos.Width * 3),(e.Pos.Height * 3));
+                    }
                          
 
                     //set tunnel, rectangle to transfer level on collide.
@@ -1325,27 +1348,18 @@ namespace As_Far_as_the_Light_Reaches
                     break;
                 case 1: // underground 
 
-                    //set player location and camera position
-                    //curleveltexture set LoadNextLevel
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set box that will take the player to the next level
-
-
                     tunnel = new Rectangle(2810, 2590,410,170);
 
                     break;
                 case 2: // alleyway tunnel 
+                    cam.Position -= cam.Position;
                     walls.Add(new Wall(180, -868, 152, 1284, Wall.direction.right));
                     walls.Add(new Wall(720, -864, 72, 1280, Wall.direction.left));
-                    //tunnel = new Rectangle(0,0,0,0);
+                    tunnel = new Rectangle(0,0,0,0);
                     enemies.Clear();
                     break;
                 case 3:
-                    //set player location
-                    //set bounding box for level (?)
-                    //set enemies, will eventually use file reading
-                    //set tunnel, rectangle to transfer level on collide.
+
                     cam.Position -= cam.Position;
 
                     break;

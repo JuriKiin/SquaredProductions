@@ -36,22 +36,6 @@ namespace As_Far_as_the_Light_Reaches
 
         }
 
-        public LevelManager(ContentManager cont)
-        {
-            // int count = 1;
-
-
-            //   levelBackgrounds.Add(cont.Load<Texture2D>(path + count.ToString()));
-            //  count++;
-
-        }
-
-
-        public void LoadNextLevel()  //This Loads the next level
-        {
-            //  if(curLevel < levelBackgrounds.Count) curLevel++;
-            //  curLevelTexture = levelBackgrounds[curLevel];
-        }
 
 
 
