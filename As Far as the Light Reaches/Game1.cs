@@ -191,6 +191,8 @@ namespace As_Far_as_the_Light_Reaches
 
         int enemyNum = 0;
 
+        List<Texture2D> enemyTextures = new List<Texture2D>();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -313,6 +315,10 @@ namespace As_Far_as_the_Light_Reaches
             cow = Content.Load<Texture2D>("Enemies\\Cow.png");
             horseboy = Content.Load<Texture2D>("Enemies\\HorseBoy.png");
             unlucky = Content.Load<Texture2D>("Enemies\\Unlucky.png");
+
+            enemyTextures.Add(cow);
+            enemyTextures.Add(horseboy);
+            enemyTextures.Add(unlucky);
 
             //Dialoguemanager
             Story = new DialogueManager(spriteBatch, font);
@@ -458,7 +464,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     foreach (Enemy e in enemies)     //Check to see if the player position intersects with any of the enemies.
                     {
-                        if (e.Pos.Intersects(player.PlayerRec))
+                        if (e.TrigRect.Intersects(player.PlayerRec))
                         {
                             //enemyNum++;
                             //switch (enemyNum)
@@ -646,9 +652,18 @@ namespace As_Far_as_the_Light_Reaches
                                     if (endGame)
                                     {
                                         manager.CurLevel = 2;
+                                        player.CurHealth = player.MaxHealth;
                                         curState = GameState.Over;
                                     }
-                                    curState = GameState.Over;
+                                    else
+                                    {
+                                        cam.Position -= cam.Position;
+                                        enemies.Clear();
+                                        walls.Clear();
+                                        LevelGen();
+                                        curState = GameState.Over;
+                                    }
+
                                 }
 
                                 cmbState = CombatState.Attack;  //Set the combat state to attacking after a brief pause.
@@ -933,8 +948,8 @@ namespace As_Far_as_the_Light_Reaches
                     //Draw each enemy
                     foreach (Enemy e in enemies)
                     {
-                        spriteBatch.Draw(unlucky, new Rectangle(e.Pos.X, e.Pos.Y, 75, 85), Color.White);
-                        mapBatch.Draw(engage,e.TrigRect,Color.White);
+                        spriteBatch.Draw(engage, e.TrigRect, Color.White);
+                        spriteBatch.Draw(e.EnemyTexture, new Rectangle(e.Pos.X, e.Pos.Y, e.EnemyTexture.Width, e.EnemyTexture.Height), Color.White);
                     }
 
 
@@ -943,6 +958,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     //Draw basic UI
                     spriteBatch.Draw(basicUI, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+                    spriteBatch.DrawString(font,player.CurHealth.ToString() + "/" + player.MaxHealth.ToString(),new Vector2(190,690),Color.White);
 
                     switch (Moving)
                     {
@@ -1025,7 +1041,7 @@ namespace As_Far_as_the_Light_Reaches
                             }
                             else
                             {
-                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((unlucky.Width*4) / 2), 100, unlucky.Width * 4, unlucky.Height * 4), Color.White);
+                                spriteBatch.Draw(curEnemy.EnemyTexture, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((curEnemy.EnemyTexture.Width*5) / 2), 100, curEnemy.EnemyTexture.Width * 5, curEnemy.EnemyTexture.Height * 5), Color.White);
                             }
 
                             //Draw the UI for combat
@@ -1056,7 +1072,7 @@ namespace As_Far_as_the_Light_Reaches
                             }
                             else
                             {
-                                spriteBatch.Draw(unlucky, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((unlucky.Width*4) / 2), 100, unlucky.Width * 4, unlucky.Height * 4), Color.White);
+                                spriteBatch.Draw(curEnemy.EnemyTexture, new Rectangle((GraphicsDevice.Viewport.Width / 2) - ((curEnemy.EnemyTexture.Width * 5) / 2), 100, curEnemy.EnemyTexture.Width * 5, curEnemy.EnemyTexture.Height * 5), Color.White);
                             }
 
 
@@ -1203,6 +1219,7 @@ namespace As_Far_as_the_Light_Reaches
                 foreach(Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X + moveSpeed, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                    e.TrigRect = new Rectangle((e.Pos.X - e.EnemyTexture.Width), (e.Pos.Y - e.EnemyTexture.Height), (e.EnemyTexture.Width * 3), (e.EnemyTexture.Height * 3));
                 }
                 foreach (Wall w in walls)
                 {
@@ -1218,6 +1235,7 @@ namespace As_Far_as_the_Light_Reaches
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X - moveSpeed, e.Pos.Y, e.Pos.Width, e.Pos.Height);
+                    e.TrigRect = new Rectangle((e.Pos.X - e.EnemyTexture.Width), (e.Pos.Y - e.EnemyTexture.Height), (e.EnemyTexture.Width * 3), (e.EnemyTexture.Height * 3));
                 }
                 foreach (Wall w in walls)
                 {
@@ -1232,6 +1250,7 @@ namespace As_Far_as_the_Light_Reaches
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X, e.Pos.Y + moveSpeed, e.Pos.Width, e.Pos.Height);
+                    e.TrigRect = new Rectangle((e.Pos.X - e.EnemyTexture.Width), (e.Pos.Y - e.EnemyTexture.Height), (e.EnemyTexture.Width * 3), (e.EnemyTexture.Height * 3));
                 }
                 foreach (Wall w in walls)
                 {
@@ -1246,6 +1265,7 @@ namespace As_Far_as_the_Light_Reaches
                 foreach (Enemy e in enemies)
                 {
                     e.Pos = new Rectangle(e.Pos.X, e.Pos.Y - moveSpeed, e.Pos.Width, e.Pos.Height);
+                    e.TrigRect = new Rectangle((e.Pos.X - e.EnemyTexture.Width), (e.Pos.Y - e.EnemyTexture.Height), (e.EnemyTexture.Width * 3), (e.EnemyTexture.Height * 3));
                 }
                 foreach (Wall w in walls)
                 {
@@ -1299,6 +1319,7 @@ namespace As_Far_as_the_Light_Reaches
         //LEVEL GENERATING METHOD
         public void LevelGen()
         {
+            Random r = new Random();
             //clear list of walls
             walls.Clear();
             switch (manager.CurLevel)
@@ -1356,7 +1377,9 @@ namespace As_Far_as_the_Light_Reaches
 
                     foreach (Enemy e in enemies)
                     {
-                        e.TrigRect = new Rectangle((e.Pos.X-e.Pos.Width),(e.Pos.Y-e.Pos.Height),(e.Pos.Width * 3),(e.Pos.Height * 3));
+                        int i = r.Next(0,enemyTextures.Count);
+                        e.EnemyTexture = enemyTextures[i];
+                        e.TrigRect = new Rectangle((e.Pos.X-e.EnemyTexture.Width),(e.Pos.Y-e.EnemyTexture.Height),(e.EnemyTexture.Width * 3),(e.EnemyTexture.Height * 3));
                     }
                          
 
