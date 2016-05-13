@@ -233,7 +233,7 @@ namespace As_Far_as_the_Light_Reaches
             ReadFiles();    //Creates each enemy
             arrowSpawner.LoadArrow(Content); //This loads all of the arrow keys into arrows.
 
-            manager.CurLevel = 0;
+            manager.CurLevel = 0; // change this to change the map first loaded for testing purpose 
 
             base.Initialize();
         }
@@ -380,7 +380,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (endGame)
                         {
-                            manager.CurLevel = 2;
+                            manager.CurLevel = 0;
                             curState = GameState.Walk;
                             timer = 0;
                         }
@@ -925,7 +925,7 @@ namespace As_Far_as_the_Light_Reaches
                             break;
                         case 1: // undergound 
 
-                            mapBatch.Draw(underGsmall, new Rectangle(0, 0, 6000, 8000), Color.White);
+                            mapBatch.Draw(underGsmall, new Rectangle(-1615, -2700, 6000, 8000), Color.White);
 
                             break;
 
@@ -1391,18 +1391,84 @@ namespace As_Far_as_the_Light_Reaches
 
                     tunnel = new Rectangle(2810, 2590,410,170);
 
+                    //walls :  color organized for testing purposes in photoshop. - Andrew 
+                    //red 
+                       walls.Add(new Wall(72, 516, 616, 404, Wall.direction.right));
+                       walls.Add(new Wall(660, -60, 152, 688, Wall.direction.right));
+                       walls.Add(new Wall(-840, -216, 1668, 312, Wall.direction.right));
+                       walls.Add(new Wall(80, 540, 204, 976, Wall.direction.right));
+                       walls.Add(new Wall(640, 720, 164, 1376, Wall.direction.right));
+                       walls.Add(new Wall(-368, -72, 76, 1452, Wall.direction.right));
+                       walls.Add(new Wall(-916, 1316, 540, 124, Wall.direction.right));
+                       walls.Add(new Wall(-384, 1960, 1180, 124, Wall.direction.right));
+
+                       //blue 
+                       walls.Add(new Wall(-916, 1340, 112, 2424, Wall.direction.right));
+                       walls.Add(new Wall(-432, 2020, 92, 1080, Wall.direction.right));
+                       walls.Add(new Wall(-336, 2988, 1732, 172, Wall.direction.right));
+                       walls.Add(new Wall(1248, 3016, 116, 584, Wall.direction.right));
+                       walls.Add(new Wall(172, 3524, 1192, 76, Wall.direction.right));
+                       walls.Add(new Wall(-876, 3596, 528, 76, Wall.direction.right));
+                       walls.Add(new Wall(-1132, 3728, 852, 156, Wall.direction.right));
+                       walls.Add(new Wall(128, 3568, 72, 896, Wall.direction.right));  
+
+                       //green 
+                       walls.Add(new Wall(-1612, 4356, 1812, 112, Wall.direction.right));
+                       walls.Add(new Wall(-1628, -2700, 104, 7160, Wall.direction.right));
+                       walls.Add(new Wall(-1144, -2100, 64, 5932, Wall.direction.right)); 
+                       //green 2 
+                       walls.Add(new Wall(-1616, -2708, 1924, 104, Wall.direction.right));
+                       walls.Add(new Wall(252, -2700, 68, 656, Wall.direction.right));
+                       walls.Add(new Wall(-1076, -2152, 820, 76, Wall.direction.right));
+                       walls.Add(new Wall(-264, -2100, 28, 856, Wall.direction.right));
+                       walls.Add(new Wall(132, -1452, 72, 772, Wall.direction.right));
+                       walls.Add(new Wall(-340, -760, 552, 104, Wall.direction.right));
+                       walls.Add(new Wall(-816, -1296, 552, 96, Wall.direction.right));
+                       walls.Add(new Wall(-808, -1280, 68, 1044, Wall.direction.right));
+                       walls.Add(new Wall(-408, -700, 96, 484, Wall.direction.right)); 
+
+                    //yellow
+                    walls.Add(new Wall(296, -2052, 3520, 140, Wall.direction.right));
+                    walls.Add(new Wall(196, -1508, 3056, 84, Wall.direction.right));
+                    walls.Add(new Wall(3700, -2028, 108, 3580, Wall.direction.right));
+                    walls.Add(new Wall(3256, -1444, 72, 3068, Wall.direction.right));
+                    walls.Add(new Wall(1704, 1636, 1516, 80, Wall.direction.right));
+                    walls.Add(new Wall(1052, 720, 108, 1448, Wall.direction.right));
+                    walls.Add(new Wall(1632, 724, 108, 912, Wall.direction.right));
+                    walls.Add(new Wall(1044, 2144, 2732, 4, Wall.direction.right));
+                    walls.Add(new Wall(3808, 1484, 532, 128, Wall.direction.right)); 
+
+                    // light blue 
+                    walls.Add(new Wall(4256, 1484, 96, 3780, Wall.direction.right));
+                    walls.Add(new Wall(3796, 2192, 109, 2480, Wall.direction.right));
+                    walls.Add(new Wall(856, 4632, 132, 604, Wall.direction.right));
+                    walls.Add(new Wall(880, 5156, 3468, 104, Wall.direction.right));
+                    walls.Add(new Wall(876, 4628, 2924, 132, Wall.direction.right)); 
+
+                    // purple 
+                    walls.Add(new Wall(1004, 348, 28, 360, Wall.direction.right));
+                    walls.Add(new Wall(1748, 308, 12, 440, Wall.direction.right));
+                    walls.Add(new Wall(1016, -148, 176, 472, Wall.direction.right));
+                    walls.Add(new Wall(1596, -156, 160, 396, Wall.direction.right));
+                    walls.Add(new Wall(1708, 252, 40, 52, Wall.direction.right));
+                    walls.Add(new Wall(1036, 288, 44, 64, Wall.direction.right));
+
+
+
+
                     break;
                 case 2: // alleyway tunnel 
                     cam.Position -= cam.Position;
                     walls.Add(new Wall(180, -868, 152, 1284, Wall.direction.right));
                     walls.Add(new Wall(720, -864, 72, 1280, Wall.direction.left));
+                    walls.Add(new Wall(176, 420, 664, 1, Wall.direction.up));
                     tunnel = new Rectangle(0,0,0,0);
                     enemies.Clear();
                     break;
                 case 3:
 
                     cam.Position -= cam.Position;
-
+                    
                     break;
             }
         }
