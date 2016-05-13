@@ -228,3 +228,7 @@
 	- Made the enemies have different sprites
 	- fixed the larger box collisions
 	- make the sprites' rectangles look better and fit better on the screen.
+
+
+//Juri Kiin 2:56 PM 5/13/2016
+	- Added a new sprite for the enemy collision rectangle.
