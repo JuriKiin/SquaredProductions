@@ -1389,7 +1389,7 @@ namespace As_Far_as_the_Light_Reaches
                     break;
                 case 1: // underground 
 
-                    tunnel = new Rectangle(2810, 2590,410,170);
+                    tunnel = new Rectangle(1296, -92,228, 148);
 
                     //walls :  color organized for testing purposes in photoshop. - Andrew 
                     //red 
@@ -1451,7 +1451,7 @@ namespace As_Far_as_the_Light_Reaches
                     walls.Add(new Wall(1016, -148, 176, 472, Wall.direction.right));
                     walls.Add(new Wall(1596, -156, 160, 396, Wall.direction.right));
                     walls.Add(new Wall(1708, 252, 40, 52, Wall.direction.right));
-                    walls.Add(new Wall(1036, 288, 44, 64, Wall.direction.right));
+                    walls.Add(new Wall(1036, 288, 44, 64, Wall.direction.right)); 
 
 
 
