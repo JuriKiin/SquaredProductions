@@ -1107,7 +1107,7 @@ namespace As_Far_as_the_Light_Reaches
                     break;
 
                 case GameState.Pause:
-
+                    
                     //Draw pause menu
                     spriteBatch.Draw(startMenu, new Vector2(0, 0), Color.White);
                     break;
