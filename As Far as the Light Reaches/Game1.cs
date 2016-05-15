@@ -1514,6 +1514,13 @@ namespace As_Far_as_the_Light_Reaches
                     E0.Pos = new Rectangle(1432, 1268, 75, 85);
                     enemies.Add(E88);
 
+                    foreach (Enemy e in enemies)
+                    {
+                        int i = r.Next(0, enemyTextures.Count);
+                        e.EnemyTexture = enemyTextures[i];
+                        e.TrigRect = new Rectangle((e.Pos.X - e.EnemyTexture.Width), (e.Pos.Y - e.EnemyTexture.Height), (e.EnemyTexture.Width * 3), (e.EnemyTexture.Height * 3));
+                    }
+
                     break;
 
                 case 2: // alleyway tunnel 
