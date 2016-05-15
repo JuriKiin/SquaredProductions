@@ -379,7 +379,7 @@ namespace As_Far_as_the_Light_Reaches
                     {
                         if (endGame)
                         {
-                            manager.CurLevel = 0;
+                            manager.CurLevel = 2;
                             curState = GameState.Walk;
                             timer = 0;
                         }
@@ -860,7 +860,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Left))
                     {
-                        curEnemy = new Enemy((int)((player.MaxHealth)*1.5),player.Damage,14,"Player",4,true,6);
+                        curEnemy = new Enemy((int)((player.MaxHealth)*2),(int)player.Damage/2,14,"Player",4,true,6);
                         endTex = true;
                         endGame = true;
                         curState = GameState.Combat;
@@ -869,7 +869,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Right))
                     {
-                        curEnemy = new Enemy((int)((player.MaxHealth + 2)*1.5),player.Damage + 2, 16, "Boss", 3, true, 6);
+                        curEnemy = new Enemy((int)((player.MaxHealth + 2)*2),(int)(player.Damage + 2)/2, 16, "Boss", 3, true, 6);
                         endTex = false;
                         endGame = true;
                         curState = GameState.Combat;
