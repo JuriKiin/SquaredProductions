@@ -232,3 +232,8 @@
 
 //Juri Kiin 2:56 PM 5/13/2016
 	- Added a new sprite for the enemy collision rectangle.
+
+
+//Juri Kiin 1:01 PM 5/15/2016
+	- Fixed some level changes
+	- nerfed boss fights
