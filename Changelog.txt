@@ -237,3 +237,7 @@
 //Juri Kiin 1:01 PM 5/15/2016
 	- Fixed some level changes
 	- nerfed boss fights
+
+//James Friedenberg 4:29 PM 5/15/2016
+	- Added enemies to underground map and fixed their positions
+	- GG game works great

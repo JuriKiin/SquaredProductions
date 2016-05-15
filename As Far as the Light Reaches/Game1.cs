@@ -1370,9 +1370,9 @@ namespace As_Far_as_the_Light_Reaches
                          TestGoon.Pos = new Rectangle(480, -1000, 75, 85);
                          enemies.Add(TestGoon);
 
-                         Enemy E = new Enemy(18, 1, 6, "Enemy", 1, true,5);
-                         E.Pos = new Rectangle(-450, -2300, 75, 85);
-                         enemies.Add(E);
+                         Enemy E1 = new Enemy(18, 1, 6, "Enemy", 1, true,5);
+                         E1.Pos = new Rectangle(-450, -2300, 75, 85);
+                         enemies.Add(E1);
 
                          Enemy E2 = new Enemy(16, 1, 7, "Enemy2", 1, true, 5);
                          E2.Pos = new Rectangle(480, 0, 75, 85);
@@ -1478,41 +1478,41 @@ namespace As_Far_as_the_Light_Reaches
                     walls.Add(new Wall(1036, 288, 44, 64, Wall.direction.right));
                     
                     //ENEMIES FOR UNDERGROUND
-                    Enemy E0 = new Enemy(15, 4, 6, "Enemy0", 1, true, 6);
-                    E0.Pos = new Rectangle(192, 320, 75, 85);
-                    enemies.Add(E0);
+                    Enemy a = new Enemy(15, 4, 6, "Enemy0", 1, true, 6);
+                    a.Pos = new Rectangle(192, 320, 75, 85);
+                    enemies.Add(a);
 
-                    Enemy E1 = new Enemy(17, 2, 8, "Enemy1", 1, true, 6);
-                    E0.Pos = new Rectangle(-104, 1376, 75, 85);
-                    enemies.Add(E1);
+                    Enemy b = new Enemy(17, 2, 8, "Enemy1", 1, true, 6);
+                    b.Pos = new Rectangle(-104, 1376, 75, 85);
+                    enemies.Add(b);
 
-                    Enemy E22 = new Enemy(15, 4, 6, "Enemy22", 1, true, 6);
-                    E0.Pos = new Rectangle(-660, 2576, 75, 85);
-                    enemies.Add(E22);
+                    Enemy c = new Enemy(15, 4, 6, "Enemy22", 1, true, 6);
+                    c.Pos = new Rectangle(-660, 2576, 75, 85);
+                    enemies.Add(c);
 
-                    Enemy E33 = new Enemy(15, 4, 6, "Enemy33", 1, true, 6);
-                    E0.Pos = new Rectangle(-28, 3808, 75, 85);
-                    enemies.Add(E33);
+                    Enemy d = new Enemy(15, 4, 6, "Enemy33", 1, true, 6);
+                    d.Pos = new Rectangle(-28, 3808, 75, 85);
+                    enemies.Add(d);
 
-                    Enemy E44 = new Enemy(15, 4, 6, "Enemy44", 1, true, 6);
-                    E0.Pos = new Rectangle(-1300, 2736, 75, 85);
-                    enemies.Add(E44);
+                    Enemy f = new Enemy(15, 4, 6, "Enemy44", 1, true, 6);
+                    f.Pos = new Rectangle(-1300, 2736, 75, 85);
+                    enemies.Add(f);
 
-                    Enemy E55 = new Enemy(15, 4, 6, "Enemy55", 1, true, 6);
-                    E0.Pos = new Rectangle(-696, -2420, 75, 85);
-                    enemies.Add(E55);
+                    Enemy g = new Enemy(15, 4, 6, "Enemy55", 1, true, 6);
+                    g.Pos = new Rectangle(-696, -2420, 75, 85);
+                    enemies.Add(g);
 
-                    Enemy E66= new Enemy(15, 4, 6, "Enemy66", 1, true, 6);
-                    E0.Pos = new Rectangle(-680, -2236, 75, 85);
-                    enemies.Add(E66);
+                    Enemy h= new Enemy(15, 4, 6, "Enemy66", 1, true, 6);
+                    h.Pos = new Rectangle(-680, -2236, 75, 85);
+                    enemies.Add(h);
 
-                    Enemy E77 = new Enemy(15, 4, 6, "Enemy77", 1, true, 6);
-                    E0.Pos = new Rectangle(4068, 2768, 75, 85);
-                    enemies.Add(E77);
+                    Enemy j = new Enemy(15, 4, 6, "Enemy77", 1, true, 6);
+                    j.Pos = new Rectangle(4068, 2768, 75, 85);
+                    enemies.Add(j);
 
-                    Enemy E88 = new Enemy(15, 4, 6, "Enemy88", 1, true, 6);
-                    E0.Pos = new Rectangle(1432, 1268, 75, 85);
-                    enemies.Add(E88);
+                    Enemy l = new Enemy(15, 4, 6, "Enemy88", 1, true, 6);
+                    l.Pos = new Rectangle(1432, 1268, 75, 85);
+                    enemies.Add(l);
 
                     foreach (Enemy e in enemies)
                     {
