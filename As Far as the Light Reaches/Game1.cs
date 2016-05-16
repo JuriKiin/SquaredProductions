@@ -74,6 +74,8 @@ namespace As_Far_as_the_Light_Reaches
         int numFrames = 2;
         int framesElapsed;
 
+        bool hasWon;
+
         //Antag Textures 
         Texture2D curTex;
 
@@ -232,7 +234,7 @@ namespace As_Far_as_the_Light_Reaches
             ReadFiles();    //Creates each enemy
             arrowSpawner.LoadArrow(Content); //This loads all of the arrow keys into arrows.
 
-            manager.CurLevel = 0; // change this to change the map first loaded for testing purpose 
+            manager.CurLevel = 2; // change this to change the map first loaded for testing purpose 
 
             base.Initialize();
         }
@@ -601,6 +603,7 @@ namespace As_Far_as_the_Light_Reaches
                                 {
                                     if (endGame)
                                     {
+                                        hasWon = true;
                                         curState = GameState.Over;
                                         return;
                                     }
@@ -849,6 +852,11 @@ namespace As_Far_as_the_Light_Reaches
                 //END GAME STATE
                 case GameState.Over:
 
+                    if (hasWon)
+                    {
+                        Exit();
+                    }
+
                     if(SingleKeyPress(Keys.Space))
                     {
                         curState = GameState.Menu;
@@ -860,7 +868,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Left))
                     {
-                        curEnemy = new Enemy((int)((player.MaxHealth)*2),(int)player.Damage/2,14,"Player",4,true,6);
+                        curEnemy = new Enemy((int)((player.MaxHealth)*4),3,17,"Player",4,true,5);
                         endTex = true;
                         endGame = true;
                         curState = GameState.Combat;
@@ -869,7 +877,7 @@ namespace As_Far_as_the_Light_Reaches
 
                     if (SingleKeyPress(Keys.Right))
                     {
-                        curEnemy = new Enemy((int)((player.MaxHealth + 2)*2),(int)(player.Damage + 2)/2, 16, "Boss", 3, true, 6);
+                        curEnemy = new Enemy((int)((player.MaxHealth + 2)*4),4, 20, "Boss", 3, true, 5);
                         endTex = false;
                         endGame = true;
                         curState = GameState.Combat;

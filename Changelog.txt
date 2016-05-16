@@ -241,3 +241,6 @@
 //James Friedenberg 4:29 PM 5/15/2016
 	- Added enemies to underground map and fixed their positions
 	- GG game works great
+
+//Juri Kiin 8:00 PM 5/15/2016
+	- Balanced end game bosses.
